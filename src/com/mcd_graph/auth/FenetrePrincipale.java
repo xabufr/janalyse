@@ -16,33 +16,20 @@ import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+
+import com.event.auth.QuitListener;
+
 import java.awt.Insets;
 
 public class FenetrePrincipale {
 
 	private JFrame frame;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FenetrePrincipale window = new FenetrePrincipale();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the application.
-	 */
 	public FenetrePrincipale() {
 		initialize();
+		frame.getContentPane().add(new McdGraph(), BorderLayout.CENTER);
+		frame.setVisible(true);
+		
 	}
 
 	/**
@@ -75,6 +62,7 @@ public class FenetrePrincipale {
 		mnFichier.add(separator_1);
 		
 		JMenuItem mntmQuitter = new JMenuItem("Quitter");
+		mntmQuitter.addActionListener(new QuitListener(this));
 		mnFichier.add(mntmQuitter);
 		
 		JMenu mnEdition = new JMenu("Edition");
@@ -109,5 +97,9 @@ public class FenetrePrincipale {
 		button.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/objet.png")));
 		toolBar.add(button);
 		
+	}
+	
+	public void quitter(){
+		frame.dispose();
 	}
 }
