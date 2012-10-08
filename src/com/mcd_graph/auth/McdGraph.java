@@ -3,6 +3,7 @@ package com.mcd_graph.auth;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -10,13 +11,17 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
 
 import com.mcd_composent_graph.auth.EntiteGraph;
+import com.mcd_composent_graph.auth.McdComposentGraphique;
 
 public class McdGraph extends JPanel{
 	private EntiteGraph entite;
+	private McdComposentGraphique focus;
 	public McdGraph() {
-		entite = new EntiteGraph(30, 50);
+		focus = null;
+		entite = new EntiteGraph(new Rectangle(20 , 30, 120, 130));
 		this.setSize(new Dimension(80, 80));
 		this.addMouseMotionListener(new mouseMove(this));
+		this.addMouseListener(new mouseClick());
 	}
 	
 	public void paintComponent(Graphics g){
@@ -40,17 +45,21 @@ public class McdGraph extends JPanel{
 
 		@Override
 		public void mouseMoved(MouseEvent e) {
-			// TODO Auto-generated method stub
-			entite.setX(e.getX());
-			entite.setY(e.getY());
-			parent.repaint();
+			if (focus != null){
+				entite.setX(e.getX());
+				entite.setY(e.getY());
+				parent.repaint();
+			}
 		}		
 	}
 	
 	private class mouseClick implements MouseListener{
 
 		public void mouseClicked(MouseEvent e) {
-			
+			if (entite.contient(e.getPoint()))
+				focus = entite;
+			else
+				focus = null;
 			
 		}
 
