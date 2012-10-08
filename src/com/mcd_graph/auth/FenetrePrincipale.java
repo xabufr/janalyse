@@ -11,6 +11,12 @@ import javax.swing.JToolBar;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+import java.awt.Rectangle;
+import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import java.awt.Insets;
 
 public class FenetrePrincipale {
 
@@ -94,7 +100,14 @@ public class FenetrePrincipale {
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
 		JButton button = new JButton("");
+		button.setAlignmentY(0.0f);
+		button.setSize(new Dimension(32, 32));
+		button.setPreferredSize(new Dimension(32, 32));
+		button.setMinimumSize(new Dimension(32, 32));
+		button.setMaximumSize(new Dimension(32, 32));
+		button.setMargin(new Insets(0, 0, 0, 0));
+		button.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/objet.png")));
 		toolBar.add(button);
+		
 	}
-
 }
