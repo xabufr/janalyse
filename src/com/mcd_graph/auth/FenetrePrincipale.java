@@ -16,20 +16,33 @@ import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
-
-import com.event.auth.QuitListener;
-
 import java.awt.Insets;
 
 public class FenetrePrincipale {
 
 	private JFrame frame;
 
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					FenetrePrincipale window = new FenetrePrincipale();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
 	public FenetrePrincipale() {
 		initialize();
-		frame.getContentPane().add(new McdGraph(), BorderLayout.CENTER);
-		frame.setVisible(true);
-		
 	}
 
 	/**
@@ -62,7 +75,6 @@ public class FenetrePrincipale {
 		mnFichier.add(separator_1);
 		
 		JMenuItem mntmQuitter = new JMenuItem("Quitter");
-		mntmQuitter.addActionListener(new QuitListener(this));
 		mnFichier.add(mntmQuitter);
 		
 		JMenu mnEdition = new JMenu("Edition");
@@ -88,8 +100,7 @@ public class FenetrePrincipale {
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
 		JButton button = new JButton("");
-		button.setAlignmentY(0.0f);
-		button.setSize(new Dimension(32, 32));
+		button.setSize(new Dimension(32, 327));
 		button.setPreferredSize(new Dimension(32, 32));
 		button.setMinimumSize(new Dimension(32, 32));
 		button.setMaximumSize(new Dimension(32, 32));
@@ -98,8 +109,5 @@ public class FenetrePrincipale {
 		toolBar.add(button);
 		
 	}
-	
-	public void quitter(){
-		frame.dispose();
-	}
+
 }
