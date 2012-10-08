@@ -15,6 +15,13 @@ class FormeGeometriqueRectangle extends FormeGeometrique{
 	private Rectangle m_rect;
 	
 	public FormeGeometriqueRectangle(Rectangle r){
+		setRectangle(r);
+	}
+	public void setPosition(Point p){
+		m_rect.x=p.x;
+		m_rect.y=p.y;
+	}
+	public void setRectangle(Rectangle r){
 		m_rect=r;
 	}
 	public Boolean contient(Point p) {
