@@ -43,6 +43,7 @@ public class FenetrePrincipale {
 	 */
 	public FenetrePrincipale() {
 		initialize();
+		frame.getContentPane().add(new McdGraph());
 	}
 
 	/**
@@ -108,6 +109,10 @@ public class FenetrePrincipale {
 		button.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/objet.png")));
 		toolBar.add(button);
 		
+	}
+
+	public void quitter() {
+		frame.dispose();
 	}
 
 }
