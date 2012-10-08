@@ -1,3 +1,4 @@
+package com.mcd_graph.auth;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 
