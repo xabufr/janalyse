@@ -31,6 +31,9 @@ public class Relation {
 	public void setProprietes(ArrayList<Propriete> proprietes) {
 		m_proprietes = proprietes;
 	}
+	public void addPropriete(Propriete p){
+		m_proprietes.add(p);
+	}
 	private String m_nom;
 	private String m_commentaire;
 	private Cardinalite m_cardinalites[];

@@ -1,5 +1,6 @@
 package com.mcd_composent_graph.auth;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 
@@ -21,8 +22,18 @@ class FormeGeometriqueRectangle extends FormeGeometrique{
 		m_rect.x=p.x;
 		m_rect.y=p.y;
 	}
+	public Point getPosition(){
+		return new Point(m_rect.x, m_rect.y);
+	}
 	public void setRectangle(Rectangle r){
 		m_rect=r;
+	}
+	public void setDimension(Dimension d){
+		m_rect.width=d.width;
+		m_rect.height=d.height;
+	}
+	public Dimension getDimension(){
+		return new Dimension(m_rect.width, m_rect.height);
 	}
 	public Rectangle getRectangle(){
 		return m_rect;
