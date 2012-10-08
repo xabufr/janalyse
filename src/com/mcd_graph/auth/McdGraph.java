@@ -3,6 +3,7 @@ package com.mcd_graph.auth;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -15,9 +16,12 @@ import com.mcd_composent_graph.auth.McdComposentGraphique;
 
 public class McdGraph extends JPanel{
 	private EntiteGraph entite;
-	private McdComposentGraphique focus;
+	private McdComposentGraphique m_focus;
+	private Point m_deltaSelect;
+	
 	public McdGraph() {
-		focus = null;
+		m_focus = null;
+		m_deltaSelect = new Point();
 		entite = new EntiteGraph(new Rectangle(20 , 30, 120, 130));
 		this.setSize(new Dimension(80, 80));
 		this.addMouseMotionListener(new mouseMove(this));
@@ -37,39 +41,39 @@ public class McdGraph extends JPanel{
 			parent = p;
 		}
 
-		@Override
 		public void mouseDragged(MouseEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseMoved(MouseEvent e) {
-			if (focus != null){
-				entite.setX(e.getX());
-				entite.setY(e.getY());
+			if (m_focus != null){
+				Point tmp = new Point();
+				tmp.x = e.getPoint().x - m_deltaSelect.x;
+				tmp.y = e.getPoint().y - m_deltaSelect.y;
+				entite.setPosition(tmp);
 				parent.repaint();
 			}
-		}		
+		}
+
+		public void mouseMoved(MouseEvent e) {}		
 	}
 	
 	private class mouseClick implements MouseListener{
 
-		public void mouseClicked(MouseEvent e) {
-			if (entite.contient(e.getPoint()))
-				focus = entite;
-			else
-				focus = null;
-			
-		}
+		public void mouseClicked(MouseEvent e) {}
 
 		public void mouseEntered(MouseEvent e) {}
 
 		public void mouseExited(MouseEvent e) {}
 
-		public void mousePressed(MouseEvent e) {}
+		public void mousePressed(MouseEvent e) {
+			if (entite.contient(e.getPoint())){
+				m_focus = entite;
+				m_deltaSelect.x = e.getPoint().x - entite.getRectangle().x;
+				m_deltaSelect.y = e.getPoint().y - entite.getRectangle().y;
+			}
+		}
 
-		public void mouseReleased(MouseEvent e) {}
+		public void mouseReleased(MouseEvent e) {
+			m_focus = null;
+		
+		}
 	
 	}
 }

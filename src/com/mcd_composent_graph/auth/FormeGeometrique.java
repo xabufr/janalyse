@@ -24,6 +24,9 @@ class FormeGeometriqueRectangle extends FormeGeometrique{
 	public void setRectangle(Rectangle r){
 		m_rect=r;
 	}
+	public Rectangle getRectangle(){
+		return m_rect;
+	}
 	public Boolean contient(Point p) {
 		return m_rect.contains(p);
 	}
