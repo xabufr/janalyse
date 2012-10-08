@@ -3,6 +3,7 @@ package com.mcd_graph.auth;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -12,6 +13,8 @@ import javax.swing.JPanel;
 
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
+import com.mcd_composent_graph.auth.ProprieteGraph;
+import com.mcd_log.auth.Propriete;
 
 public class McdGraph extends JPanel{
 	private EntiteGraph entite;
@@ -19,6 +22,7 @@ public class McdGraph extends JPanel{
 	public McdGraph() {
 		focus = null;
 		entite = new EntiteGraph(new Rectangle(20 , 30, 120, 130));
+		
 		this.setSize(new Dimension(80, 80));
 		this.addMouseMotionListener(new mouseMove(this));
 		this.addMouseListener(new mouseClick());

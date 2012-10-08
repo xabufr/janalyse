@@ -5,12 +5,13 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Point;
 
 import com.mcd_log.auth.Propriete;
 
-public class ProptieteGraph {
+public class ProprieteGraph {
 
-	public ProptieteGraph() {
+	public ProprieteGraph() {
 		
 	}
 	
@@ -28,10 +29,14 @@ public class ProptieteGraph {
 		return new Dimension(width, height);
 	}
 	
-	public void dessiner(Graphics g, Font f, Color c)
+	public void dessiner(Graphics g, Font f, Color c, Point p)
 	{
 		g.setColor(c);
-		
+		g.setFont(f);
+		g.drawString(m_propriete.getName(), p.x, p.y);
+		if(m_propriete.isClePrimaire()){
+			g.drawLine(p.x, p.y + 2, p.x + getDimension(g,f).width, p.y + 2);
+		}
 	}
 
 	private Propriete m_propriete;
