@@ -13,6 +13,9 @@ import javax.swing.KeyStroke;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
@@ -22,6 +25,9 @@ import java.awt.event.KeyEvent;
 import javax.swing.JLabel;
 
 import com.event.auth.QuitListener;
+import com.preferences_mcd_logique.auth.McdPreferencesManager;
+import com.preferences_mcd_logique.auth.PCle;
+import com.preferences_mcd_logique.auth.PGroupe;
 
 import java.awt.Insets;
 import java.awt.Component;
@@ -37,6 +43,11 @@ public class FenetrePrincipale {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+					prefs.setFont(PGroupe.HERITAGE, PCle.FONT, "TimesRoman", Font.PLAIN, 500);
+					prefs.set(PGroupe.HERITAGE,  PCle.COLOR, Color.GREEN);
+					prefs.set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR, Color.RED);
+					prefs.set(PGroupe.HERITAGE, PCle.FONT_COLOR, Color.BLACK);
 					FenetrePrincipale window = new FenetrePrincipale();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
