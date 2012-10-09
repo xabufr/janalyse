@@ -12,15 +12,19 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
 
 import com.mcd_composent_graph.auth.EntiteGraph;
+import com.mcd_composent_graph.auth.HeritageGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.ProprieteGraph;
 import com.mcd_composent_graph.auth.RelationGraph;
+import com.mcd_log.auth.Heritage;
+import com.mcd_log.auth.HeritageType;
 import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
 
 public class McdGraph extends JPanel{
 	private EntiteGraph entite;
 	private RelationGraph rel;
+	private HeritageGraph her;
 	private McdComposentGraphique m_focus;
 	private Point m_deltaSelect;
 	
@@ -29,6 +33,8 @@ public class McdGraph extends JPanel{
 		m_deltaSelect = new Point();
 		entite = new EntiteGraph(new Rectangle(20 , 30, 120, 130));
 		rel = new RelationGraph();
+		her = new HeritageGraph();
+		her.setHeritage(new Heritage(null, HeritageType.T));
 		Relation test = new Relation("               ");
 		rel.setRelation(test);
 		test.addPropriete(new Propriete("                     ", null));
@@ -47,7 +53,8 @@ public class McdGraph extends JPanel{
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		entite.Dessiner(g);
-		rel.Dessiner(g);
+		//rel.Dessiner(g);
+		her.Dessiner(g);
 	}
 	
 	private class mouseMove implements MouseMotionListener{
