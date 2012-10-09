@@ -44,6 +44,15 @@ public class Cardinalite {
 	public void setRelation(Relation relation) {
 		m_relation = relation;
 	}
+	
+	public String toString(){
+		String ret = String.valueOf(m_min)+",";
+		if(m_max>0)
+			ret+=String.valueOf(m_max);
+		else
+			ret+="n";
+		return ret;
+	}
 
 	private Boolean m_relatif;
 	private int m_min, m_max; //m_max: (-1) = inf

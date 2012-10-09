@@ -44,10 +44,11 @@ public class FenetrePrincipale {
 			public void run() {
 				try {
 					McdPreferencesManager prefs = McdPreferencesManager.getInstance();
-					prefs.setFont(PGroupe.HERITAGE, PCle.FONT, "TimesRoman", Font.PLAIN, 500);
+					prefs.setFont(PGroupe.HERITAGE, PCle.FONT, "TimesRoman", Font.PLAIN, 5);
 					prefs.set(PGroupe.HERITAGE,  PCle.COLOR, Color.GREEN);
 					prefs.set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR, Color.RED);
 					prefs.set(PGroupe.HERITAGE, PCle.FONT_COLOR, Color.BLACK);
+					prefs.setFont(PGroupe.CARDINALITE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
 					FenetrePrincipale window = new FenetrePrincipale();
 					window.frame.setVisible(true);
 				} catch (Exception e) {

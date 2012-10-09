@@ -76,7 +76,7 @@ public class EntiteGraph extends FormeGeometriqueRectangle implements McdCompose
 	}
 
 	@Override
-	public void Dessiner(Graphics g) {
+	public void dessiner(Graphics g) {
 		// TODO Auto-generated method stub
 		
 	}

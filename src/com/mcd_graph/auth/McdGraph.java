@@ -47,6 +47,7 @@ public class McdGraph extends JPanel{
 		test.addPropriete(new Propriete("propriété1", null));
 		test.addPropriete(new Propriete("propriété1", null));
 		rel.setRelation(test);
+		rel.setPosition(new Point(100,100));
 
 		
 		
@@ -80,11 +81,11 @@ public class McdGraph extends JPanel{
 		
 		entite.dessiner(g, g.getFont(), Color.YELLOW);
 
-		rel.Dessiner(g);
+		rel.dessiner(g);
 
 		//her.Dessiner(g);
 
-		card.Dessiner(g);
+		card.dessiner(g);
 
 	}
 	
