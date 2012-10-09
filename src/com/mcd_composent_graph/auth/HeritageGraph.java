@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Heritage;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
@@ -35,8 +36,6 @@ public class HeritageGraph extends FormeGeometriqueRectangle implements McdCompo
 		Font font = prefs.getFont(PGroupe.HERITAGE, PCle.FONT);
 		if(!m_initialise)
 		{
-			
-
 			FontMetrics metric = g.getFontMetrics(font);
 			dim.width = metric.stringWidth(" XT ");
 			dim.height = metric.getHeight();
@@ -63,5 +62,12 @@ public class HeritageGraph extends FormeGeometriqueRectangle implements McdCompo
 
 		g.drawString(m_heritage.getType().toString(), pos.x+dim.width/2-this.m_widthType/2, pos.y+dim.height-2);
 	}
-
+	@Override
+	public void setMcd(McdGraph mcd) {
+		if(m_mcd!=null)
+			m_mcd.removeLogic(m_heritage);
+		m_mcd=mcd;
+		m_mcd.registerLogic(m_heritage, this);
+	}
+	McdGraph m_mcd;
 }

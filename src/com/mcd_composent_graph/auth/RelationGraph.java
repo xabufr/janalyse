@@ -10,6 +10,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
 
@@ -104,4 +105,12 @@ public class RelationGraph extends FormeGeometriqueRectangle implements McdCompo
 		}
 
 	}
+	
+	public void setMcd(McdGraph mcd) {
+		if(m_mcd!=null)
+			m_mcd.removeLogic(m_relation);
+		m_mcd=mcd;
+		m_mcd.registerLogic(m_relation, this);
+	}
+	McdGraph m_mcd;
 }

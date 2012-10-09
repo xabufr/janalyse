@@ -8,14 +8,17 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Hashtable;
 
 import javax.swing.JPanel;
 
+import com.mcd_composent_graph.auth.CardinaliteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.ProprieteGraph;
 import com.mcd_composent_graph.auth.RelationGraph;
+import com.mcd_log.auth.Cardinalite;
 import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.HeritageType;
 import com.mcd_log.auth.Propriete;
@@ -25,22 +28,41 @@ import com.mcd_log.auth.Relation;
 public class McdGraph extends JPanel{
 	private EntiteGraph entite;
 	private RelationGraph rel;
+	private CardinaliteGraph card;
 	private HeritageGraph her;
 	private McdComposentGraphique m_focus;
 	private Point m_deltaSelect;
 	
 	public McdGraph() {
+		m_logicObjects = new Hashtable<Object, McdComposentGraphique> ();
 		m_focus = null;
 		m_deltaSelect = new Point();
 		entite = new EntiteGraph(new Rectangle(20 , 30, 120, 130), "Test");
 		
 		rel = new RelationGraph();
+
 		her = new HeritageGraph();
 		her.setHeritage(new Heritage(null, HeritageType.T));
 		Relation test = new Relation("Realation1");
 		test.addPropriete(new Propriete("propriété1", null));
 		test.addPropriete(new Propriete("propriété1", null));
 		rel.setRelation(test);
+
+		
+		
+		card = new CardinaliteGraph();
+		
+		Cardinalite ca = new Cardinalite();
+		ca.setEntite(entite.getEntite());
+		ca.setRelation(rel.getRelation());
+		
+		
+		rel.setMcd(this);
+		entite.setMcd(this);
+		
+		card.setCardinalite(ca);
+		card.setMcd(this);
+
 		/*test.addPropriete(new Propriete("prop2", null));
 		test.addPropriete(new Propriete("prop3", null));
 		test.addPropriete(new Propriete("prop4", null));
@@ -59,7 +81,11 @@ public class McdGraph extends JPanel{
 		entite.dessiner(g, g.getFont(), Color.YELLOW);
 
 		rel.Dessiner(g);
+
 		//her.Dessiner(g);
+
+		card.Dessiner(g);
+
 	}
 	
 	private class mouseMove implements MouseMotionListener{
@@ -103,4 +129,15 @@ public class McdGraph extends JPanel{
 		}
 	
 	}
+	
+	public void registerLogic(Object o, McdComposentGraphique g){
+		m_logicObjects.put(o, g);
+	}
+	public McdComposentGraphique getGraphicComponent(Object o){
+		return this.m_logicObjects.get(o);
+	}
+	public void removeLogic(Object o){
+		this.m_logicObjects.remove(o);
+	}
+	private Hashtable<Object, McdComposentGraphique> m_logicObjects;
 }
