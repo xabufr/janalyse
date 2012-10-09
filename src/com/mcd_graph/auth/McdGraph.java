@@ -37,9 +37,10 @@ public class McdGraph extends JPanel{
 		rel = new RelationGraph();
 		her = new HeritageGraph();
 		her.setHeritage(new Heritage(null, HeritageType.T));
-		Relation test = new Relation("               ");
+		Relation test = new Relation("Realation1");
+		test.addPropriete(new Propriete("propriété1", null));
+		test.addPropriete(new Propriete("propriété1", null));
 		rel.setRelation(test);
-		test.addPropriete(new Propriete("                     ", null));
 		/*test.addPropriete(new Propriete("prop2", null));
 		test.addPropriete(new Propriete("prop3", null));
 		test.addPropriete(new Propriete("prop4", null));
@@ -57,8 +58,8 @@ public class McdGraph extends JPanel{
 		
 		entite.dessiner(g, g.getFont(), Color.YELLOW);
 
-		//rel.Dessiner(g);
-		her.Dessiner(g);
+		rel.Dessiner(g);
+		//her.Dessiner(g);
 	}
 	
 	private class mouseMove implements MouseMotionListener{

@@ -62,30 +62,37 @@ public class RelationGraph extends FormeGeometriqueRectangle implements McdCompo
 				dimEC=m_proprietes.get(i).getDimension(g, font);
 				if(dimEC.width>dim.width)
 					dim.width=dimEC.width;
-				dim.height+=dimEC.height;
+				
+				dim.height+=dimEC.height+4;
 			}
-			dim.height +=m_heightNom+13;
-			dim.width += 30;
+			
+			dim.height *= 2;
+			dim.width += 60;
 			setDimension(dim);
 		}
 		Point pos = getPosition();
-		Dimension dim=getDimension();
+		Dimension dim = getDimension();
 		
 		
 		g.setColor(Color.GREEN);
 		
-		g.fillRoundRect(pos.x, pos.y, dim.width, dim.height, 20, dim.height);
+		if (dim.height > dim.width)
+			dim.width = dim.height*2;
+		else
+			dim.height = dim.width/2;
+		
+		g.fillOval(pos.x, pos.y, dim.width, dim.height);
 		g.setColor(Color.BLACK);
-		g.drawRoundRect(pos.x, pos.y, dim.width, dim.height, 20, dim.height);
+		g.drawOval(pos.x, pos.y, dim.width, dim.height);
 		
 		Point cursor = new Point(pos);
 		cursor.x += (dim.width/2)-(m_widthNom/2);
-		cursor.y += this.m_heightNom + 1;
+		cursor.y += (dim.height/4)+(m_heightNom/2);
 		g.setFont(new Font("TimesRoman", Font.BOLD, 12));
 		g.drawString(m_relation.getNom(), cursor.x, cursor.y);
-		cursor.y+=3;
+		cursor.y = pos.y+(dim.height/2);
 		
-		g.drawLine(pos.x+5, cursor.y, pos.x+dim.width-5, cursor.y);
+		g.drawLine(pos.x, cursor.y, pos.x+dim.width, cursor.y);
 		
 		Font font = new Font("TimesRoman", Font.PLAIN, 10);
 		Dimension dimEC;
