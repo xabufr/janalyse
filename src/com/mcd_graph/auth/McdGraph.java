@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.ProprieteGraph;
-import com.mcd_log.auth.Propriete;
 
 public class McdGraph extends JPanel{
 	private EntiteGraph entite;
@@ -24,7 +23,15 @@ public class McdGraph extends JPanel{
 	public McdGraph() {
 		m_focus = null;
 		m_deltaSelect = new Point();
-		entite = new EntiteGraph(new Rectangle(20 , 30, 120, 130));
+		entite = new EntiteGraph(new Rectangle(20 , 30, 120, 130), "Test");
+		
+		//test
+		entite.addProprieteGraph(new ProprieteGraph("aqzefzaregf", null));
+		entite.addProprieteGraph(new ProprieteGraph("azef", null));
+		entite.addProprieteGraph(new ProprieteGraph("aqzefzaazefeazregf", null));
+		entite.addProprieteGraph(new ProprieteGraph("aqzefzafreazrfregf", null));
+		entite.addProprieteGraph(new ProprieteGraph("aqzefzaregf", null));
+		entite.addProprieteGraph(new ProprieteGraph("aqzaregf", null));
 		
 		this.setSize(new Dimension(80, 80));
 		this.addMouseMotionListener(new mouseMove(this));
@@ -34,7 +41,7 @@ public class McdGraph extends JPanel{
 	public void paintComponent(Graphics g){
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		entite.Dessiner(g);
+		entite.dessiner(g, g.getFont(), Color.YELLOW);
 	}
 	
 	private class mouseMove implements MouseMotionListener{
@@ -70,6 +77,7 @@ public class McdGraph extends JPanel{
 				m_focus = entite;
 				m_deltaSelect.x = e.getPoint().x - entite.getRectangle().x;
 				m_deltaSelect.y = e.getPoint().y - entite.getRectangle().y;
+				
 			}
 		}
 

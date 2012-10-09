@@ -8,11 +8,12 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import com.mcd_log.auth.Propriete;
+import com.mcd_log.auth.Type;
 
 public class ProprieteGraph {
 
-	public ProprieteGraph() {
-		
+	public ProprieteGraph(String s, Type t) {
+		m_propriete = new Propriete(s, t);
 	}
 	
 	public Propriete getPropriete() {

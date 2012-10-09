@@ -8,6 +8,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
@@ -15,7 +17,12 @@ import java.awt.Rectangle;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
 import javax.swing.JLabel;
+
+import com.event.auth.QuitListener;
+
 import java.awt.Insets;
 
 public class FenetrePrincipale {
@@ -58,6 +65,7 @@ public class FenetrePrincipale {
 		frame.setJMenuBar(menuBar);
 		
 		JMenu mnFichier = new JMenu("Fichier");
+		mnFichier.setMnemonic('F');
 		menuBar.add(mnFichier);
 		
 		JMenuItem menuItem = new JMenuItem("Nouveau");
@@ -76,21 +84,28 @@ public class FenetrePrincipale {
 		mnFichier.add(separator_1);
 		
 		JMenuItem mntmQuitter = new JMenuItem("Quitter");
+		mntmQuitter.addActionListener(new QuitListener(this));
+		mntmQuitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
 		mnFichier.add(mntmQuitter);
 		
 		JMenu mnEdition = new JMenu("Edition");
+		mnEdition.setMnemonic('E');
 		menuBar.add(mnEdition);
 		
 		JMenuItem mntmCouper = new JMenuItem("Couper");
+		mntmCouper.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK));
 		mnEdition.add(mntmCouper);
 		
 		JMenuItem mntmCopier = new JMenuItem("Copier");
+		mntmCopier.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK));
 		mnEdition.add(mntmCopier);
 		
 		JMenuItem mntmColler = new JMenuItem("Coller");
+		mntmColler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK));
 		mnEdition.add(mntmColler);
 		
 		JMenu mnAide = new JMenu("Aide");
+		mnAide.setMnemonic('A');
 		menuBar.add(mnAide);
 		
 		JMenuItem mntmAPropos = new JMenuItem("A propos...");
