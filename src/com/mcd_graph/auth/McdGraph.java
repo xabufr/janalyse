@@ -54,7 +54,7 @@ public class McdGraph extends JPanel{
 		entite.dessiner(g, g.getFont(), Color.YELLOW);
 
 		//rel.Dessiner(g);
-		her.Dessiner(g);
+		//her.Dessiner(g);
 	}
 	
 	private class mouseMove implements MouseMotionListener{

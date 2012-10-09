@@ -7,7 +7,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
 import com.mcd_log.auth.Propriete;
@@ -17,7 +16,6 @@ public class RelationGraph extends FormeGeometriqueRectangle implements McdCompo
 
 	private Relation m_relation;
 	private int m_lastPropsNumber, m_heightNom, m_widthNom;
-	private int m_minxellipse, m_maxxellipse;
 	private ArrayList<ProprieteGraph> m_proprietes;
 	public RelationGraph() {
 		super(new Rectangle());
