@@ -13,6 +13,9 @@ import java.util.List;
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
+import com.preferences_mcd_logique.auth.McdPreferencesManager;
+import com.preferences_mcd_logique.auth.PCle;
+import com.preferences_mcd_logique.auth.PGroupe;
 
 public class RelationGraph extends FormeGeometriqueRectangle implements McdComposentGraphique{
 
@@ -45,18 +48,19 @@ public class RelationGraph extends FormeGeometriqueRectangle implements McdCompo
 		return m_relation;
 	}
 	public void dessiner(Graphics g) {
+		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		if(this.m_lastPropsNumber!=this.m_relation.getProprietes().size())
 		{
 			this.actualiser();
 	
 			Dimension dim = new Dimension(0,0), dimEC;
-			Font font = new Font("TimesRoman", Font.PLAIN, 12);
+			Font font = prefs.getFont(PGroupe.RELATION, PCle.FONT_NOM);
 			
 			FontMetrics metric = g.getFontMetrics(font);
 			m_widthNom = dim.width = metric.stringWidth(m_relation.getNom());
 			m_heightNom = metric.getHeight();
 			
-			font = new Font("TimesRoman", Font.PLAIN, 10);
+			font = prefs.getFont(PGroupe.RELATION, PCle.FONT);
 			
 			for(int i=0;i<m_lastPropsNumber;++i){
 				dimEC=m_proprietes.get(i).getDimension(g, font);
@@ -76,32 +80,35 @@ public class RelationGraph extends FormeGeometriqueRectangle implements McdCompo
 		if (dim.height == 0)
 			dim.height = dim.width/2;
 		
-		g.setColor(Color.GREEN);
-		
 		if (dim.height > dim.width)
 			dim.width = dim.height*2;
 		
+		g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR));
+		
 		g.fillOval(pos.x, pos.y, dim.width, dim.height);
-		g.setColor(Color.BLACK);
+		g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR));
 		g.drawOval(pos.x, pos.y, dim.width, dim.height);
 		
 		Point cursor = new Point(pos);
 		cursor.x += (dim.width/2)-(m_widthNom/2);
 		cursor.y += (dim.height/4)+(m_heightNom/2);
-		g.setFont(new Font("TimesRoman", Font.BOLD, 12));
+		g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.FONT_NOM_COLOR));
+		g.setFont(prefs.getFont(PGroupe.RELATION, PCle.FONT_NOM));
 		g.drawString(m_relation.getNom(), cursor.x, cursor.y);
 		cursor.y = pos.y+(dim.height/2);
 		
+		g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR));
 		g.drawLine(pos.x, cursor.y, pos.x+dim.width, cursor.y);
 		
-		Font font = new Font("TimesRoman", Font.PLAIN, 10);
+		Font font = prefs.getFont(PGroupe.RELATION, PCle.FONT);
+		Color couleur = (Color) prefs.get(PGroupe.RELATION, PCle.FONT_COLOR);
 		Dimension dimEC;
 		cursor.y-=3;
 		for(int i=0;i<this.m_lastPropsNumber;++i){
 			dimEC = this.m_proprietes.get(i).getDimension(g, font);
 			cursor.y+= 2 + dimEC.height;
 			cursor.x = pos.x+(dim.width/2)-(dimEC.width/2);
-			this.m_proprietes.get(i).dessiner(g, font, Color.BLACK, cursor);
+			this.m_proprietes.get(i).dessiner(g, font, couleur, cursor);
 		}
 
 	}

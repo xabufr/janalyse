@@ -44,11 +44,30 @@ public class FenetrePrincipale {
 			public void run() {
 				try {
 					McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+					
 					prefs.setFont(PGroupe.HERITAGE, PCle.FONT, "TimesRoman", Font.PLAIN, 5);
 					prefs.set(PGroupe.HERITAGE,  PCle.COLOR, Color.GREEN);
 					prefs.set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR, Color.RED);
 					prefs.set(PGroupe.HERITAGE, PCle.FONT_COLOR, Color.BLACK);
+					
 					prefs.setFont(PGroupe.CARDINALITE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
+					prefs.set(PGroupe.CARDINALITE, PCle.FONT_COLOR, Color.BLACK);
+					prefs.set(PGroupe.CARDINALITE, PCle.COLOR, Color.BLACK);
+					
+					prefs.setFont(PGroupe.RELATION, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
+					prefs.setFont(PGroupe.RELATION, PCle.FONT_NOM, "TimesRoman", Font.PLAIN, 12);
+					prefs.set(PGroupe.RELATION, PCle.FONT_COLOR, Color.GRAY);
+					prefs.set(PGroupe.RELATION, PCle.FONT_NOM_COLOR, Color.BLACK);
+					prefs.set(PGroupe.RELATION, PCle.COLOR, Color.GREEN);
+					prefs.set(PGroupe.RELATION, PCle.COLOR_CONTOUR, Color.BLACK);
+					
+					prefs.setFont(PGroupe.ENTITE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
+					prefs.setFont(PGroupe.ENTITE, PCle.FONT_NOM, "TimesRoman", Font.PLAIN, 12);
+					prefs.set(PGroupe.ENTITE,  PCle.COLOR, Color.GREEN);
+					prefs.set(PGroupe.ENTITE, PCle.COLOR_CONTOUR, Color.RED);
+					prefs.set(PGroupe.ENTITE, PCle.FONT_COLOR, Color.RED);
+					prefs.set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR, Color.BLACK);
+					
 					FenetrePrincipale window = new FenetrePrincipale();
 					window.frame.setVisible(true);
 				} catch (Exception e) {

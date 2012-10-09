@@ -87,8 +87,9 @@ public class CardinaliteGraph extends FormeGeometriqueLigne implements McdCompos
 		this.setPointA(a);
 		this.setPointB(b);
 		
-		g.setColor(Color.BLACK);
+		g.setColor((Color) prefs.get(PGroupe.CARDINALITE, PCle.COLOR));
 		g.drawLine(getPointA().x, getPointA().y, getPointB().x, getPointB().y);
+		g.setColor((Color) prefs.get(PGroupe.CARDINALITE, PCle.FONT_COLOR));
 		g.drawString(m_cardinalite.toString(), positionCard.x, positionCard.y);
 		
 	}
