@@ -12,8 +12,8 @@ import com.mcd_log.auth.Type;
 
 public class ProprieteGraph {
 
-	public ProprieteGraph(String s, Type t) {
-		m_propriete = new Propriete(s, t);
+	public ProprieteGraph() {
+
 	}
 	
 	public Propriete getPropriete() {

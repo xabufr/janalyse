@@ -6,32 +6,36 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.mcd_log.auth.Entite;
+import com.mcd_log.auth.Propriete;
 
 public class EntiteGraph extends FormeGeometriqueRectangle implements McdComposentGraphique{
 	private Entite m_entite;
-	private List<ProprieteGraph> m_proprietesGraph;
 
 	public EntiteGraph(Rectangle r, String s) {
 		super(r);
 		m_entite = new Entite(s);
-		m_proprietesGraph = new ArrayList<ProprieteGraph>();
+		
+		m_entite.addPropriete(new Propriete("argfarzgf", null));
+		m_entite.addPropriete(new Propriete("qsdfqdf", null));
+		m_entite.addPropriete(new Propriete("za	erfez", null));
+		m_entite.addPropriete(new Propriete("qsdfdqds", null));
+		m_entite.addPropriete(new Propriete("azefzeaffzaefza", null));
 	}
 
 	public void dessiner(Graphics g, Font f, Color c) {
 		Rectangle rect = getRectangle();
 		int x, y, widthMax=0, heightMax=0;
 		FontMetrics font = g.getFontMetrics();
+		ProprieteGraph dessinPropriete = new ProprieteGraph();
 		
 		g.setColor(c);
 		g.setFont(f);
 		
-		for (ProprieteGraph pg : m_proprietesGraph){
-			if (font.stringWidth(pg.getPropriete().getName()) > widthMax)
-				widthMax = font.stringWidth(pg.getPropriete().getName());
+		for (Propriete propriete : m_entite.getProprietes()){
+			if (font.stringWidth(propriete.getName()) > widthMax)
+				widthMax = font.stringWidth(propriete.getName());
 			
 			++heightMax;
 		}
@@ -55,15 +59,19 @@ public class EntiteGraph extends FormeGeometriqueRectangle implements McdCompose
 		//propriete
 		x = (int)rect.getX()+5;
 		y = (int)rect.getY() + 30 + font.getHeight();
-		for (ProprieteGraph pg : m_proprietesGraph){
-			pg.dessiner(g, f, Color.BLACK, new Point(x, y));
+		for (Propriete propriete : m_entite.getProprietes()){
+			dessinPropriete.setPropriete(propriete);
+			dessinPropriete.dessiner(g, f, Color.BLACK, new Point(x, y));
 			y += font.getHeight() + 4;
 		}
 	}
 	
-	public void addProprieteGraph(ProprieteGraph p){
-		m_proprietesGraph.add(p);
-		m_entite.addPropriete(p.getPropriete());
+	public void setEntite (Entite entite){
+		m_entite = entite;
+	}
+	
+	public Entite getEntite(){
+		return m_entite;
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
@@ -17,6 +18,7 @@ public class RelationGraph extends FormeGeometriqueRectangle implements McdCompo
 	private Relation m_relation;
 	private int m_lastPropsNumber, m_heightNom, m_widthNom;
 	private ArrayList<ProprieteGraph> m_proprietes;
+
 	public RelationGraph() {
 		super(new Rectangle());
 		m_proprietes = new ArrayList<ProprieteGraph>();
@@ -25,11 +27,11 @@ public class RelationGraph extends FormeGeometriqueRectangle implements McdCompo
 	}
 	public void actualiser(){
 		m_proprietes.clear();
-		ArrayList<Propriete> props = m_relation.getProprietes();
+		List<Propriete> props = m_relation.getProprietes();
 		this.m_lastPropsNumber=props.size();
 		for(int i=0;i<m_lastPropsNumber;++i)
 		{
-			ProprieteGraph _p = new ProprieteGraph("", null);
+			ProprieteGraph _p = new ProprieteGraph();
 			_p.setPropriete(props.get(i));
 			m_proprietes.add(_p);
 		}
