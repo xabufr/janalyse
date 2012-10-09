@@ -73,13 +73,13 @@ public class RelationGraph extends FormeGeometriqueRectangle implements McdCompo
 		Point pos = getPosition();
 		Dimension dim = getDimension();
 		
+		if (dim.height == 0)
+			dim.height = dim.width/2;
 		
 		g.setColor(Color.GREEN);
 		
 		if (dim.height > dim.width)
 			dim.width = dim.height*2;
-		else
-			dim.height = dim.width/2;
 		
 		g.fillOval(pos.x, pos.y, dim.width, dim.height);
 		g.setColor(Color.BLACK);
