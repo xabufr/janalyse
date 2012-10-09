@@ -37,6 +37,7 @@ public class FenetrePrincipale {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					FenetrePrincipale window = new FenetrePrincipale();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
