@@ -44,7 +44,7 @@ public class RelationGraph extends FormeGeometriqueRectangle implements McdCompo
 	public Relation getRelation(){
 		return m_relation;
 	}
-	public void Dessiner(Graphics g) {
+	public void dessiner(Graphics g) {
 		if(this.m_lastPropsNumber!=this.m_relation.getProprietes().size())
 		{
 			this.actualiser();

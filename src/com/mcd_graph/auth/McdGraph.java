@@ -43,8 +43,13 @@ public class McdGraph extends JPanel{
 
 		her = new HeritageGraph();
 		her.setHeritage(new Heritage(null, HeritageType.T));
-		/*Relation test = new Relation("Realation1");
-		rel.setRelation(test);*/
+
+		Relation test = new Relation("Realation1");
+		test.addPropriete(new Propriete("propriété1", null));
+		test.addPropriete(new Propriete("propriété1", null));
+		rel.setRelation(test);
+		rel.setPosition(new Point(100,100));
+
 
 		
 		
@@ -78,11 +83,11 @@ public class McdGraph extends JPanel{
 		
 		entite.dessiner(g, g.getFont(), Color.YELLOW);
 
-		rel.Dessiner(g);
+		rel.dessiner(g);
 
 		//her.Dessiner(g);
 
-		card.Dessiner(g);
+		card.dessiner(g);
 
 	}
 	

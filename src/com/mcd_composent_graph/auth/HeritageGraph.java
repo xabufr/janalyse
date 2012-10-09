@@ -29,7 +29,7 @@ public class HeritageGraph extends FormeGeometriqueRectangle implements McdCompo
 		m_heritage = heritage;
 		
 	}
-	public void Dessiner(Graphics g) {
+	public void dessiner(Graphics g) {
 		
 		Dimension dim = new Dimension();
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
