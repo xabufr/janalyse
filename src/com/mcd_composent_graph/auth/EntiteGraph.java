@@ -1,6 +1,7 @@
 package com.mcd_composent_graph.auth;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -17,20 +18,14 @@ import com.preferences_mcd_logique.auth.PGroupe;
 public class EntiteGraph extends FormeGeometriqueRectangle implements McdComposentGraphique{
 	private Entite m_entite;
 
-	public EntiteGraph(Rectangle r, String s) {
-		super(r);
-		m_entite = new Entite(s);
-		
-		m_entite.addPropriete(new Propriete("argfarzgf", null));
-		m_entite.addPropriete(new Propriete("qsdfqdf", null));
-		m_entite.addPropriete(new Propriete("za	erfez", null));
-		m_entite.addPropriete(new Propriete("qsdfdqds", null));
-		m_entite.addPropriete(new Propriete("azefzeaffzaefza", null));
+	public EntiteGraph() {
+		super(new Rectangle());
 	}
 
 	public void dessiner(Graphics g, Font f, Color c) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
-		Rectangle rect = getRectangle();
+		Point pos = getPosition();
+		Dimension dim = getDimension();
 		int x, y, widthMax=0, heightMax=0;
 		
 		
@@ -59,20 +54,20 @@ public class EntiteGraph extends FormeGeometriqueRectangle implements McdCompose
 		
 		//cadre
 		g.setColor((Color) prefs.get(PGroupe.ENTITE, PCle.COLOR));
-		g.fillRect((int)rect.getX(), (int)rect.getY(), widthMax, heightMax);
+		g.fillRect(pos.x, pos.y, widthMax, heightMax);
 		g.setColor((Color) prefs.get(PGroupe.ENTITE, PCle.COLOR_CONTOUR));
-		g.drawRect((int)rect.getX(), (int)rect.getY(), widthMax, heightMax);
-		this.setRectangle(new Rectangle((int)rect.getX(), (int)rect.getY(), widthMax, heightMax));
-		g.drawLine((int)rect.getX(), ((int)rect.getY()+font.getHeight()+6), ((int)rect.getX()+widthMax), ((int)rect.getY()+font.getHeight()+6));
+		g.drawRect(pos.x, pos.y, widthMax, heightMax);
+		this.setRectangle(new Rectangle(pos.x, pos.y, widthMax, heightMax));
+		g.drawLine(pos.x, (pos.y+font.getHeight()+6), (pos.x+widthMax), (pos.y+font.getHeight()+6));
 		//titre
-		x = ((int)rect.getX() + (widthMax / 2)) - (font.stringWidth(m_entite.getName()) / 2);
-		y = ((int)rect.getY() + font.getHeight());
+		x = (pos.x + (widthMax / 2)) - (font.stringWidth(m_entite.getName()) / 2);
+		y = (pos.y + font.getHeight());
 		g.setColor((Color) prefs.get(PGroupe.ENTITE, PCle.FONT_NOM_COLOR));
 		g.drawString(m_entite.getName(), x, y);
 		//propriete
 		g.setFont(prefs.getFont(PGroupe.ENTITE, PCle.FONT));
 		font = g.getFontMetrics();
-		x = (int)rect.getX()+5;
+		x = pos.x+5;
 		y += font.getHeight()+10;
 		for (Propriete propriete : m_entite.getProprietes()){
 			dessinPropriete.setPropriete(propriete);

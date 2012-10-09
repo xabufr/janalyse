@@ -16,13 +16,8 @@ import javax.swing.ImageIcon;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Rectangle;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-
-import javax.swing.JLabel;
 
 import com.event.auth.QuitListener;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
@@ -30,7 +25,6 @@ import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
 
 import java.awt.Insets;
-import java.awt.Component;
 
 public class FenetrePrincipale {
 

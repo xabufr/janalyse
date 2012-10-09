@@ -9,7 +9,8 @@ public abstract class FormeGeometrique {
 	public FormeGeometrique() {
 	}
 	public abstract Boolean contient(Point p);
-
+	public abstract void setPosition(Point p);
+	public abstract Rectangle getRectangle();
 }
 
 class FormeGeometriqueRectangle extends FormeGeometrique{
@@ -87,6 +88,16 @@ class FormeGeometriqueLigne extends FormeGeometrique{
 			return true;
 		
 		return false;
+	}
+	@Override
+	public void setPosition(Point p) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Rectangle getRectangle() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
