@@ -43,18 +43,3 @@ public class McdPreferencesManager {
 	private Hashtable<PGroupe, Hashtable<PCle, Object>> m_proprietes;
 }
 
-enum PGroupe{
-	RELATION,
-	PROPRIETE,
-	HERITAGE,
-	ENTITE
-}
-enum PCle{
-	FONT_NOM,
-	FONT,
-	COLOR,
-	FONT_COLOR,
-	FONT_NOM_COLOR,
-	FONT_SIZE,
-	FONT_NOM_SIZE
-}
