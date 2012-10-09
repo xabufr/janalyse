@@ -12,11 +12,20 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
 
 import com.mcd_composent_graph.auth.EntiteGraph;
+import com.mcd_composent_graph.auth.HeritageGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.ProprieteGraph;
+import com.mcd_composent_graph.auth.RelationGraph;
+import com.mcd_log.auth.Heritage;
+import com.mcd_log.auth.HeritageType;
+import com.mcd_log.auth.Propriete;
+import com.mcd_log.auth.Relation;
+
 
 public class McdGraph extends JPanel{
 	private EntiteGraph entite;
+	private RelationGraph rel;
+	private HeritageGraph her;
 	private McdComposentGraphique m_focus;
 	private Point m_deltaSelect;
 	
@@ -34,21 +43,23 @@ public class McdGraph extends JPanel{
 		entite.addProprieteGraph(new ProprieteGraph("aqzaregf", null));
 		
 		this.setSize(new Dimension(80, 80));
-		this.addMouseMotionListener(new mouseMove(this));
+		this.addMouseMotionListener(new mouseMove());
 		this.addMouseListener(new mouseClick());
 	}
 	
 	public void paintComponent(Graphics g){
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		
 		entite.dessiner(g, g.getFont(), Color.YELLOW);
+
+		//rel.Dessiner(g);
+		her.Dessiner(g);
 	}
 	
 	private class mouseMove implements MouseMotionListener{
-		private McdGraph parent;
 		
-		public mouseMove(McdGraph p){
-			parent = p;
+		public mouseMove(){
 		}
 
 		public void mouseDragged(MouseEvent e) {
@@ -57,7 +68,7 @@ public class McdGraph extends JPanel{
 				tmp.x = e.getPoint().x - m_deltaSelect.x;
 				tmp.y = e.getPoint().y - m_deltaSelect.y;
 				entite.setPosition(tmp);
-				parent.repaint();
+				repaint(); //Intéressant n'est-ce pas ? Note que le McdGraph.this. est facultatif ici...
 			}
 		}
 

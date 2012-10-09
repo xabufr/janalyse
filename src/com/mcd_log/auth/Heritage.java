@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 public class Heritage {
 	public Heritage(Entite parent){
-		this(parent, HeritageType.XT);
+		this(parent, HeritageType.NONE);
 	}
 	public Heritage(Entite parent, HeritageType t){
 		setParent(parent);
+		setType(t);
 	}
 	public Entite getParent() {
 		return m_parent;
