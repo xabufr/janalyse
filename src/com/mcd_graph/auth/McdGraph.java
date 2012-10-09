@@ -45,7 +45,7 @@ public class McdGraph extends JPanel{
 		test.addPropriete(new Propriete("prop6 super longue pour tester la redimenssion", null));*/
 		
 		this.setSize(new Dimension(80, 80));
-		this.addMouseMotionListener(new mouseMove(this));
+		this.addMouseMotionListener(new mouseMove());
 		this.addMouseListener(new mouseClick());
 	}
 	
@@ -58,10 +58,8 @@ public class McdGraph extends JPanel{
 	}
 	
 	private class mouseMove implements MouseMotionListener{
-		private McdGraph parent;
 		
-		public mouseMove(McdGraph p){
-			parent = p;
+		public mouseMove(){
 		}
 
 		public void mouseDragged(MouseEvent e) {
@@ -70,7 +68,7 @@ public class McdGraph extends JPanel{
 				tmp.x = e.getPoint().x - m_deltaSelect.x;
 				tmp.y = e.getPoint().y - m_deltaSelect.y;
 				entite.setPosition(tmp);
-				parent.repaint();
+				McdGraph.this.repaint(); //Intéressant n'est-ce pas ? Note que le McdGraph.this. est facultatif ici...
 			}
 		}
 
