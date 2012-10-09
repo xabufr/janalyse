@@ -29,14 +29,14 @@ public class McdGraph extends JPanel{
 		m_deltaSelect = new Point();
 		entite = new EntiteGraph(new Rectangle(20 , 30, 120, 130));
 		rel = new RelationGraph();
-		Relation test = new Relation("test");
+		Relation test = new Relation("               ");
 		rel.setRelation(test);
-		test.addPropriete(new Propriete("prop1", null));
-		test.addPropriete(new Propriete("prop2", null));
-		/*test.addPropriete(new Propriete("prop3", null));
+		test.addPropriete(new Propriete("                     ", null));
+		/*test.addPropriete(new Propriete("prop2", null));
+		test.addPropriete(new Propriete("prop3", null));
 		test.addPropriete(new Propriete("prop4", null));
-		test.addPropriete(new Propriete("prop5", null));*/
-		test.addPropriete(new Propriete("prop6 super longue pour tester la redimenssion", null));
+		test.addPropriete(new Propriete("prop5", null));
+		test.addPropriete(new Propriete("prop6 super longue pour tester la redimenssion", null));*/
 		
 		this.setSize(new Dimension(80, 80));
 		this.addMouseMotionListener(new mouseMove(this));

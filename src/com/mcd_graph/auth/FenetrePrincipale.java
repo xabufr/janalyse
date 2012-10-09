@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.Insets;
+import java.awt.Component;
 
 public class FenetrePrincipale {
 
@@ -108,6 +109,14 @@ public class FenetrePrincipale {
 		button.setMargin(new Insets(0, 0, 0, 0));
 		button.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/objet.png")));
 		toolBar.add(button);
+		
+		JButton button_1 = new JButton("");
+		button_1.setMargin(new Insets(0, 0, 0, 0));
+		button_1.setMinimumSize(new Dimension(32, 32));
+		button_1.setMaximumSize(new Dimension(32, 32));
+		button_1.setPreferredSize(new Dimension(32, 32));
+		button_1.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/relation.png")));
+		toolBar.add(button_1);
 		
 	}
 
