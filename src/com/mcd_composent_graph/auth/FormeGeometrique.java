@@ -51,6 +51,18 @@ class FormeGeometriqueLigne extends FormeGeometrique{
 		m_b=b;
 		m_tolerance=(float) 1.0;
 	}
+	public void setPointA(Point a){
+		m_a=a;
+	}
+	public void setPointB(Point b){
+		m_b=b;
+	}
+	public Point getPointA(){
+		return m_a;
+	}
+	public Point getPointB(){
+		return m_b;
+	}
 	public Boolean contient(Point p) {
 		if(m_a==p||m_b==p)
 			return true;

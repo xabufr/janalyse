@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Propriete;
 
@@ -79,4 +80,14 @@ public class EntiteGraph extends FormeGeometriqueRectangle implements McdCompose
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void setMcd(McdGraph mcd) {
+		if(m_mcd != null){
+			m_mcd.removeLogic(m_entite);
+		}
+		m_mcd=mcd;
+		m_mcd.registerLogic(m_entite, this);
+	}
+	McdGraph m_mcd;
 }

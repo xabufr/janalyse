@@ -4,5 +4,6 @@ public enum PGroupe{
 	RELATION,
 	PROPRIETE,
 	HERITAGE,
-	ENTITE
+	ENTITE,
+	CARDINALITE
 }
