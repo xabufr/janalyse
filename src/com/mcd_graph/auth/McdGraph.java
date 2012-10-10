@@ -45,9 +45,10 @@ public class McdGraph extends JPanel{
 	public McdGraph() {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		
-		prefs.setFont(PGroupe.HERITAGE, PCle.FONT, "TimesRoman", Font.PLAIN, 5);
+		prefs.setFont(PGroupe.HERITAGE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
 		prefs.set(PGroupe.HERITAGE,  PCle.COLOR, Color.GREEN);
 		prefs.set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR, Color.RED);
+		prefs.set(PGroupe.HERITAGE, PCle.COLOR_LINE, Color.BLACK);
 		prefs.set(PGroupe.HERITAGE, PCle.FONT_COLOR, Color.BLACK);
 		
 		prefs.setFont(PGroupe.CONTRAINTE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
@@ -80,6 +81,7 @@ public class McdGraph extends JPanel{
 		m_states.put(McdGraphStateE.INSERT_RELATION, new McdGraphStateInsertRelation());
 		m_states.put(McdGraphStateE.INSERT_LIEN, new McdGraphStateInsertLien());
 		m_states.put(McdGraphStateE.INSERT_CONTRAINTE, new McdGraphStateInsertContrainte());
+		m_states.put(McdGraphStateE.INSERT_HERITAGE, new McdGraphStateInsertHeritage());
 		m_currentState = McdGraphStateE.INVALID;
 
 		m_components = new ArrayList<McdComposentGraphique>();
@@ -333,6 +335,16 @@ public class McdGraph extends JPanel{
 					}
 					contrainte.update();
 				}
+				else if(m_objects[0] instanceof HeritageGraph || m_objects[1] instanceof HeritageGraph){
+					HeritageGraph heritage = (HeritageGraph) (m_objects[0] instanceof HeritageGraph ?
+							m_objects[0]:m_objects[1]);
+					if(m_objects[0] instanceof EntiteGraph || m_objects[1] instanceof EntiteGraph){
+						EntiteGraph entite = (EntiteGraph) (m_objects[0] instanceof EntiteGraph ?
+								m_objects[0]:m_objects[1]);
+						heritage.getHeritage().setParent(entite.getEntite());
+					}
+					heritage.update();
+				}
 				clear();
 			}
 			repaint();
@@ -374,6 +386,46 @@ public class McdGraph extends JPanel{
 			
 			m_components.add(contG);
 			m_componentsFirst.add(contG);
+			repaint();
+		}
+
+		public void mouseReleased(MouseEvent e) {
+			
+		}
+
+		public void mouseDragged(MouseEvent e) {
+			
+		}
+
+		public void mouseMoved(MouseEvent e) {
+			
+		}
+		
+	}
+	private class McdGraphStateInsertHeritage extends McdGraphState{
+
+		public void mouseClicked(MouseEvent e) {
+			
+		}
+
+		public void mouseEntered(MouseEvent e) {
+			
+		}
+
+		public void mouseExited(MouseEvent e) {
+			
+		}
+
+		public void mousePressed(MouseEvent e) {
+			HeritageGraph herG = new HeritageGraph();
+			Heritage her = new Heritage(HeritageType.XT);
+			
+			herG.setHeritage(her);
+			herG.setPosition(e.getPoint());
+			herG.setMcd(McdGraph.this);
+			
+			m_components.add(herG);
+			m_componentsFirst.add(herG);
 			repaint();
 		}
 

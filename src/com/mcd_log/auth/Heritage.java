@@ -3,11 +3,7 @@ package com.mcd_log.auth;
 import java.util.ArrayList;
 
 public class Heritage {
-	public Heritage(Entite parent){
-		this(parent, HeritageType.NONE);
-	}
-	public Heritage(Entite parent, HeritageType t){
-		setParent(parent);
+	public Heritage(HeritageType t){
 		setType(t);
 	}
 	public Entite getParent() {

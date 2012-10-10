@@ -37,6 +37,7 @@ public class FenetrePrincipale {
 	private JButton m_boutonEdition;
 	private JButton m_boutonInsertionLien;
 	private JButton m_boutonInsertionContrainte;
+	private JButton m_boutonInsertionHeritage;
 	private ArrayList<JButton> m_stateButtons;
 	/**
 	 * Launch the application.
@@ -178,6 +179,15 @@ public class FenetrePrincipale {
 		m_stateButtons.add(m_boutonInsertionContrainte);
 		toolBar.add(m_boutonInsertionContrainte);
 		
+		m_boutonInsertionHeritage = new JButton("");
+		m_boutonInsertionHeritage.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/heritage.png")));
+		m_boutonInsertionHeritage.setPreferredSize(new Dimension(32, 32));
+		m_boutonInsertionHeritage.setMinimumSize(new Dimension(32, 32));
+		m_boutonInsertionHeritage.setMaximumSize(new Dimension(32, 32));
+		m_boutonInsertionHeritage.setMargin(new Insets(0, 0, 0, 0));
+		m_stateButtons.add(m_boutonInsertionHeritage);
+		toolBar.add(m_boutonInsertionHeritage);
+		
 		
 		m_boutonInsertionEntite.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
@@ -195,6 +205,12 @@ public class FenetrePrincipale {
 			public void actionPerformed(ActionEvent arg0) {
 				m_mcd.setState(McdGraphStateE.INSERT_CONTRAINTE);
 				setEnabledButton(m_boutonInsertionContrainte);
+			}
+		});
+		m_boutonInsertionHeritage.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				m_mcd.setState(McdGraphStateE.INSERT_HERITAGE);
+				setEnabledButton(m_boutonInsertionHeritage);
 			}
 		});
 		m_boutonInsertionLien.addActionListener(new ActionListener(){
