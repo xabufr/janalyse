@@ -173,6 +173,19 @@ public class FenetrePrincipale {
 		});
 		toolBar.add(boutonInsertionLien);
 		
+		JButton boutonInsertionContrainte = new JButton("");
+		boutonInsertionContrainte.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/contrainte.png")));
+		boutonInsertionContrainte.setPreferredSize(new Dimension(32, 32));
+		boutonInsertionContrainte.setMinimumSize(new Dimension(32, 32));
+		boutonInsertionContrainte.setMaximumSize(new Dimension(32, 32));
+		boutonInsertionContrainte.setMargin(new Insets(0, 0, 0, 0));
+		boutonInsertionContrainte.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				m_mcd.setState(McdGraphStateE.INSERT_CONTRAINTE);
+			}
+		});
+		toolBar.add(boutonInsertionContrainte);
+		
 	}
 
 	public void quitter() {

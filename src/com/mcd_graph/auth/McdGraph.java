@@ -72,6 +72,7 @@ public class McdGraph extends JPanel{
 		m_states.put(McdGraphStateE.INSERT_ENTITE, new McdGraphStateInsertEntite());
 		m_states.put(McdGraphStateE.INSERT_RELATION, new McdGraphStateInsertRelation());
 		m_states.put(McdGraphStateE.INSERT_LIEN, new McdGraphStateInsertLien());
+		m_states.put(McdGraphStateE.INSERT_CONTRAINTE, new McdGraphStateInsertContrainte());
 		m_currentState = McdGraphStateE.INVALID;
 
 		m_components = new ArrayList<McdComposentGraphique>();
@@ -253,28 +254,6 @@ public class McdGraph extends JPanel{
 			
 		}
 	}
-	
-	private class mouseClick implements MouseListener{
-
-		public void mouseReleased(MouseEvent e) {}
-		
-		public void mouseClicked(MouseEvent e) {}
-
-		public void mouseEntered(MouseEvent e) {}
-
-		public void mouseExited(MouseEvent e) {}
-
-		public void mousePressed(MouseEvent e) {
-			for (McdComposentGraphique composant : m_logicObjects.values()){
-				FormeGeometrique forme = (FormeGeometrique)composant;
-				if (forme.contient(e.getPoint())){
-					m_focus = composant;
-					m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
-					m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
-				}
-			}
-		}
-	}
 
 	class McdGraphStateInsertLien extends McdGraphState{
 		private McdComposentGraphique m_objects[];
@@ -291,6 +270,17 @@ public class McdGraph extends JPanel{
 			m_current=0;
 		}
 		public void mouseClicked(MouseEvent e) {
+			
+		}
+		public void mouseEntered(MouseEvent e) {
+			
+		}
+
+		public void mouseExited(MouseEvent e) {
+			
+		}
+
+		public void mousePressed(MouseEvent e) {
 			for(McdComposentGraphique component : m_components){
 				if(((FormeGeometrique)component).contient(e.getPoint())){
 					if(component.isLinkable()){
@@ -326,10 +316,32 @@ public class McdGraph extends JPanel{
 					m_components.add(cardG);
 					m_componentsFirst.add(cardG);
 				}
+				else if(m_objects[0] instanceof ContrainteGraph || m_objects[1] instanceof ContrainteGraph){
+					ContrainteGraph contrainte;
+				}
 				clear();
 			}
 			repaint();
 		}
+
+		public void mouseReleased(MouseEvent e) {
+			
+		}
+
+		public void mouseDragged(MouseEvent e) {
+			
+		}
+
+		public void mouseMoved(MouseEvent e) {
+			
+		}
+	}
+	private class McdGraphStateInsertContrainte extends McdGraphState{
+
+		public void mouseClicked(MouseEvent e) {
+			
+		}
+
 		public void mouseEntered(MouseEvent e) {
 			
 		}
@@ -339,7 +351,16 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
+			ContrainteGraph contG = new ContrainteGraph();
+			Contrainte cont = new Contrainte("X");
 			
+			contG.setContrainte(cont);
+			contG.setPosition(e.getPoint());
+			contG.setMcd(McdGraph.this);
+			
+			m_components.add(contG);
+			m_componentsFirst.add(contG);
+			repaint();
 		}
 
 		public void mouseReleased(MouseEvent e) {
