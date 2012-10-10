@@ -10,7 +10,7 @@ public abstract class FormeGeometrique {
 	}
 	public abstract Boolean contient(Point p);
 	public abstract void setPosition(Point p);
-	public abstract Rectangle getRectangle();
+	public abstract Point getPosition();
 }
 
 class FormeGeometriqueRectangle extends FormeGeometrique{
@@ -94,8 +94,9 @@ class FormeGeometriqueLigne extends FormeGeometrique{
 		// TODO Auto-generated method stub
 		
 	}
+
 	@Override
-	public Rectangle getRectangle() {
+	public Point getPosition() {
 		// TODO Auto-generated method stub
 		return null;
 	}

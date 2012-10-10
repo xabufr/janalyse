@@ -82,7 +82,6 @@ public class McdGraph extends JPanel{
 		m_focus = null;
 		m_deltaSelect = new Point();
 		
-		
 		this.setSize(new Dimension(80, 80));
 		this.setState(McdGraphStateE.EDIT);
 	}
@@ -229,8 +228,8 @@ public class McdGraph extends JPanel{
 				FormeGeometrique forme = (FormeGeometrique)composant;
 				if (forme.contient(e.getPoint())){
 					m_focus = composant;
-					m_deltaSelect.x = e.getPoint().x - forme.getRectangle().x;
-					m_deltaSelect.y = e.getPoint().y - forme.getRectangle().y;
+					m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
+					m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
 				}
 			}
 		}
@@ -254,7 +253,30 @@ public class McdGraph extends JPanel{
 			
 		}
 	}
-	private class McdGraphStateInsertLien extends McdGraphState{
+	
+	private class mouseClick implements MouseListener{
+
+		public void mouseReleased(MouseEvent e) {}
+		
+		public void mouseClicked(MouseEvent e) {}
+
+		public void mouseEntered(MouseEvent e) {}
+
+		public void mouseExited(MouseEvent e) {}
+
+		public void mousePressed(MouseEvent e) {
+			for (McdComposentGraphique composant : m_logicObjects.values()){
+				FormeGeometrique forme = (FormeGeometrique)composant;
+				if (forme.contient(e.getPoint())){
+					m_focus = composant;
+					m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
+					m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
+				}
+			}
+		}
+	}
+
+	class McdGraphStateInsertLien extends McdGraphState{
 		private McdComposentGraphique m_objects[];
 		private int m_current;
 		public McdGraphStateInsertLien(){
@@ -275,6 +297,7 @@ public class McdGraph extends JPanel{
 						m_objects[m_current++] = component;
 						break;
 					}
+
 				}
 			}
 			if(m_current > 1){ //Si on a 2 objets de linkés

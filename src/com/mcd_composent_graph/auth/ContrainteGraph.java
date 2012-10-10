@@ -10,21 +10,26 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
+import java.util.ArrayList;
+import java.util.List;
 
 
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Contrainte;
+import com.mcd_log.auth.Entite;
+import com.mcd_log.auth.Relation;
 
 public class ContrainteGraph extends FormeGeometriqueRectangle implements McdComposentGraphique{
 	private Contrainte m_contrainte;
-	private EntiteGraph m_entiteGraph;
-	private RelationGraph m_relationGraph;
-	private RelationGraph m_relationGraph2;
+	private List<EntiteGraph> m_entiteGraph;
+	private List<RelationGraph> m_relationGraph;
 	private Boolean m_needUpdateGraphic;
 	private McdGraph m_mcd;
 	
 	public ContrainteGraph(){
 		super(new Rectangle());
+		m_entiteGraph = new ArrayList<EntiteGraph>();
+		m_relationGraph = new ArrayList<RelationGraph>();
 		m_needUpdateGraphic = true;
 		
 	}
@@ -43,13 +48,14 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
                 0); 
 		
 		if(m_needUpdateGraphic&&m_mcd!=null){
-			m_relationGraph = (RelationGraph) m_mcd.getGraphicComponent(m_contrainte.getRelations().get(0));
-			m_relationGraph2 = (RelationGraph) m_mcd.getGraphicComponent(m_contrainte.getRelations().get(1));
-			m_entiteGraph = (EntiteGraph) m_mcd.getGraphicComponent(m_contrainte.getEntites().get(0));
+			for (Relation r : m_contrainte.getRelations())
+				m_relationGraph.add((RelationGraph) m_mcd.getGraphicComponent(r));
+			
+			for (Entite e : m_contrainte.getEntites())
+				m_entiteGraph.add((EntiteGraph) m_mcd.getGraphicComponent(e));
+			
 			m_needUpdateGraphic=false;
 		}
-		if(m_relationGraph==null||m_relationGraph2==null||m_entiteGraph==null)
-			return;
 		
 		g.setFont(f);
 		g.setColor(Color.BLACK);
@@ -59,48 +65,47 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
 		Point centreContrainte = getPosition();
 		Point centreObjet;
 		
-		if (m_contrainte.getNom().equals("T") || m_contrainte.getNom().equals("+") || m_contrainte.getNom().equals("1")){
-			centreContrainte.x += dim.width / 2;
-			centreContrainte.y += dim.height / 2;
-			centreObjet = m_relationGraph.getPosition();
-			centreObjet.x += m_relationGraph.getDimension().width / 2;
-			centreObjet.y += m_relationGraph.getDimension().height / 2;
-			
-			g.drawLine(centreContrainte.x, centreContrainte.y, centreObjet.x, centreObjet.y);
-			
-			centreObjet = m_relationGraph2.getPosition();
-			centreObjet.x += m_relationGraph2.getDimension().width / 2;
-			centreObjet.y += m_relationGraph2.getDimension().height / 2;
-			
-			g.drawLine(centreContrainte.x, centreContrainte.y, centreObjet.x, centreObjet.y);
+		centreContrainte.x += dim.width / 2;
+		centreContrainte.y += dim.height / 2;
+		
+		if (m_contrainte.getNom().equals("T") || m_contrainte.getNom().equals("+") || m_contrainte.getNom().equals("1") || m_contrainte.getNom().equals("X")){
+			for (RelationGraph r : m_relationGraph){
+				centreObjet = r.getPosition();
+				centreObjet.x += r.getDimension().width / 2;
+				centreObjet.y += r.getDimension().height / 2;
+				
+				g.drawLine(centreContrainte.x, centreContrainte.y, centreObjet.x, centreObjet.y);
+			}
 			
 			g2.setStroke(dashed);
 			
-			centreObjet = m_entiteGraph.getPosition();
-			centreObjet.x += m_entiteGraph.getDimension().width / 2;
-			centreObjet.y += m_entiteGraph.getDimension().height / 2;
-			
-			Rectangle obj = m_entiteGraph.getRectangle();
-			Line2D l = new Line2D.Double(centreContrainte, centreObjet),
-					haut = new Line2D.Double(obj.x, obj.y, obj.x+obj.width, obj.y),
-					bas = new Line2D.Double(obj.x, obj.y+obj.height, obj.x+obj.width, obj.y+obj.height),
-					gauche = new Line2D.Double(obj.x, obj.y, obj.x, obj.y+obj.height),
-					droite = new Line2D.Double(obj.x+obj.width, obj.y, obj.x+obj.width, obj.y+obj.height);
-			
-			if (l.intersectsLine(haut)){
-				centreObjet.y -= obj.height/2; 
+			for (EntiteGraph e : m_entiteGraph){
+				centreObjet = e.getPosition();
+				centreObjet.x += e.getDimension().width / 2;
+				centreObjet.y += e.getDimension().height / 2;
+				
+				Rectangle obj = e.getRectangle();
+				Line2D l = new Line2D.Double(centreContrainte, centreObjet),
+						haut = new Line2D.Double(obj.x, obj.y, obj.x+obj.width, obj.y),
+						bas = new Line2D.Double(obj.x, obj.y+obj.height, obj.x+obj.width, obj.y+obj.height),
+						gauche = new Line2D.Double(obj.x, obj.y, obj.x, obj.y+obj.height),
+						droite = new Line2D.Double(obj.x+obj.width, obj.y, obj.x+obj.width, obj.y+obj.height);
+				
+				if (l.intersectsLine(haut)){
+					centreObjet.y -= obj.height/2; 
+				}
+				else if (l.intersectsLine(bas)){
+					centreObjet.y += obj.height/2;			
+				}
+				else if (l.intersectsLine(gauche)){
+					centreObjet.x -= obj.width/2;
+				}
+				else if (l.intersectsLine(droite)){
+					centreObjet.x += obj.height/2;
+				}
+				
+				g2.draw(new Line2D.Double(centreContrainte.x, centreContrainte.y, centreObjet.x, centreObjet.y));
 			}
-			else if (l.intersectsLine(bas)){
-				centreObjet.y += obj.height/2;			
-			}
-			else if (l.intersectsLine(gauche)){
-				centreObjet.x -= obj.width/2;
-			}
-			else if (l.intersectsLine(droite)){
-				centreObjet.x += obj.height/2;
-			}
-			
-			g2.draw(new Line2D.Double(centreContrainte.x, centreContrainte.y, centreObjet.x, centreObjet.y));
 			g2.setStroke(new BasicStroke(1.0f));
 		}
 		
