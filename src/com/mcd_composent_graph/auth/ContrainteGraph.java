@@ -36,6 +36,9 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
 		m_needUpdateGraphic = true;
 		
 	}
+	public void update(){
+		m_needUpdateGraphic=true;
+	}
 	
 	public void dessiner(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
@@ -154,7 +157,6 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
 	}
 
 	public Boolean isLinkable() {
-		// TODO Auto-generated method stub
-		return null;
+		return true;
 	}
 }
