@@ -22,6 +22,7 @@ import com.mcd_composent_graph.auth.RelationGraph;
 import com.mcd_composent_graph.auth.FormeGeometrique;
 import com.mcd_log.auth.Cardinalite;
 import com.mcd_log.auth.Contrainte;
+import com.mcd_log.auth.ContrainteType;
 import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.HeritageType;
 import com.mcd_log.auth.Relation;
@@ -48,6 +49,12 @@ public class McdGraph extends JPanel{
 		prefs.set(PGroupe.HERITAGE,  PCle.COLOR, Color.GREEN);
 		prefs.set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR, Color.RED);
 		prefs.set(PGroupe.HERITAGE, PCle.FONT_COLOR, Color.BLACK);
+		
+		prefs.setFont(PGroupe.CONTRAINTE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
+		prefs.set(PGroupe.CONTRAINTE,  PCle.COLOR, Color.CYAN);
+		prefs.set(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR, Color.BLACK);
+		prefs.set(PGroupe.CONTRAINTE, PCle.COLOR_LINE, Color.BLACK);
+		prefs.set(PGroupe.CONTRAINTE, PCle.FONT_COLOR, Color.BLACK);
 		
 		prefs.setFont(PGroupe.CARDINALITE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
 		prefs.set(PGroupe.CARDINALITE, PCle.FONT_COLOR, Color.BLACK);
@@ -82,6 +89,10 @@ public class McdGraph extends JPanel{
 		m_logicObjects = new Hashtable<Object, McdComposentGraphique> ();
 		m_focus = null;
 		m_deltaSelect = new Point();
+		
+		ContrainteGraph cont = new ContrainteGraph();
+		cont.setContrainte(new Contrainte(ContrainteType.X));
+		m_componentsFirst.add(cont);
 		
 		this.setSize(new Dimension(80, 80));
 		this.setState(McdGraphStateE.EDIT);
@@ -354,7 +365,7 @@ public class McdGraph extends JPanel{
 
 		public void mousePressed(MouseEvent e) {
 			ContrainteGraph contG = new ContrainteGraph();
-			Contrainte cont = new Contrainte("X");
+			Contrainte cont = new Contrainte(ContrainteType.X);
 			
 			contG.setContrainte(cont);
 			contG.setPosition(e.getPoint());

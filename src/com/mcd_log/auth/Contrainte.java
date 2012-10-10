@@ -7,8 +7,8 @@ public class Contrainte {
 	private List<Entite> m_entites;
 	private List<Relation> m_relations;
 	
-	public Contrainte(String nom){
-		setNom(nom);
+	public Contrainte(ContrainteType t){
+		setNom(t.toString());
 	}
 	
 	public String getNom() {

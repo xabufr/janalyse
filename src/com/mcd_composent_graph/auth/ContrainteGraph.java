@@ -18,6 +18,9 @@ import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Contrainte;
 import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Relation;
+import com.preferences_mcd_logique.auth.McdPreferencesManager;
+import com.preferences_mcd_logique.auth.PCle;
+import com.preferences_mcd_logique.auth.PGroupe;
 
 public class ContrainteGraph extends FormeGeometriqueRectangle implements McdComposentGraphique{
 	private Contrainte m_contrainte;
@@ -34,7 +37,8 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
 		
 	}
 	
-	public void dessiner(Graphics g, Font f, Color c) {
+	public void dessiner(Graphics g) {
+		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		Dimension dim = new Dimension(0,0);
 		Point pos = getPosition();
 		FontMetrics font = g.getFontMetrics();
@@ -57,9 +61,6 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
 			m_needUpdateGraphic=false;
 		}
 		
-		g.setFont(f);
-		g.setColor(Color.BLACK);
-		
 		dim.width = dim.height = 30;
 		
 		Point centreContrainte = getPosition();
@@ -69,6 +70,7 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
 		centreContrainte.y += dim.height / 2;
 		
 		if (m_contrainte.getNom().equals("T") || m_contrainte.getNom().equals("+") || m_contrainte.getNom().equals("1") || m_contrainte.getNom().equals("X")){
+			g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR_LINE));
 			for (RelationGraph r : m_relationGraph){
 				centreObjet = r.getPosition();
 				centreObjet.x += r.getDimension().width / 2;
@@ -109,10 +111,9 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
 			g2.setStroke(new BasicStroke(1.0f));
 		}
 		
-		g.setColor(c);
-		
+		g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR));
 		g.fillOval(pos.x, pos.y, dim.width, dim.height);
-		g.setColor(Color.BLACK);
+		g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR));
 		g.drawOval(pos.x, pos.y, dim.width, dim.height);
 		
 		this.setDimension(dim);
@@ -130,6 +131,8 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
 			pos.y += (dim.height/2)+(font.getStringBounds(m_contrainte.getNom(), g).getHeight()/2)-1;
 		}
 		
+		g.setFont((Font)prefs.getFont(PGroupe.CONTRAINTE, PCle.FONT));
+		g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.FONT_COLOR));
 		g.drawString(m_contrainte.getNom(), pos.x, pos.y);
 	}
 
@@ -150,10 +153,8 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
 		m_needUpdateGraphic=true;
 	}
 
-	public void dessiner(Graphics g) {
-		
-	}
 	public Boolean isLinkable() {
-		return true;
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
