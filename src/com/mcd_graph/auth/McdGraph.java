@@ -130,12 +130,7 @@ public class McdGraph extends JPanel{
 		this.addMouseListener(m_states.get(this.m_currentState));
 		m_states.get(this.m_currentState).enterState();
 	}
-	
-	
-	
-	
-	
-	
+		
 	private abstract class McdGraphState implements MouseListener, MouseMotionListener{
 		public void enterState(){ }
 		public void leftState() { }
