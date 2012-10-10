@@ -146,7 +146,6 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
 	}
 
 	public void dessiner(Graphics g) {
-		// TODO Auto-generated method stub
 		
 	}
 	public Boolean isLinkable() {

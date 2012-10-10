@@ -110,12 +110,14 @@ public class McdGraph extends JPanel{
 	}
 	public void setState(McdGraphStateE s){
 		if(m_currentState!=McdGraphStateE.INVALID){
+			m_states.get(this.m_currentState).leftState();
 			this.removeMouseListener(m_states.get(this.m_currentState));
 			this.removeMouseMotionListener(m_states.get(this.m_currentState));
 		}
 		m_currentState=s;
 		this.addMouseMotionListener(m_states.get(this.m_currentState));
 		this.addMouseListener(m_states.get(this.m_currentState));
+		m_states.get(this.m_currentState).enterState();
 	}
 	
 	
@@ -136,13 +138,7 @@ public class McdGraph extends JPanel{
 	private class McdGraphStateInsertEntite extends McdGraphStateInsert{
 
 		public void mouseClicked(MouseEvent e) {
-			EntiteGraph eg = new EntiteGraph();
-			eg.setEntite(new Entite("Entite"+(m_last++)));
-			eg.setPosition(e.getPoint());
-			eg.setMcd(McdGraph.this);
-			m_components.add(eg);
-			m_componentsSecond.add(eg);
-			repaint();
+			
 		}
 
 		public void mouseEntered(MouseEvent e) {
@@ -154,7 +150,13 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
-			
+			EntiteGraph eg = new EntiteGraph();
+			eg.setEntite(new Entite("Entite"+(m_last++)));
+			eg.setPosition(e.getPoint());
+			eg.setMcd(McdGraph.this);
+			m_components.add(eg);
+			m_componentsSecond.add(eg);
+			repaint();
 		}
 
 		public void mouseReleased(MouseEvent e) {
@@ -172,13 +174,7 @@ public class McdGraph extends JPanel{
 	private class McdGraphStateInsertRelation extends McdGraphStateInsert{
 		
 		public void mouseClicked(MouseEvent e) {
-			RelationGraph eg = new RelationGraph();
-			eg.setRelation(new Relation("Relation"+(m_last++)));
-			eg.setPosition(e.getPoint());
-			eg.setMcd(McdGraph.this);
-			m_components.add(eg);
-			m_componentsSecond.add(eg);
-			repaint();
+			
 		}
 
 		public void mouseEntered(MouseEvent arg0) {
@@ -189,8 +185,14 @@ public class McdGraph extends JPanel{
 			
 		}
 
-		public void mousePressed(MouseEvent arg0) {
-			
+		public void mousePressed(MouseEvent e) {
+			RelationGraph eg = new RelationGraph();
+			eg.setRelation(new Relation("Relation"+(m_last++)));
+			eg.setPosition(e.getPoint());
+			eg.setMcd(McdGraph.this);
+			m_components.add(eg);
+			m_componentsSecond.add(eg);
+			repaint();
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
@@ -207,7 +209,9 @@ public class McdGraph extends JPanel{
 		
 	}
 	private class McdGraphStateEdit extends McdGraphState{
-
+		public void enterState(){
+			m_focus=null;
+		}
 		public void mouseClicked(MouseEvent e) {
 			
 		}
@@ -232,7 +236,7 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			m_focus = null;
+			//m_focus = null; //Pour gérer la suppression, il faut garder le dernier click
 		}
 
 		public void mouseDragged(MouseEvent e) {
@@ -298,7 +302,6 @@ public class McdGraph extends JPanel{
 					
 					m_components.add(cardG);
 					m_componentsFirst.add(cardG);
-					System.out.println("ok");
 				}
 				clear();
 			}
