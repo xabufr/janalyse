@@ -153,7 +153,6 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
 		m_needUpdateGraphic=true;
 	}
 
-	@Override
 	public Boolean isLinkable() {
 		// TODO Auto-generated method stub
 		return null;

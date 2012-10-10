@@ -79,6 +79,7 @@ public class McdGraph extends JPanel{
 		m_states.put(McdGraphStateE.INSERT_ENTITE, new McdGraphStateInsertEntite());
 		m_states.put(McdGraphStateE.INSERT_RELATION, new McdGraphStateInsertRelation());
 		m_states.put(McdGraphStateE.INSERT_LIEN, new McdGraphStateInsertLien());
+		m_states.put(McdGraphStateE.INSERT_CONTRAINTE, new McdGraphStateInsertContrainte());
 		m_currentState = McdGraphStateE.INVALID;
 
 		m_components = new ArrayList<McdComposentGraphique>();
@@ -120,12 +121,14 @@ public class McdGraph extends JPanel{
 	}
 	public void setState(McdGraphStateE s){
 		if(m_currentState!=McdGraphStateE.INVALID){
+			m_states.get(this.m_currentState).leftState();
 			this.removeMouseListener(m_states.get(this.m_currentState));
 			this.removeMouseMotionListener(m_states.get(this.m_currentState));
 		}
 		m_currentState=s;
 		this.addMouseMotionListener(m_states.get(this.m_currentState));
 		this.addMouseListener(m_states.get(this.m_currentState));
+		m_states.get(this.m_currentState).enterState();
 	}
 	
 	
@@ -146,13 +149,7 @@ public class McdGraph extends JPanel{
 	private class McdGraphStateInsertEntite extends McdGraphStateInsert{
 
 		public void mouseClicked(MouseEvent e) {
-			EntiteGraph eg = new EntiteGraph();
-			eg.setEntite(new Entite("Entite"+(m_last++)));
-			eg.setPosition(e.getPoint());
-			eg.setMcd(McdGraph.this);
-			m_components.add(eg);
-			m_componentsSecond.add(eg);
-			repaint();
+			
 		}
 
 		public void mouseEntered(MouseEvent e) {
@@ -164,7 +161,13 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
-			
+			EntiteGraph eg = new EntiteGraph();
+			eg.setEntite(new Entite("Entite"+(m_last++)));
+			eg.setPosition(e.getPoint());
+			eg.setMcd(McdGraph.this);
+			m_components.add(eg);
+			m_componentsSecond.add(eg);
+			repaint();
 		}
 
 		public void mouseReleased(MouseEvent e) {
@@ -182,13 +185,7 @@ public class McdGraph extends JPanel{
 	private class McdGraphStateInsertRelation extends McdGraphStateInsert{
 		
 		public void mouseClicked(MouseEvent e) {
-			RelationGraph eg = new RelationGraph();
-			eg.setRelation(new Relation("Relation"+(m_last++)));
-			eg.setPosition(e.getPoint());
-			eg.setMcd(McdGraph.this);
-			m_components.add(eg);
-			m_componentsSecond.add(eg);
-			repaint();
+			
 		}
 
 		public void mouseEntered(MouseEvent arg0) {
@@ -199,8 +196,14 @@ public class McdGraph extends JPanel{
 			
 		}
 
-		public void mousePressed(MouseEvent arg0) {
-			
+		public void mousePressed(MouseEvent e) {
+			RelationGraph eg = new RelationGraph();
+			eg.setRelation(new Relation("Relation"+(m_last++)));
+			eg.setPosition(e.getPoint());
+			eg.setMcd(McdGraph.this);
+			m_components.add(eg);
+			m_componentsSecond.add(eg);
+			repaint();
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
@@ -217,7 +220,9 @@ public class McdGraph extends JPanel{
 		
 	}
 	private class McdGraphStateEdit extends McdGraphState{
-
+		public void enterState(){
+			m_focus=null;
+		}
 		public void mouseClicked(MouseEvent e) {
 			
 		}
@@ -242,7 +247,7 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			m_focus = null;
+			//m_focus = null; //Pour gérer la suppression, il faut garder le dernier click
 		}
 
 		public void mouseDragged(MouseEvent e) {
@@ -258,28 +263,6 @@ public class McdGraph extends JPanel{
 
 		public void mouseMoved(MouseEvent e) {
 			
-		}
-	}
-	
-	private class mouseClick implements MouseListener{
-
-		public void mouseReleased(MouseEvent e) {}
-		
-		public void mouseClicked(MouseEvent e) {}
-
-		public void mouseEntered(MouseEvent e) {}
-
-		public void mouseExited(MouseEvent e) {}
-
-		public void mousePressed(MouseEvent e) {
-			for (McdComposentGraphique composant : m_logicObjects.values()){
-				FormeGeometrique forme = (FormeGeometrique)composant;
-				if (forme.contient(e.getPoint())){
-					m_focus = composant;
-					m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
-					m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
-				}
-			}
 		}
 	}
 
@@ -298,6 +281,17 @@ public class McdGraph extends JPanel{
 			m_current=0;
 		}
 		public void mouseClicked(MouseEvent e) {
+			
+		}
+		public void mouseEntered(MouseEvent e) {
+			
+		}
+
+		public void mouseExited(MouseEvent e) {
+			
+		}
+
+		public void mousePressed(MouseEvent e) {
 			for(McdComposentGraphique component : m_components){
 				if(((FormeGeometrique)component).contient(e.getPoint())){
 					if(component.isLinkable()){
@@ -332,12 +326,33 @@ public class McdGraph extends JPanel{
 					
 					m_components.add(cardG);
 					m_componentsFirst.add(cardG);
-					System.out.println("ok");
+				}
+				else if(m_objects[0] instanceof ContrainteGraph || m_objects[1] instanceof ContrainteGraph){
+					ContrainteGraph contrainte;
 				}
 				clear();
 			}
 			repaint();
 		}
+
+		public void mouseReleased(MouseEvent e) {
+			
+		}
+
+		public void mouseDragged(MouseEvent e) {
+			
+		}
+
+		public void mouseMoved(MouseEvent e) {
+			
+		}
+	}
+	private class McdGraphStateInsertContrainte extends McdGraphState{
+
+		public void mouseClicked(MouseEvent e) {
+			
+		}
+
 		public void mouseEntered(MouseEvent e) {
 			
 		}
@@ -347,7 +362,16 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
+			ContrainteGraph contG = new ContrainteGraph();
+			Contrainte cont = new Contrainte(ContrainteType.X);
 			
+			contG.setContrainte(cont);
+			contG.setPosition(e.getPoint());
+			contG.setMcd(McdGraph.this);
+			
+			m_components.add(contG);
+			m_componentsFirst.add(contG);
+			repaint();
 		}
 
 		public void mouseReleased(MouseEvent e) {
