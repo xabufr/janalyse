@@ -27,11 +27,17 @@ import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
 
 import java.awt.Insets;
+import java.util.ArrayList;
 
 public class FenetrePrincipale {
 	private McdGraph m_mcd;
 	private JFrame frame;
-
+	private JButton m_boutonInsertionEntite;
+	private JButton m_boutonInsertionRelation;
+	private JButton m_boutonEdition;
+	private JButton m_boutonInsertionLien;
+	private JButton m_boutonInsertionContrainte;
+	private ArrayList<JButton> m_stateButtons;
 	/**
 	 * Launch the application.
 	 */
@@ -53,9 +59,15 @@ public class FenetrePrincipale {
 	 * Create the application.
 	 */
 	public FenetrePrincipale() {
+		m_stateButtons = new ArrayList<JButton>();
 		initialize();
 		m_mcd = new McdGraph();
 		frame.getContentPane().add(m_mcd);
+	}
+	private void setEnabledButton(JButton b){
+		for(JButton button : m_stateButtons){
+			button.setEnabled(button!=b);
+		}
 	}
 
 	/**
@@ -120,72 +132,84 @@ public class FenetrePrincipale {
 		toolBar.setFloatable(false);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
-		JButton boutonInsertionEntite = new JButton("");
-		boutonInsertionEntite.setSize(new Dimension(32, 327));
-		boutonInsertionEntite.setPreferredSize(new Dimension(32, 32));
-		boutonInsertionEntite.setMinimumSize(new Dimension(32, 32));
-		boutonInsertionEntite.setMaximumSize(new Dimension(32, 32));
-		boutonInsertionEntite.setMargin(new Insets(0, 0, 0, 0));
-		boutonInsertionEntite.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/objet.png")));
-		boutonInsertionEntite.addActionListener(new ActionListener(){
+		m_boutonInsertionEntite = new JButton("");
+		m_boutonInsertionEntite.setSize(new Dimension(32, 327));
+		m_boutonInsertionEntite.setPreferredSize(new Dimension(32, 32));
+		m_boutonInsertionEntite.setMinimumSize(new Dimension(32, 32));
+		m_boutonInsertionEntite.setMaximumSize(new Dimension(32, 32));
+		m_boutonInsertionEntite.setMargin(new Insets(0, 0, 0, 0));
+		m_boutonInsertionEntite.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/objet.png")));
+		m_stateButtons.add(m_boutonInsertionEntite);
+		toolBar.add(m_boutonInsertionEntite);
+		
+		m_boutonInsertionRelation = new JButton("");
+		m_boutonInsertionRelation.setMargin(new Insets(0, 0, 0, 0));
+		m_boutonInsertionRelation.setMinimumSize(new Dimension(32, 32));
+		m_boutonInsertionRelation.setMaximumSize(new Dimension(32, 32));
+		m_boutonInsertionRelation.setPreferredSize(new Dimension(32, 32));
+		m_boutonInsertionRelation.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/relation.png")));
+		m_stateButtons.add(m_boutonInsertionRelation);
+		toolBar.add(m_boutonInsertionRelation);
+		
+		m_boutonEdition = new JButton("");
+		m_boutonEdition.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/edition.png")));
+		m_boutonEdition.setPreferredSize(new Dimension(32, 32));
+		m_boutonEdition.setMinimumSize(new Dimension(32, 32));
+		m_boutonEdition.setMaximumSize(new Dimension(32, 32));
+		m_boutonEdition.setMargin(new Insets(0, 0, 0, 0));
+		m_stateButtons.add(m_boutonEdition);
+		toolBar.add(m_boutonEdition);
+		
+		m_boutonInsertionLien = new JButton("");
+		m_boutonInsertionLien.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/lien.png")));
+		m_boutonInsertionLien.setPreferredSize(new Dimension(32, 32));
+		m_boutonInsertionLien.setMinimumSize(new Dimension(32, 32));
+		m_boutonInsertionLien.setMaximumSize(new Dimension(32, 32));
+		m_boutonInsertionLien.setMargin(new Insets(0, 0, 0, 0));
+		m_stateButtons.add(m_boutonInsertionLien);
+		toolBar.add(m_boutonInsertionLien);
+		
+		m_boutonInsertionContrainte = new JButton("");
+		m_boutonInsertionContrainte.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/contrainte.png")));
+		m_boutonInsertionContrainte.setPreferredSize(new Dimension(32, 32));
+		m_boutonInsertionContrainte.setMinimumSize(new Dimension(32, 32));
+		m_boutonInsertionContrainte.setMaximumSize(new Dimension(32, 32));
+		m_boutonInsertionContrainte.setMargin(new Insets(0, 0, 0, 0));
+		m_stateButtons.add(m_boutonInsertionContrainte);
+		toolBar.add(m_boutonInsertionContrainte);
+		
+		
+		m_boutonInsertionEntite.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				m_mcd.setState(McdGraphStateE.INSERT_ENTITE);
+				setEnabledButton(m_boutonInsertionEntite);
 			}
 		});
-		toolBar.add(boutonInsertionEntite);
-		
-		JButton boutonInsertionRelation = new JButton("");
-		boutonInsertionRelation.setMargin(new Insets(0, 0, 0, 0));
-		boutonInsertionRelation.setMinimumSize(new Dimension(32, 32));
-		boutonInsertionRelation.setMaximumSize(new Dimension(32, 32));
-		boutonInsertionRelation.setPreferredSize(new Dimension(32, 32));
-		boutonInsertionRelation.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/relation.png")));
-		boutonInsertionRelation.addActionListener(new ActionListener(){
+		m_boutonInsertionRelation.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				m_mcd.setState(McdGraphStateE.INSERT_RELATION);
+				setEnabledButton(m_boutonInsertionRelation);
 			}
 		});
-		toolBar.add(boutonInsertionRelation);
-		
-		JButton boutonEdition = new JButton("");
-		boutonEdition.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/edition.png")));
-		boutonEdition.setPreferredSize(new Dimension(32, 32));
-		boutonEdition.setMinimumSize(new Dimension(32, 32));
-		boutonEdition.setMaximumSize(new Dimension(32, 32));
-		boutonEdition.setMargin(new Insets(0, 0, 0, 0));
-		boutonEdition.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0) {
-				m_mcd.setState(McdGraphStateE.EDIT);
-			}
-		});
-		toolBar.add(boutonEdition);
-		
-		JButton boutonInsertionLien = new JButton("");
-		boutonInsertionLien.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/lien.png")));
-		boutonInsertionLien.setPreferredSize(new Dimension(32, 32));
-		boutonInsertionLien.setMinimumSize(new Dimension(32, 32));
-		boutonInsertionLien.setMaximumSize(new Dimension(32, 32));
-		boutonInsertionLien.setMargin(new Insets(0, 0, 0, 0));
-		boutonInsertionLien.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0) {
-				m_mcd.setState(McdGraphStateE.INSERT_LIEN);
-			}
-		});
-		toolBar.add(boutonInsertionLien);
-		
-		JButton boutonInsertionContrainte = new JButton("");
-		boutonInsertionContrainte.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/contrainte.png")));
-		boutonInsertionContrainte.setPreferredSize(new Dimension(32, 32));
-		boutonInsertionContrainte.setMinimumSize(new Dimension(32, 32));
-		boutonInsertionContrainte.setMaximumSize(new Dimension(32, 32));
-		boutonInsertionContrainte.setMargin(new Insets(0, 0, 0, 0));
-		boutonInsertionContrainte.addActionListener(new ActionListener(){
+		m_boutonInsertionContrainte.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				m_mcd.setState(McdGraphStateE.INSERT_CONTRAINTE);
+				setEnabledButton(m_boutonInsertionContrainte);
 			}
 		});
-		toolBar.add(boutonInsertionContrainte);
-		
+		m_boutonInsertionLien.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent arg0) {
+			m_mcd.setState(McdGraphStateE.INSERT_LIEN);
+			setEnabledButton(m_boutonInsertionLien);
+		}
+		});
+		m_boutonEdition.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				m_mcd.setState(McdGraphStateE.EDIT);
+				setEnabledButton(m_boutonEdition);
+			}
+		});
+		setEnabledButton(m_boutonEdition);
 	}
 
 	public void quitter() {
