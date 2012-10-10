@@ -30,7 +30,6 @@ public class HeritageGraph extends FormeGeometriqueRectangle implements McdCompo
 		
 	}
 	public void dessiner(Graphics g) {
-		
 		Dimension dim = new Dimension();
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		Font font = prefs.getFont(PGroupe.HERITAGE, PCle.FONT);
