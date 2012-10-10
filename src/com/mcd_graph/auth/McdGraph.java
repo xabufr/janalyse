@@ -85,10 +85,11 @@ public class McdGraph extends JPanel{
 
 		cont = new ContrainteGraph();
 		
-		Contrainte c = new Contrainte("T");
+		Contrainte c = new Contrainte("X");
 		List<Entite> lstE = new ArrayList<Entite>();
 		List<Relation> lstR = new ArrayList<Relation>();
 		lstE.add(entite.getEntite());
+		lstE.add(entite2.getEntite());
 		lstR.add(test);
 		lstR.add(test2);
 		c.setEntites(lstE);
@@ -207,8 +208,8 @@ public class McdGraph extends JPanel{
 				FormeGeometrique forme = (FormeGeometrique)composant;
 				if (forme.contient(e.getPoint())){
 					m_focus = composant;
-					m_deltaSelect.x = e.getPoint().x - forme.getRectangle().x;
-					m_deltaSelect.y = e.getPoint().y - forme.getRectangle().y;
+					m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
+					m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
 				}
 			}
 		}
