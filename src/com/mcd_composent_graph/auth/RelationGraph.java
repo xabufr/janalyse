@@ -115,7 +115,9 @@ public class RelationGraph extends FormeGeometriqueRectangle implements McdCompo
 		}
 
 	}
-	
+	public Boolean isLinkable() {
+		return true;
+	}
 	public void setMcd(McdGraph mcd) {
 		if(m_mcd!=null)
 			m_mcd.removeLogic(m_relation);

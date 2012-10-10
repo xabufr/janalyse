@@ -112,6 +112,8 @@ public class CardinaliteGraph extends FormeGeometriqueLigne implements McdCompos
 		m_mcd.registerLogic(m_cardinalite, this);
 		m_needUpdateGraphic=true;
 	}
+	public Boolean isLinkable() {
+		return false;
+	}
 	McdGraph m_mcd;
-
 }

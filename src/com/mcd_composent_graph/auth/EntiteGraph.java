@@ -97,5 +97,8 @@ public class EntiteGraph extends FormeGeometriqueRectangle implements McdCompose
 		m_mcd=mcd;
 		m_mcd.registerLogic(m_entite, this);
 	}
+	public Boolean isLinkable() {
+		return true;
+	}
 	McdGraph m_mcd;
 }

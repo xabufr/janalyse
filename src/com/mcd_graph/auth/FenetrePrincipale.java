@@ -160,6 +160,19 @@ public class FenetrePrincipale {
 		});
 		toolBar.add(boutonEdition);
 		
+		JButton boutonInsertionLien = new JButton("");
+		boutonInsertionLien.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/lien.png")));
+		boutonInsertionLien.setPreferredSize(new Dimension(32, 32));
+		boutonInsertionLien.setMinimumSize(new Dimension(32, 32));
+		boutonInsertionLien.setMaximumSize(new Dimension(32, 32));
+		boutonInsertionLien.setMargin(new Insets(0, 0, 0, 0));
+		boutonInsertionLien.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				m_mcd.setState(McdGraphStateE.INSERT_LIEN);
+			}
+		});
+		toolBar.add(boutonInsertionLien);
+		
 	}
 
 	public void quitter() {

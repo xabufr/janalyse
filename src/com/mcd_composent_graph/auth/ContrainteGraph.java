@@ -145,9 +145,11 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
 		m_needUpdateGraphic=true;
 	}
 
-	@Override
 	public void dessiner(Graphics g) {
 		// TODO Auto-generated method stub
 		
+	}
+	public Boolean isLinkable() {
+		return true;
 	}
 }

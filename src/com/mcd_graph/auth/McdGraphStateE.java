@@ -4,5 +4,6 @@ public enum McdGraphStateE {
 	EDIT,
 	INSERT_ENTITE,
 	INSERT_RELATION,
+	INSERT_LIEN,
 	INVALID
 }

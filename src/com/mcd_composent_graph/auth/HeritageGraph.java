@@ -68,5 +68,8 @@ public class HeritageGraph extends FormeGeometriqueRectangle implements McdCompo
 		m_mcd=mcd;
 		m_mcd.registerLogic(m_heritage, this);
 	}
+	public Boolean isLinkable() {
+		return true;
+	}
 	McdGraph m_mcd;
 }
