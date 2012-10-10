@@ -17,6 +17,8 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import com.event.auth.QuitListener;
@@ -27,7 +29,7 @@ import com.preferences_mcd_logique.auth.PGroupe;
 import java.awt.Insets;
 
 public class FenetrePrincipale {
-
+	private McdGraph m_mcd;
 	private JFrame frame;
 
 	/**
@@ -37,30 +39,6 @@ public class FenetrePrincipale {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					McdPreferencesManager prefs = McdPreferencesManager.getInstance();
-					
-					prefs.setFont(PGroupe.HERITAGE, PCle.FONT, "TimesRoman", Font.PLAIN, 5);
-					prefs.set(PGroupe.HERITAGE,  PCle.COLOR, Color.GREEN);
-					prefs.set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR, Color.RED);
-					prefs.set(PGroupe.HERITAGE, PCle.FONT_COLOR, Color.BLACK);
-					
-					prefs.setFont(PGroupe.CARDINALITE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
-					prefs.set(PGroupe.CARDINALITE, PCle.FONT_COLOR, Color.BLACK);
-					prefs.set(PGroupe.CARDINALITE, PCle.COLOR, Color.BLACK);
-					
-					prefs.setFont(PGroupe.RELATION, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
-					prefs.setFont(PGroupe.RELATION, PCle.FONT_NOM, "TimesRoman", Font.PLAIN, 12);
-					prefs.set(PGroupe.RELATION, PCle.FONT_COLOR, Color.GRAY);
-					prefs.set(PGroupe.RELATION, PCle.FONT_NOM_COLOR, Color.BLACK);
-					prefs.set(PGroupe.RELATION, PCle.COLOR, Color.GREEN);
-					prefs.set(PGroupe.RELATION, PCle.COLOR_CONTOUR, Color.BLACK);
-					
-					prefs.setFont(PGroupe.ENTITE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
-					prefs.setFont(PGroupe.ENTITE, PCle.FONT_NOM, "TimesRoman", Font.PLAIN, 12);
-					prefs.set(PGroupe.ENTITE,  PCle.COLOR, Color.GREEN);
-					prefs.set(PGroupe.ENTITE, PCle.COLOR_CONTOUR, Color.RED);
-					prefs.set(PGroupe.ENTITE, PCle.FONT_COLOR, Color.RED);
-					prefs.set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR, Color.BLACK);
 					
 					FenetrePrincipale window = new FenetrePrincipale();
 					window.frame.setVisible(true);
@@ -76,7 +54,8 @@ public class FenetrePrincipale {
 	 */
 	public FenetrePrincipale() {
 		initialize();
-		frame.getContentPane().add(new McdGraph());
+		m_mcd = new McdGraph();
+		frame.getContentPane().add(m_mcd);
 	}
 
 	/**
@@ -141,22 +120,58 @@ public class FenetrePrincipale {
 		toolBar.setFloatable(false);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
-		JButton button = new JButton("");
-		button.setSize(new Dimension(32, 327));
-		button.setPreferredSize(new Dimension(32, 32));
-		button.setMinimumSize(new Dimension(32, 32));
-		button.setMaximumSize(new Dimension(32, 32));
-		button.setMargin(new Insets(0, 0, 0, 0));
-		button.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/objet.png")));
-		toolBar.add(button);
+		JButton boutonInsertionEntite = new JButton("");
+		boutonInsertionEntite.setSize(new Dimension(32, 327));
+		boutonInsertionEntite.setPreferredSize(new Dimension(32, 32));
+		boutonInsertionEntite.setMinimumSize(new Dimension(32, 32));
+		boutonInsertionEntite.setMaximumSize(new Dimension(32, 32));
+		boutonInsertionEntite.setMargin(new Insets(0, 0, 0, 0));
+		boutonInsertionEntite.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/objet.png")));
+		boutonInsertionEntite.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				m_mcd.setState(McdGraphStateE.INSERT_ENTITE);
+			}
+		});
+		toolBar.add(boutonInsertionEntite);
 		
-		JButton button_1 = new JButton("");
-		button_1.setMargin(new Insets(0, 0, 0, 0));
-		button_1.setMinimumSize(new Dimension(32, 32));
-		button_1.setMaximumSize(new Dimension(32, 32));
-		button_1.setPreferredSize(new Dimension(32, 32));
-		button_1.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/relation.png")));
-		toolBar.add(button_1);
+		JButton boutonInsertionRelation = new JButton("");
+		boutonInsertionRelation.setMargin(new Insets(0, 0, 0, 0));
+		boutonInsertionRelation.setMinimumSize(new Dimension(32, 32));
+		boutonInsertionRelation.setMaximumSize(new Dimension(32, 32));
+		boutonInsertionRelation.setPreferredSize(new Dimension(32, 32));
+		boutonInsertionRelation.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/relation.png")));
+		boutonInsertionRelation.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				m_mcd.setState(McdGraphStateE.INSERT_RELATION);
+			}
+		});
+		toolBar.add(boutonInsertionRelation);
+		
+		JButton boutonEdition = new JButton("");
+		boutonEdition.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/edition.png")));
+		boutonEdition.setPreferredSize(new Dimension(32, 32));
+		boutonEdition.setMinimumSize(new Dimension(32, 32));
+		boutonEdition.setMaximumSize(new Dimension(32, 32));
+		boutonEdition.setMargin(new Insets(0, 0, 0, 0));
+		boutonEdition.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				m_mcd.setState(McdGraphStateE.EDIT);
+			}
+		});
+		toolBar.add(boutonEdition);
+		
+		JButton boutonInsertionLien = new JButton("");
+		boutonInsertionLien.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/lien.png")));
+		boutonInsertionLien.setPreferredSize(new Dimension(32, 32));
+		boutonInsertionLien.setMinimumSize(new Dimension(32, 32));
+		boutonInsertionLien.setMaximumSize(new Dimension(32, 32));
+		boutonInsertionLien.setMargin(new Insets(0, 0, 0, 0));
+		boutonInsertionLien.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				m_mcd.setState(McdGraphStateE.INSERT_LIEN);
+			}
+		});
+		toolBar.add(boutonInsertionLien);
 		
 	}
 

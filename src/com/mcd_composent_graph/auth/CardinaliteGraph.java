@@ -53,6 +53,7 @@ public class CardinaliteGraph extends FormeGeometriqueLigne implements McdCompos
 		a=m_entiteGraph.getPosition();
 		Point positionCard = new Point();
 		Dimension dimCardinalite = new Dimension();
+		
 		Font font = prefs.getFont(PGroupe.CARDINALITE, PCle.FONT);
 		g.setFont(font);
 		FontMetrics fm = g.getFontMetrics();
@@ -111,6 +112,8 @@ public class CardinaliteGraph extends FormeGeometriqueLigne implements McdCompos
 		m_mcd.registerLogic(m_cardinalite, this);
 		m_needUpdateGraphic=true;
 	}
+	public Boolean isLinkable() {
+		return false;
+	}
 	McdGraph m_mcd;
-
 }

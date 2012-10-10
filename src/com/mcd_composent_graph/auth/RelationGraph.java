@@ -56,6 +56,7 @@ public class RelationGraph extends FormeGeometriqueRectangle implements McdCompo
 			Dimension dim = new Dimension(0,0), dimEC;
 			Font font = prefs.getFont(PGroupe.RELATION, PCle.FONT_NOM);
 			
+			
 			FontMetrics metric = g.getFontMetrics(font);
 			m_widthNom = dim.width = metric.stringWidth(m_relation.getNom());
 			m_heightNom = metric.getHeight();
@@ -114,7 +115,9 @@ public class RelationGraph extends FormeGeometriqueRectangle implements McdCompo
 		}
 
 	}
-	
+	public Boolean isLinkable() {
+		return true;
+	}
 	public void setMcd(McdGraph mcd) {
 		if(m_mcd!=null)
 			m_mcd.removeLogic(m_relation);

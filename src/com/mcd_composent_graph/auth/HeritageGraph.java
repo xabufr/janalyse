@@ -30,7 +30,6 @@ public class HeritageGraph extends FormeGeometriqueRectangle implements McdCompo
 		
 	}
 	public void dessiner(Graphics g) {
-		
 		Dimension dim = new Dimension();
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		Font font = prefs.getFont(PGroupe.HERITAGE, PCle.FONT);
@@ -68,6 +67,9 @@ public class HeritageGraph extends FormeGeometriqueRectangle implements McdCompo
 			m_mcd.removeLogic(m_heritage);
 		m_mcd=mcd;
 		m_mcd.registerLogic(m_heritage, this);
+	}
+	public Boolean isLinkable() {
+		return true;
 	}
 	McdGraph m_mcd;
 }
