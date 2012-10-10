@@ -317,7 +317,9 @@ public class McdGraph extends JPanel{
 					m_componentsFirst.add(cardG);
 				}
 				else if(m_objects[0] instanceof ContrainteGraph || m_objects[1] instanceof ContrainteGraph){
-					ContrainteGraph contrainte;
+					ContrainteGraph contrainte = (ContrainteGraph) (m_objects[0] instanceof ContrainteGraph ?
+							m_objects[0]:m_objects[1]);
+					
 				}
 				clear();
 			}
