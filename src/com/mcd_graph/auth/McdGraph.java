@@ -52,6 +52,8 @@ public class McdGraph extends JPanel{
 	private McdGraphStateE m_currentState;
 	private Hashtable<Object, McdComposentGraphique> m_logicObjects;
 	
+	private ArrayList<McdComposentGraphique> m_components, m_componentsFirst, m_componentsSecond;
+	
 	public McdGraph() {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		
@@ -80,14 +82,19 @@ public class McdGraph extends JPanel{
 		
 		m_states = new Hashtable<McdGraphStateE,McdGraphState>();
 		m_states.put(McdGraphStateE.EDIT, new McdGraphStateEdit());
-		m_states.put(McdGraphStateE.EDIT, new McdGraphStateInsertEntite());
+		m_states.put(McdGraphStateE.INSERT_ENTITE, new McdGraphStateInsertEntite());
+		m_states.put(McdGraphStateE.INSERT_RELATION, new McdGraphStateInsertRelation());
 		m_currentState = McdGraphStateE.INVALID;
+		
+		m_components = new ArrayList<McdComposentGraphique>();
+		m_componentsFirst = new ArrayList<McdComposentGraphique>();
+		m_componentsSecond = new ArrayList<McdComposentGraphique>();
 		
 		m_logicObjects = new Hashtable<Object, McdComposentGraphique> ();
 		m_focus = null;
 		m_deltaSelect = new Point();
 		
-		entite = new EntiteGraph();
+		/*entite = new EntiteGraph();
 		entite2 = new EntiteGraph();
 		
 		Entite e = new Entite("Entite1");
@@ -175,17 +182,17 @@ public class McdGraph extends JPanel{
 		card4.setCardinalite(ca4);
 		card4.setMcd(this);
 
-		/*test.addPropriete(new Propriete("prop2", null));
+		test.addPropriete(new Propriete("prop2", null));
 		test.addPropriete(new Propriete("prop3", null));
 		test.addPropriete(new Propriete("prop4", null));
 		test.addPropriete(new Propriete("prop5", null));
-		test.addPropriete(new Propriete("prop6 super longue pour tester la redimenssion", null));*/
+		test.addPropriete(new Propriete("prop6 super longue pour tester la redimenssion", null));
 		
 		m_logicObjects.put(entite.getEntite(), entite);
 		m_logicObjects.put(rel.getRelation(), rel);
 		m_logicObjects.put(cont.getContrainte(), cont);
 		m_logicObjects.put(entite2.getEntite(), entite2);
-		m_logicObjects.put(rel2.getRelation(), rel2);
+		m_logicObjects.put(rel2.getRelation(), rel2);*/
 		
 		this.setSize(new Dimension(80, 80));
 		this.setState(McdGraphStateE.EDIT);
@@ -195,9 +202,15 @@ public class McdGraph extends JPanel{
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
+		for(McdComposentGraphique component : m_componentsFirst){
+			component.dessiner(g);
+		}
+		for(McdComposentGraphique component : m_componentsSecond){
+			component.dessiner(g);
+		}
 		//her.Dessiner(g);
 
-		card.dessiner(g);
+		/*card.dessiner(g);
 		card2.dessiner(g);
 		card3.dessiner(g);
 		card4.dessiner(g);
@@ -208,7 +221,7 @@ public class McdGraph extends JPanel{
 		rel2.dessiner(g);
 		
 		entite.dessiner(g, g.getFont(), Color.YELLOW);
-		entite2.dessiner(g, g.getFont(), Color.YELLOW);
+		entite2.dessiner(g, g.getFont(), Color.YELLOW);*/
 
 	}
 	
@@ -238,10 +251,22 @@ public class McdGraph extends JPanel{
 	
 	private abstract class McdGraphState implements MouseListener, MouseMotionListener{
 	}
-	private class McdGraphStateInsertEntite extends McdGraphState{
+	private abstract class McdGraphStateInsert extends McdGraphState{
+		protected int m_last;
+		public McdGraphStateInsert(){
+			m_last=0;
+		}
+	}
+	private class McdGraphStateInsertEntite extends McdGraphStateInsert{
 
 		public void mouseClicked(MouseEvent e) {
-			
+			EntiteGraph eg = new EntiteGraph();
+			eg.setEntite(new Entite("Entite"+(m_last++)));
+			eg.setPosition(e.getPoint());
+			eg.setMcd(McdGraph.this);
+			m_components.add(eg);
+			m_componentsSecond.add(eg);
+			repaint();
 		}
 
 		public void mouseEntered(MouseEvent e) {
@@ -267,6 +292,43 @@ public class McdGraph extends JPanel{
 		public void mouseMoved(MouseEvent arg0) {
 			
 		}
+	}
+	private class McdGraphStateInsertRelation extends McdGraphStateInsert{
+		
+		public void mouseClicked(MouseEvent e) {
+			RelationGraph eg = new RelationGraph();
+			eg.setRelation(new Relation("Relation"+(m_last++)));
+			eg.setPosition(e.getPoint());
+			eg.setMcd(McdGraph.this);
+			m_components.add(eg);
+			m_componentsSecond.add(eg);
+			repaint();
+		}
+
+		public void mouseEntered(MouseEvent arg0) {
+			
+		}
+
+		public void mouseExited(MouseEvent arg0) {
+			
+		}
+
+		public void mousePressed(MouseEvent arg0) {
+			
+		}
+
+		public void mouseReleased(MouseEvent arg0) {
+			
+		}
+
+		public void mouseDragged(MouseEvent arg0) {
+			
+		}
+
+		public void mouseMoved(MouseEvent arg0) {
+			
+		}
+		
 	}
 	private class McdGraphStateEdit extends McdGraphState{
 

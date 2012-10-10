@@ -22,7 +22,7 @@ public class EntiteGraph extends FormeGeometriqueRectangle implements McdCompose
 		super(new Rectangle());
 	}
 
-	public void dessiner(Graphics g, Font f, Color c) {
+	public void dessiner(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		Point pos = getPosition();
 		Dimension dim = getDimension();
@@ -87,12 +87,6 @@ public class EntiteGraph extends FormeGeometriqueRectangle implements McdCompose
 	
 	public Entite getEntite(){
 		return m_entite;
-	}
-
-	@Override
-	public void dessiner(Graphics g) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
