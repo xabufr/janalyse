@@ -90,10 +90,6 @@ public class McdGraph extends JPanel{
 		m_focus = null;
 		m_deltaSelect = new Point();
 		
-		ContrainteGraph cont = new ContrainteGraph();
-		cont.setContrainte(new Contrainte(ContrainteType.X));
-		m_componentsFirst.add(cont);
-		
 		this.setSize(new Dimension(80, 80));
 		this.setState(McdGraphStateE.EDIT);
 	}
@@ -323,7 +319,19 @@ public class McdGraph extends JPanel{
 					m_componentsFirst.add(cardG);
 				}
 				else if(m_objects[0] instanceof ContrainteGraph || m_objects[1] instanceof ContrainteGraph){
-					ContrainteGraph contrainte;
+					ContrainteGraph contrainte = (ContrainteGraph) (m_objects[0] instanceof ContrainteGraph ?
+							m_objects[0]:m_objects[1]);
+					if(m_objects[0] instanceof RelationGraph || m_objects[1] instanceof RelationGraph){
+						RelationGraph relation = (RelationGraph) (m_objects[0] instanceof RelationGraph ?
+								m_objects[0]:m_objects[1]);
+						contrainte.getContrainte().addRelation(relation.getRelation());
+					}
+					else if(m_objects[0] instanceof EntiteGraph || m_objects[1] instanceof EntiteGraph){
+						EntiteGraph entite = (EntiteGraph) (m_objects[0] instanceof EntiteGraph ?
+								m_objects[0]:m_objects[1]);
+						contrainte.getContrainte().addEntite(entite.getEntite());
+					}
+					contrainte.update();
 				}
 				clear();
 			}
