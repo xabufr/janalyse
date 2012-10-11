@@ -1,6 +1,7 @@
 package com.mcd_graph.auth;
 
 public enum McdGraphStateE {
+	MOVE,
 	EDIT,
 	INSERT_ENTITE,
 	INSERT_RELATION,

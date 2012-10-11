@@ -22,15 +22,37 @@ import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
 
-public class ContrainteGraph extends FormeGeometriqueRectangle implements McdComposentGraphique{
+public class ContrainteGraph extends McdComposentGraphique implements FormeGeometrique{
 	private Contrainte m_contrainte;
 	private List<EntiteGraph> m_entiteGraph;
 	private List<RelationGraph> m_relationGraph;
 	private Boolean m_needUpdateGraphic;
 	private McdGraph m_mcd;
-	
+	private FormeGeometriqueRectangle m_geometrie;
+
+	public Rectangle getRectangle(){
+		return m_geometrie.getRectangle();
+	}
+	public void setRectangle(Rectangle r){
+		m_geometrie.setRectangle(r);
+	}
+	public Point getPosition(){
+		return m_geometrie.getPosition();
+	}
+	public void setPosition(Point p){
+		m_geometrie.setPosition(p);
+	}
+	public Boolean contient(Point p){
+		return m_geometrie.contient(p);
+	}
+	public Dimension getDimension(){
+		return m_geometrie.getDimension();
+	}
+	public void setDimension(Dimension d){
+		m_geometrie.setDimension(d);
+	}
 	public ContrainteGraph(){
-		super(new Rectangle());
+		m_geometrie = new FormeGeometriqueRectangle(new Rectangle());
 		m_entiteGraph = new ArrayList<EntiteGraph>();
 		m_relationGraph = new ArrayList<RelationGraph>();
 		m_needUpdateGraphic = true;
@@ -158,5 +180,8 @@ public class ContrainteGraph extends FormeGeometriqueRectangle implements McdCom
 
 	public Boolean isLinkable() {
 		return true;
+	}
+	public Boolean isMovable(){
+		return false;
 	}
 }

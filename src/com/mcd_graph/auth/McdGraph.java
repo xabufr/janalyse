@@ -8,8 +8,10 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Timer;
 
 import javax.swing.JPanel;
 
@@ -76,12 +78,13 @@ public class McdGraph extends JPanel{
 		prefs.set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR, Color.BLACK);
 		
 		m_states = new Hashtable<McdGraphStateE,McdGraphState>();
-		m_states.put(McdGraphStateE.EDIT, new McdGraphStateEdit());
+		m_states.put(McdGraphStateE.MOVE, new McdGraphStateMove());
 		m_states.put(McdGraphStateE.INSERT_ENTITE, new McdGraphStateInsertEntite());
 		m_states.put(McdGraphStateE.INSERT_RELATION, new McdGraphStateInsertRelation());
 		m_states.put(McdGraphStateE.INSERT_LIEN, new McdGraphStateInsertLien());
 		m_states.put(McdGraphStateE.INSERT_CONTRAINTE, new McdGraphStateInsertContrainte());
 		m_states.put(McdGraphStateE.INSERT_HERITAGE, new McdGraphStateInsertHeritage());
+		m_states.put(McdGraphStateE.EDIT, new McdGraphStateEdit());
 		m_currentState = McdGraphStateE.INVALID;
 
 		m_components = new ArrayList<McdComposentGraphique>();
@@ -93,7 +96,7 @@ public class McdGraph extends JPanel{
 		m_deltaSelect = new Point();
 		
 		this.setSize(new Dimension(80, 80));
-		this.setState(McdGraphStateE.EDIT);
+		this.setState(McdGraphStateE.MOVE);
 	}
 	
 	public void paintComponent(Graphics g){
@@ -212,7 +215,7 @@ public class McdGraph extends JPanel{
 		}
 		
 	}
-	private class McdGraphStateEdit extends McdGraphState{
+	private class McdGraphStateMove extends McdGraphState{
 		public void enterState(){
 			m_focus=null;
 		}
@@ -230,8 +233,11 @@ public class McdGraph extends JPanel{
 
 		public void mousePressed(MouseEvent e) {
 			for (McdComposentGraphique composant : m_components){
+				if(!composant.isMovable())
+					continue;
 				FormeGeometrique forme = (FormeGeometrique)composant;
-				if (forme.contient(e.getPoint())){
+				if (forme.contient(
+						e.getPoint())){
 					m_focus = composant;
 					m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
 					m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
@@ -240,7 +246,7 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			//m_focus = null; //Pour gérer la suppression, il faut garder le dernier click
+			m_focus = null; //Pour gérer la suppression, il faut garder le dernier click
 		}
 
 		public void mouseDragged(MouseEvent e) {
@@ -441,6 +447,59 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseMoved(MouseEvent e) {
+			
+		}
+	}
+	private class McdGraphStateEdit extends McdGraphState{
+		private long m_time, m_interval;
+		
+		public McdGraphStateEdit() {
+			m_focus=null;
+			m_interval = 500;
+		}
+		public void enterState(){
+			m_focus=null;
+		}
+		public void mouseClicked(MouseEvent arg0) {
+			
+		}
+
+		public void mouseEntered(MouseEvent arg0) {
+			
+		}
+
+		public void mouseExited(MouseEvent arg0) {
+			
+		}
+
+		public void mousePressed(MouseEvent e) {
+			Boolean found=false;
+			for(McdComposentGraphique component : m_components){
+				if(((FormeGeometrique)component).contient(e.getPoint())){
+					found=true;
+					if(component!=m_focus){
+						m_time=System.currentTimeMillis();
+						m_focus=component;
+					}
+				}
+			}
+			if(found&&(System.currentTimeMillis()-m_time>=m_interval))
+			{
+				System.out.println("Edit");
+				m_focus=null;
+			}
+			
+		}
+
+		public void mouseReleased(MouseEvent arg0) {
+			
+		}
+
+		public void mouseDragged(MouseEvent arg0) {
+			
+		}
+
+		public void mouseMoved(MouseEvent arg0) {
 			
 		}
 		

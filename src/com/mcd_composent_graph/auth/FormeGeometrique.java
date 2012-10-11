@@ -3,17 +3,16 @@ package com.mcd_composent_graph.auth;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Line2D;
+import java.awt.geom.Line2D.Double;
 
-public abstract class FormeGeometrique {
-
-	public FormeGeometrique() {
-	}
+public interface FormeGeometrique {
 	public abstract Boolean contient(Point p);
 	public abstract void setPosition(Point p);
 	public abstract Point getPosition();
 }
 
-class FormeGeometriqueRectangle extends FormeGeometrique{
+class FormeGeometriqueRectangle implements FormeGeometrique{
 	private Rectangle m_rect;
 	
 	public FormeGeometriqueRectangle(Rectangle r){
@@ -44,28 +43,29 @@ class FormeGeometriqueRectangle extends FormeGeometrique{
 	}
 }
 
-class FormeGeometriqueLigne extends FormeGeometrique{
+class FormeGeometriqueLigne implements FormeGeometrique{
 	private Point m_a, m_b;
+	private Line2D m_ligne;
 	private float m_tolerance;
 	public FormeGeometriqueLigne(Point a, Point b){
-		m_a=a;
-		m_b=b;
+		m_ligne = new Line2D.Double();
+		m_ligne.setLine(a, b);
 		m_tolerance=(float) 1.0;
 	}
 	public void setPointA(Point a){
-		m_a=a;
+		m_ligne.setLine(a, getPointB());
 	}
 	public void setPointB(Point b){
-		m_b=b;
+		m_ligne.setLine(getPointA(), b);
 	}
 	public Point getPointA(){
-		return m_a;
+		return new Point((int)m_ligne.getP1().getX(), (int)m_ligne.getP1().getY());
 	}
 	public Point getPointB(){
-		return m_b;
+		return new Point((int)m_ligne.getP2().getX(), (int)m_ligne.getP2().getY());
 	}
 	public Boolean contient(Point p) {
-		if(m_a==p||m_b==p)
+		/*if(m_a==p||m_b==p)
 			return true;
 		int min = m_a.y<m_b.y?m_a.y:m_b.y;
 		int max = m_a.y>m_b.y?m_a.y:m_b.y;
@@ -87,7 +87,8 @@ class FormeGeometriqueLigne extends FormeGeometrique{
 		if(y >= p.y-m_tolerance && y <= p.y + m_tolerance && y >= min && y >= max)
 			return true;
 		
-		return false;
+		return false;*/
+		return m_ligne.contains(p);
 	}
 	@Override
 	public void setPosition(Point p) {
