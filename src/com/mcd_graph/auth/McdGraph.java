@@ -8,8 +8,10 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Timer;
 
 import javax.swing.JPanel;
 
@@ -446,7 +448,15 @@ public class McdGraph extends JPanel{
 		}
 	}
 	private class McdGraphStateEdit extends McdGraphState{
-
+		private long m_time, m_interval;
+		
+		public McdGraphStateEdit() {
+			m_focus=null;
+			m_interval = 500;
+		}
+		public void enterState(){
+			m_focus=null;
+		}
 		public void mouseClicked(MouseEvent arg0) {
 			
 		}
@@ -459,7 +469,22 @@ public class McdGraph extends JPanel{
 			
 		}
 
-		public void mousePressed(MouseEvent arg0) {
+		public void mousePressed(MouseEvent e) {
+			Boolean found=false;
+			for(McdComposentGraphique component : m_components){
+				if(((FormeGeometrique)component).contient(e.getPoint())){
+					found=true;
+					if(component!=m_focus){
+						m_time=System.currentTimeMillis();
+						m_focus=component;
+					}
+				}
+			}
+			if(found&&(System.currentTimeMillis()-m_time>=m_interval))
+			{
+				System.out.println("Edit");
+				m_focus=null;
+			}
 			
 		}
 
