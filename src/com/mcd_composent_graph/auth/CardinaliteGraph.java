@@ -128,6 +128,9 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 	public Boolean isLinkable() {
 		return false;
 	}
+	public Boolean isMovable(){
+		return false;
+	}
 	McdGraph m_mcd;
 
 	public Boolean contient(Point p) {

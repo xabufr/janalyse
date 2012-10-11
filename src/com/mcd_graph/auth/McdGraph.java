@@ -22,6 +22,7 @@ import com.mcd_composent_graph.auth.HeritageGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.RelationGraph;
 import com.mcd_composent_graph.auth.FormeGeometrique;
+import com.mcd_edition_fenetre.auth.FenetreEditionCardinalite;
 import com.mcd_edition_fenetre.auth.FenetreEditionRelation;
 import com.mcd_log.auth.Cardinalite;
 import com.mcd_log.auth.Contrainte;
@@ -475,12 +476,23 @@ public class McdGraph extends JPanel{
 
 		public void mousePressed(MouseEvent e) {
 			Boolean found=false;
-			for(McdComposentGraphique component : m_components){
+			for(McdComposentGraphique component : m_componentsSecond){
 				if(((FormeGeometrique)component).contient(e.getPoint())){
 					found=true;
 					if(component!=m_focus){
 						m_time=System.currentTimeMillis();
 						m_focus=component;
+					}
+				}
+			}
+			if(!found){
+				for(McdComposentGraphique component : m_componentsFirst){
+					if(((FormeGeometrique)component).contient(e.getPoint())){
+						found=true;
+						if(component!=m_focus){
+							m_time=System.currentTimeMillis();
+							m_focus=component;
+						}
 					}
 				}
 			}
@@ -491,6 +503,9 @@ public class McdGraph extends JPanel{
 				{
 					new FenetreEditionRelation(McdGraph.this, (RelationGraph)m_focus).setVisible(true);
 					((RelationGraph)m_focus).actualiser();
+				}
+				else if(m_focus instanceof CardinaliteGraph){
+					new FenetreEditionCardinalite(McdGraph.this, (CardinaliteGraph)m_focus).setVisible(true);
 				}
 				m_focus=null;
 			}
