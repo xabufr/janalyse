@@ -217,7 +217,22 @@ public class FenetreEditionRelation extends JDialog {
 						reloadRelationProprietes();
 					}
 				});
-				panel.add(btnUp, "cell 1 2");
+				panel.add(btnUp, "cell 1 1");
+			}
+			{
+				JButton btnSupprimer = new JButton("Sup.");
+				btnSupprimer.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						Object o = m_listeProprietes.getSelectedValue();
+						if(o==null)
+							return;
+						m_model.remove(m_model.indexOf(o));
+						reloadRelationProprietes();
+						if(m_model.size()!=0)
+							m_listeProprietes.setSelectedIndex(0);
+					}
+				});
+				panel.add(btnSupprimer, "cell 1 2");
 			}
 			panel.add(btnDown, "cell 1 3");
 		}
