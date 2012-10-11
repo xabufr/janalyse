@@ -347,7 +347,10 @@ public class McdGraph extends JPanel{
 					if(m_objects[0] instanceof EntiteGraph || m_objects[1] instanceof EntiteGraph){
 						EntiteGraph entite = (EntiteGraph) (m_objects[0] instanceof EntiteGraph ?
 								m_objects[0]:m_objects[1]);
-						heritage.getHeritage().setParent(entite.getEntite());
+						if (heritage.getHeritage().getParent() == null)
+							heritage.getHeritage().setParent(entite.getEntite());
+						else
+							heritage.getHeritage().addEnfant(entite.getEntite());
 					}
 					heritage.update();
 				}
