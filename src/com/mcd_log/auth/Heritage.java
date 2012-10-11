@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Heritage {
 	public Heritage(HeritageType t){
 		setType(t);
+		m_enfants = new ArrayList<Entite>();
 	}
 	public Entite getParent() {
 		return m_parent;
