@@ -82,6 +82,7 @@ public class McdGraph extends JPanel{
 		m_states.put(McdGraphStateE.INSERT_LIEN, new McdGraphStateInsertLien());
 		m_states.put(McdGraphStateE.INSERT_CONTRAINTE, new McdGraphStateInsertContrainte());
 		m_states.put(McdGraphStateE.INSERT_HERITAGE, new McdGraphStateInsertHeritage());
+		m_states.put(McdGraphStateE.EDIT, new McdGraphStateEdit());
 		m_currentState = McdGraphStateE.INVALID;
 
 		m_components = new ArrayList<McdComposentGraphique>();
@@ -441,6 +442,36 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseMoved(MouseEvent e) {
+			
+		}
+	}
+	private class McdGraphStateEdit extends McdGraphState{
+
+		public void mouseClicked(MouseEvent arg0) {
+			
+		}
+
+		public void mouseEntered(MouseEvent arg0) {
+			
+		}
+
+		public void mouseExited(MouseEvent arg0) {
+			
+		}
+
+		public void mousePressed(MouseEvent arg0) {
+			
+		}
+
+		public void mouseReleased(MouseEvent arg0) {
+			
+		}
+
+		public void mouseDragged(MouseEvent arg0) {
+			
+		}
+
+		public void mouseMoved(MouseEvent arg0) {
 			
 		}
 		
