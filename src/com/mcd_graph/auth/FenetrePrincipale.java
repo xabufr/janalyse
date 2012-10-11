@@ -221,7 +221,7 @@ public class FenetrePrincipale {
 		});
 		m_boutonEdition.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				m_mcd.setState(McdGraphStateE.EDIT);
+				m_mcd.setState(McdGraphStateE.MOVE);
 				setEnabledButton(m_boutonEdition);
 			}
 		});

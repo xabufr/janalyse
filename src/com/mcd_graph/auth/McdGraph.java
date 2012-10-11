@@ -76,7 +76,7 @@ public class McdGraph extends JPanel{
 		prefs.set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR, Color.BLACK);
 		
 		m_states = new Hashtable<McdGraphStateE,McdGraphState>();
-		m_states.put(McdGraphStateE.EDIT, new McdGraphStateEdit());
+		m_states.put(McdGraphStateE.MOVE, new McdGraphStateMove());
 		m_states.put(McdGraphStateE.INSERT_ENTITE, new McdGraphStateInsertEntite());
 		m_states.put(McdGraphStateE.INSERT_RELATION, new McdGraphStateInsertRelation());
 		m_states.put(McdGraphStateE.INSERT_LIEN, new McdGraphStateInsertLien());
@@ -93,7 +93,7 @@ public class McdGraph extends JPanel{
 		m_deltaSelect = new Point();
 		
 		this.setSize(new Dimension(80, 80));
-		this.setState(McdGraphStateE.EDIT);
+		this.setState(McdGraphStateE.MOVE);
 	}
 	
 	public void paintComponent(Graphics g){
@@ -212,7 +212,7 @@ public class McdGraph extends JPanel{
 		}
 		
 	}
-	private class McdGraphStateEdit extends McdGraphState{
+	private class McdGraphStateMove extends McdGraphState{
 		public void enterState(){
 			m_focus=null;
 		}
@@ -230,8 +230,11 @@ public class McdGraph extends JPanel{
 
 		public void mousePressed(MouseEvent e) {
 			for (McdComposentGraphique composant : m_components){
+				if(!composant.isMovable())
+					continue;
 				FormeGeometrique forme = (FormeGeometrique)composant;
-				if (forme.contient(e.getPoint())){
+				if (forme.contient(
+						e.getPoint())){
 					m_focus = composant;
 					m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
 					m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
@@ -240,7 +243,7 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			//m_focus = null; //Pour gérer la suppression, il faut garder le dernier click
+			m_focus = null; //Pour gérer la suppression, il faut garder le dernier click
 		}
 
 		public void mouseDragged(MouseEvent e) {

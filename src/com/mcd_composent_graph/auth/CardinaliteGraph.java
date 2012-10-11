@@ -15,14 +15,27 @@ import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
 
-public class CardinaliteGraph extends FormeGeometriqueLigne implements McdComposentGraphique{
+public class CardinaliteGraph extends McdComposentGraphique implements FormeGeometrique {
 	private Cardinalite m_cardinalite;
 	private EntiteGraph m_entiteGraph;
 	private RelationGraph m_relationGraph;
 	private Boolean m_needUpdateGraphic;
+	private FormeGeometriqueLigne m_geometrie;
 	
+	public void setPointA(Point p){
+		m_geometrie.setPointA(p);
+	}
+	public void setPointB(Point p){
+		m_geometrie.setPointB(p);
+	}
+	public Point getPointA(){
+		return m_geometrie.getPointA();
+	}
+	public Point getPointB(){
+		return m_geometrie.getPointB();
+	}
 	public CardinaliteGraph() {
-		super(new Point(), new Point());
+		m_geometrie = new FormeGeometriqueLigne(new Point(), new Point());
 		m_needUpdateGraphic=true;
 	}
 
@@ -116,4 +129,17 @@ public class CardinaliteGraph extends FormeGeometriqueLigne implements McdCompos
 		return false;
 	}
 	McdGraph m_mcd;
+
+	public Boolean contient(Point p) {
+		return m_geometrie.contient(p);
+	}
+
+	public void setPosition(Point p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Point getPosition() {
+		return null;
+	}
 }

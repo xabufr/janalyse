@@ -15,11 +15,34 @@ import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
 
-public class EntiteGraph extends FormeGeometriqueRectangle implements McdComposentGraphique{
+public class EntiteGraph extends McdComposentGraphique implements FormeGeometrique{
 	private Entite m_entite;
+	private FormeGeometriqueRectangle m_geometrie;
+
+	public Rectangle getRectangle(){
+		return m_geometrie.getRectangle();
+	}
+	public void setRectangle(Rectangle r){
+		m_geometrie.setRectangle(r);
+	}
+	public Point getPosition(){
+		return m_geometrie.getPosition();
+	}
+	public void setPosition(Point p){
+		m_geometrie.setPosition(p);
+	}
+	public Boolean contient(Point p){
+		return m_geometrie.contient(p);
+	}
+	public Dimension getDimension(){
+		return m_geometrie.getDimension();
+	}
+	public void setDimension(Dimension d){
+		m_geometrie.setDimension(d);
+	}
 
 	public EntiteGraph() {
-		super(new Rectangle());
+		m_geometrie = new FormeGeometriqueRectangle(new Rectangle());
 	}
 
 	public void dessiner(Graphics g) {
