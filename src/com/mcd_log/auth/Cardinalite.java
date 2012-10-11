@@ -49,11 +49,16 @@ public class Cardinalite implements Cloneable{
 	}
 	
 	public String toString(){
-		String ret = String.valueOf(m_min)+",";
+		String ret="";
+		if(isRelatif())
+			ret="(";
+		ret += String.valueOf(m_min)+",";
 		if(m_max>0)
 			ret+=String.valueOf(m_max);
 		else
 			ret+="n";
+		if(isRelatif())
+			ret+=")";
 		return ret;
 	}
 
