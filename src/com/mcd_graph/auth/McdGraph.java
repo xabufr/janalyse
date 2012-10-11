@@ -484,7 +484,8 @@ public class McdGraph extends JPanel{
 					}
 				}
 			}
-			if(found&&(System.currentTimeMillis()-m_time>=m_interval))
+			if(found&&(System.currentTimeMillis()-m_time>=m_interval)||
+					e.getClickCount()==2)
 			{
 				if(m_focus instanceof RelationGraph)
 				{

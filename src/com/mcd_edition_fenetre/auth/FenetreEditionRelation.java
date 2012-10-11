@@ -315,6 +315,8 @@ public class FenetreEditionRelation extends JDialog {
 	}
 	private class validerModifications implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
+			m_relationCopie.setNom(m_nom.getText());
+			m_relationCopie.setCommentaire(m_commentaire.getText());
 			m_relation.copyFrom(m_relationCopie);
 			FenetreEditionRelation.this.setVisible(false);
 			m_mcd.repaint();
