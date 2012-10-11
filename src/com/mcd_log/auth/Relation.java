@@ -5,6 +5,10 @@ import java.util.ArrayList;
 public class Relation {
 	public Relation(){
 		this("");
+		this.m_cardinalites = new Cardinalite[2];
+		this.m_cardinalites[0] = new Cardinalite();
+		this.m_cardinalites[1] = new Cardinalite();
+		m_proprietes = new ArrayList<Propriete> ();
 	}
 	public Relation(String nom){
 		m_nom=nom;
@@ -12,6 +16,19 @@ public class Relation {
 		this.m_cardinalites[0] = new Cardinalite();
 		this.m_cardinalites[1] = new Cardinalite();
 		m_proprietes = new ArrayList<Propriete> ();
+	}
+	public Relation(Relation r){
+		m_nom=r.m_nom;
+		m_commentaire=r.m_commentaire;
+		m_proprietes = new ArrayList<Propriete> ();
+		for(Propriete p : r.m_proprietes){
+			m_proprietes.add(new Propriete(p));
+		}
+	}
+	public void copyFrom(Relation r){
+		m_nom=r.m_nom;
+		m_commentaire=r.m_commentaire;
+		m_proprietes=r.m_proprietes;
 	}
 	public String getNom() {
 		return m_nom;

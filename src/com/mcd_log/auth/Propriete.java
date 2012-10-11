@@ -1,16 +1,16 @@
 package com.mcd_log.auth;
 
-public class Propriete {
+public class Propriete implements Cloneable{
 	private String m_name;
 	private String m_commentaire;
-	private Type m_type;
+	private ProprieteType m_proprieteType;
 	private int m_taille;
 	private boolean m_clePrimaire;
 	private boolean m_autoIncrement;
 	private boolean m_null;
 	
-	public Propriete(String name, Type type){
-		setType(type);	
+	public Propriete(String name, ProprieteType proprieteType){
+		setType(proprieteType);	
 		setName(name);
 		setTaille(255);
 		setClePrimaire(false);
@@ -18,13 +18,22 @@ public class Propriete {
 		setNull(false);
 	}
 	
-	public Propriete(String name, Type type, int taille, boolean clePrimaire, boolean autoIncrement, boolean zero){
-		setType(type);	
+	public Propriete(String name, ProprieteType proprieteType, int taille, boolean clePrimaire, boolean autoIncrement, boolean zero){
+		setType(proprieteType);	
 		setName(name);
 		setTaille(taille);
 		setClePrimaire(clePrimaire);
 		setAutoIncrement(autoIncrement);
 		setNull(zero);
+	}
+	public Propriete(Propriete p){
+		setType(new ProprieteType(p.m_proprieteType));
+		setCommentaire(p.m_commentaire);
+		setName(p.m_name);
+		setTaille(p.m_taille);
+		setClePrimaire(p.m_clePrimaire);
+		setAutoIncrement(p.m_autoIncrement);
+		setNull(p.m_autoIncrement);
 	}
 
 	public String getName() {
@@ -43,12 +52,12 @@ public class Propriete {
 		m_commentaire = commentaire;
 	}
 
-	public Type getType() {
-		return m_type;
+	public ProprieteType getType() {
+		return m_proprieteType;
 	}
 
-	public void setType(Type m_type) {
-		this.m_type = m_type;
+	public void setType(ProprieteType m_type) {
+		this.m_proprieteType = m_type;
 	}
 
 	public int getTaille() {
@@ -81,5 +90,14 @@ public class Propriete {
 
 	public void setNull(boolean m_null) {
 		this.m_null = m_null;
+	}
+	public String toString(){
+		return m_name;
+	}
+	
+	public Propriete clone() throws CloneNotSupportedException{
+		Propriete p = (Propriete) super.clone();
+		p.m_proprieteType = new ProprieteType(m_proprieteType);
+		return p;
 	}
 }

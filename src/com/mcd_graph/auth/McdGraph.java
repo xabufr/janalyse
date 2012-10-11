@@ -22,6 +22,7 @@ import com.mcd_composent_graph.auth.HeritageGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.RelationGraph;
 import com.mcd_composent_graph.auth.FormeGeometrique;
+import com.mcd_edition_fenetre.auth.FenetreEditionRelation;
 import com.mcd_log.auth.Cardinalite;
 import com.mcd_log.auth.Contrainte;
 import com.mcd_log.auth.ContrainteType;
@@ -483,9 +484,14 @@ public class McdGraph extends JPanel{
 					}
 				}
 			}
-			if(found&&(System.currentTimeMillis()-m_time>=m_interval))
+			if(found&&(System.currentTimeMillis()-m_time>=m_interval)||
+					e.getClickCount()==2)
 			{
-				System.out.println("Edit");
+				if(m_focus instanceof RelationGraph)
+				{
+					new FenetreEditionRelation(McdGraph.this, (RelationGraph)m_focus).setVisible(true);
+					((RelationGraph)m_focus).actualiser();
+				}
 				m_focus=null;
 			}
 			
