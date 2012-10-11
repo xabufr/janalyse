@@ -10,6 +10,7 @@ import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Entite;
@@ -79,21 +80,47 @@ public class HeritageGraph extends FormeGeometriqueRectangle implements McdCompo
 					gauche = new Line2D.Double(obj.x, obj.y, obj.x, obj.y+obj.height),
 					droite = new Line2D.Double(obj.x+obj.width, obj.y, obj.x+obj.width, obj.y+obj.height);
 			
+			Point sg, sd, e2;
+			sg = new Point();
+			sd = new Point();
+			e2 = new Point();
+			
+			
 			if (l.intersectsLine(haut)){
 				e.y -= obj.height/2;
+				e2.x = e.x+3;
+				e2.y = e.y;
 			}
 			else if (l.intersectsLine(bas)){
 				e.y += obj.height/2;
+				e2.x = e.x+3;
+				e2.y = e.y;
 			}
 			else if (l.intersectsLine(gauche)){
 				e.x -= obj.width/2;
+				e2.x = e.x;
+				e2.y = e.y+3;
 			}
 			else if (l.intersectsLine(droite)){
-				e.x += obj.height/2;
+				e.x += obj.width/2;
+				e2.x = e.x;
+				e2.y = e.y+3;
 			}
 			
+			double dist1, dist2, dist3, angle;
+			dist1 = Math.sqrt((Math.pow((h.x-e.x),2))+(Math.pow((h.y-e.y),2)));
+			dist2 = Math.sqrt((Math.pow((e2.x-e.x),2))+(Math.pow((e2.y-e.y),2)));
+			dist3 = Math.sqrt((Math.pow((h.x-e2.x),2))+(Math.pow((h.y-e2.y),2)));
+			angle = Math.acos((Math.pow(dist1, 2)+Math.pow(dist2, 2)-Math.pow(dist3, 2))/(2*dist1*dist2));
+			
+			System.out.println(Math.toDegrees(angle)+"°");
 			
 			g.drawLine(h.x, h.y, e.x, e.y);
+			
+			int pX[] = {e.x, sg.x, sd.x};
+			int pY[] = {e.y, sg.y, sd.y};
+			
+			//g.fillPolygon(pX, pY, 3);
 		}
 		
 		if (m_entitesGraph != null){
