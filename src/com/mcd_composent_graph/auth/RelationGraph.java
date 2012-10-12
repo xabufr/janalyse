@@ -23,6 +23,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 	private int m_lastPropsNumber, m_heightNom, m_widthNom;
 	private ArrayList<ProprieteGraph> m_proprietes;
 	private FormeGeometriqueRectangle m_geometrie;
+	private Boolean m_calculerTaille;
 
 	public Rectangle getRectangle(){
 		return m_geometrie.getRectangle();
@@ -50,6 +51,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 		m_proprietes = new ArrayList<ProprieteGraph>();
 		m_lastPropsNumber=-999;
 		m_heightNom = 0;
+		m_calculerTaille=true;
 	}
 	public void actualiser(){
 		m_proprietes.clear();
@@ -61,6 +63,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 			_p.setPropriete(props.get(i));
 			m_proprietes.add(_p);
 		}
+		m_calculerTaille=true;
 	}
 	public void setRelation(Relation rel){
 		m_relation=rel;
@@ -71,7 +74,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 	}
 	public void dessiner(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
-		if(this.m_lastPropsNumber!=this.m_relation.getProprietes().size())
+		if(this.m_lastPropsNumber!=this.m_relation.getProprietes().size()||m_calculerTaille)
 		{
 			this.actualiser();
 	
