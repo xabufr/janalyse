@@ -180,4 +180,13 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		return true;
 	}
 	McdGraph m_mcd;
+
+	public void prepareDelete() {
+		m_mcd.removeLogic(m_heritage);
+		m_heritage.setParent(null);
+		m_heritage.setEnfants(null);
+		m_heritage=null;
+		m_entiteGraphMere=null;
+		m_entitesGraph=null;
+	}
 }

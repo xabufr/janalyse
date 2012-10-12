@@ -127,4 +127,9 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 		return true;
 	}
 	McdGraph m_mcd;
+
+	public void prepareDelete() {
+		m_mcd.removeLogic(m_entite);
+		m_entite=null;
+	}
 }

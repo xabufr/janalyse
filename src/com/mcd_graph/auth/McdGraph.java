@@ -604,7 +604,7 @@ public class McdGraph extends JPanel{
 		}
 		public void keyPressed(KeyEvent e) {
 			if(e.getKeyCode() == KeyEvent.VK_DELETE&&m_focus!=null){
-				
+				deleteMcdComposent(m_focus);
 			}
 		}
 		public void keyReleased(KeyEvent e) {
@@ -613,6 +613,16 @@ public class McdGraph extends JPanel{
 		public void keyTyped(KeyEvent e) {
 			
 		}
+	}
+	private void deleteMcdComposent(McdComposentGraphique comp){
+		if(comp==m_focus)
+			setMcdComposentGraphiquetFocus(null);
+		comp.prepareDelete();
+		m_components.remove(comp);
+		if(m_componentsFirst.contains(comp))
+			m_componentsFirst.remove(comp);
+		else
+			m_componentsSecond.remove(comp);
 	}
 	private void setMcdComposentGraphiquetFocus(McdComposentGraphique comp){
 		if(m_focus!=null){

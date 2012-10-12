@@ -22,4 +22,5 @@ public abstract class McdComposentGraphique {
 	public Boolean getFocus(){
 		return m_focus;
 	}
+	public abstract void prepareDelete();
 }

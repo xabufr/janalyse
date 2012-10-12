@@ -187,4 +187,11 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 	public Boolean isMovable(){
 		return false;
 	}
+	public void prepareDelete() {
+		m_mcd.removeLogic(m_contrainte);
+		m_entiteGraph=null;
+		m_relationGraph=null;
+		m_contrainte=null;
+	}
+	
 }

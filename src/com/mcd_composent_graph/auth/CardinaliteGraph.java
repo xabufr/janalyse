@@ -146,4 +146,10 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 	public Point getPosition() {
 		return null;
 	}
+	public void prepareDelete() {
+		m_mcd.removeLogic(m_cardinalite);
+		m_cardinalite.setEntite(null);
+		m_cardinalite.setRelation(null);
+		m_cardinalite=null;
+	}
 }
