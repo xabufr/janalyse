@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -104,6 +106,7 @@ public class McdGraph extends JPanel{
 		
 		this.setSize(new Dimension(80, 80));
 		this.setState(McdGraphStateE.MOVE);
+		this.setFocusable(true);
 	}
 	
 	public void paintComponent(Graphics g){
@@ -132,14 +135,16 @@ public class McdGraph extends JPanel{
 			m_states.get(this.m_currentState).leftState();
 			this.removeMouseListener(m_states.get(this.m_currentState));
 			this.removeMouseMotionListener(m_states.get(this.m_currentState));
+			this.removeKeyListener(m_states.get(this.m_currentState));
 		}
 		m_currentState=s;
 		this.addMouseMotionListener(m_states.get(this.m_currentState));
 		this.addMouseListener(m_states.get(this.m_currentState));
+		this.addKeyListener(m_states.get(this.m_currentState));
 		m_states.get(this.m_currentState).enterState();
 	}
 		
-	private abstract class McdGraphState implements MouseListener, MouseMotionListener{
+	private abstract class McdGraphState implements MouseListener, MouseMotionListener, KeyListener{
 		public void enterState(){ }
 		public void leftState() { }
 	}
@@ -184,6 +189,15 @@ public class McdGraph extends JPanel{
 		public void mouseMoved(MouseEvent arg0) {
 			
 		}
+		public void keyPressed(KeyEvent arg0) {
+			
+		}
+		public void keyReleased(KeyEvent arg0) {
+					
+		}
+		public void keyTyped(KeyEvent arg0) {
+			
+		}
 	}
 	private class McdGraphStateInsertRelation extends McdGraphStateInsert{
 		
@@ -218,6 +232,18 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseMoved(MouseEvent arg0) {
+			
+		}
+
+		public void keyPressed(KeyEvent e) {
+			
+		}
+
+		public void keyReleased(KeyEvent e) {
+			
+		}
+
+		public void keyTyped(KeyEvent e) {
 			
 		}
 		
@@ -268,6 +294,15 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseMoved(MouseEvent e) {
+			
+		}
+		public void keyPressed(KeyEvent e) {
+			
+		}
+		public void keyReleased(KeyEvent e) {
+			
+		}
+		public void keyTyped(KeyEvent e) {
 			
 		}
 	}
@@ -379,6 +414,15 @@ public class McdGraph extends JPanel{
 		public void mouseMoved(MouseEvent e) {
 			
 		}
+		public void keyPressed(KeyEvent e) {
+			
+		}
+		public void keyReleased(KeyEvent e) {
+			
+		}
+		public void keyTyped(KeyEvent e) {
+			
+		}
 	}
 	private class McdGraphStateInsertContrainte extends McdGraphState{
 
@@ -416,6 +460,18 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseMoved(MouseEvent e) {
+			
+		}
+
+		public void keyPressed(KeyEvent e) {
+			
+		}
+
+		public void keyReleased(KeyEvent e) {
+			
+		}
+
+		public void keyTyped(KeyEvent e) {
 			
 		}
 		
@@ -456,6 +512,18 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseMoved(MouseEvent e) {
+			
+		}
+
+		public void keyPressed(KeyEvent e) {
+			
+		}
+
+		public void keyReleased(KeyEvent e) {
+			
+		}
+
+		public void keyTyped(KeyEvent e) {
 			
 		}
 	}
@@ -532,6 +600,17 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseMoved(MouseEvent arg0) {
+			
+		}
+		public void keyPressed(KeyEvent e) {
+			if(e.getKeyCode() == KeyEvent.VK_DELETE&&m_focus!=null){
+				
+			}
+		}
+		public void keyReleased(KeyEvent e) {
+			
+		}
+		public void keyTyped(KeyEvent e) {
 			
 		}
 	}
