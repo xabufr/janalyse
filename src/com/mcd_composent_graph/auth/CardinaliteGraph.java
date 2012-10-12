@@ -101,7 +101,10 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		this.setPointA(a);
 		this.setPointB(b);
 		
-		g.setColor((Color) prefs.get(PGroupe.CARDINALITE, PCle.COLOR));
+		if(!m_focus)
+			g.setColor((Color) prefs.get(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR));
+		else
+			g.setColor((Color) prefs.get(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR_FOCUS));
 		g.drawLine(getPointA().x, getPointA().y, getPointB().x, getPointB().y);
 		g.setColor((Color) prefs.get(PGroupe.CARDINALITE, PCle.FONT_COLOR));
 		g.drawString(m_cardinalite.toString(), positionCard.x, positionCard.y);
@@ -117,7 +120,6 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		m_needUpdateGraphic=true;
 	}
 
-	@Override
 	public void setMcd(McdGraph mcd) {
 		if(m_mcd!=null)
 			m_mcd.removeLogic(m_cardinalite);
@@ -138,7 +140,6 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 	}
 
 	public void setPosition(Point p) {
-		// TODO Auto-generated method stub
 		
 	}
 

@@ -138,7 +138,10 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 		
 		g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR));
 		g.fillOval(pos.x, pos.y, dim.width, dim.height);
-		g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR));
+		if(!m_focus)
+			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR));
+		else
+			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS));
 		g.drawOval(pos.x, pos.y, dim.width, dim.height);
 		
 		this.setDimension(dim);

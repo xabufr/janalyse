@@ -78,7 +78,10 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 		//cadre
 		g.setColor((Color) prefs.get(PGroupe.ENTITE, PCle.COLOR));
 		g.fillRect(pos.x, pos.y, widthMax, heightMax);
-		g.setColor((Color) prefs.get(PGroupe.ENTITE, PCle.COLOR_CONTOUR));
+		if(!m_focus)
+			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR));
+		else
+			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS));
 		g.drawRect(pos.x, pos.y, widthMax, heightMax);
 		this.setRectangle(new Rectangle(pos.x, pos.y, widthMax, heightMax));
 		g.drawLine(pos.x, (pos.y+font.getHeight()+6), (pos.x+widthMax), (pos.y+font.getHeight()+6));

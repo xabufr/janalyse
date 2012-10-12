@@ -152,7 +152,10 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		g.fillArc(pos.x, pos.y, dim.width, dim.height, 0, 180);
 		g.fillRect(pos.x, pos.y+dim.height/2, dim.width, dim.height/2);
 		
-		g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR_CONTOUR));
+		if(!m_focus)
+			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR));
+		else
+			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS));
 		g.drawArc(pos.x, pos.y, dim.width, dim.height, 0, 180);
 		g.drawLine(pos.x, pos.y+dim.height/2, pos.x, pos.y+dim.height-1);
 		g.drawLine(pos.x+dim.width, pos.y+dim.height/2, pos.x+dim.width, pos.y+dim.height-1);

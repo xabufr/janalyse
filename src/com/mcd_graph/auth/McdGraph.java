@@ -54,16 +54,19 @@ public class McdGraph extends JPanel{
 		prefs.set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR, Color.RED);
 		prefs.set(PGroupe.HERITAGE, PCle.COLOR_LINE, Color.BLACK);
 		prefs.set(PGroupe.HERITAGE, PCle.FONT_COLOR, Color.BLACK);
+		prefs.set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
 		
 		prefs.setFont(PGroupe.CONTRAINTE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
 		prefs.set(PGroupe.CONTRAINTE,  PCle.COLOR, Color.CYAN);
 		prefs.set(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR, Color.BLACK);
 		prefs.set(PGroupe.CONTRAINTE, PCle.COLOR_LINE, Color.BLACK);
 		prefs.set(PGroupe.CONTRAINTE, PCle.FONT_COLOR, Color.BLACK);
+		prefs.set(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
 		
 		prefs.setFont(PGroupe.CARDINALITE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
 		prefs.set(PGroupe.CARDINALITE, PCle.FONT_COLOR, Color.BLACK);
-		prefs.set(PGroupe.CARDINALITE, PCle.COLOR, Color.BLACK);
+		prefs.set(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR, Color.BLACK);
+		prefs.set(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
 		
 		prefs.setFont(PGroupe.RELATION, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
 		prefs.setFont(PGroupe.RELATION, PCle.FONT_NOM, "TimesRoman", Font.PLAIN, 10);
@@ -71,6 +74,7 @@ public class McdGraph extends JPanel{
 		prefs.set(PGroupe.RELATION, PCle.FONT_NOM_COLOR, Color.BLACK);
 		prefs.set(PGroupe.RELATION, PCle.COLOR, Color.GREEN);
 		prefs.set(PGroupe.RELATION, PCle.COLOR_CONTOUR, Color.BLACK);
+		prefs.set(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
 		
 		prefs.setFont(PGroupe.ENTITE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
 		prefs.setFont(PGroupe.ENTITE, PCle.FONT_NOM, "TimesRoman", Font.PLAIN, 12);
@@ -78,6 +82,7 @@ public class McdGraph extends JPanel{
 		prefs.set(PGroupe.ENTITE, PCle.COLOR_CONTOUR, Color.RED);
 		prefs.set(PGroupe.ENTITE, PCle.FONT_COLOR, Color.RED);
 		prefs.set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR, Color.BLACK);
+		prefs.set(PGroupe.ENTITE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
 		
 		m_states = new Hashtable<McdGraphStateE,McdGraphState>();
 		m_states.put(McdGraphStateE.MOVE, new McdGraphStateMove());
@@ -219,7 +224,7 @@ public class McdGraph extends JPanel{
 	}
 	private class McdGraphStateMove extends McdGraphState{
 		public void enterState(){
-			m_focus=null;
+			setMcdComposentGraphiquetFocus(null);
 		}
 		public void mouseClicked(MouseEvent e) {
 			
@@ -240,7 +245,7 @@ public class McdGraph extends JPanel{
 				FormeGeometrique forme = (FormeGeometrique)composant;
 				if (forme.contient(
 						e.getPoint())){
-					m_focus = composant;
+					setMcdComposentGraphiquetFocus(composant);
 					m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
 					m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
 				}
@@ -248,7 +253,7 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			m_focus = null; //Pour gérer la suppression, il faut garder le dernier click
+			setMcdComposentGraphiquetFocus(null); //Pour gérer la suppression, il faut garder le dernier click
 		}
 
 		public void mouseDragged(MouseEvent e) {
@@ -280,6 +285,7 @@ public class McdGraph extends JPanel{
 			m_objects[0]=null;
 			m_objects[1]=null;
 			m_current=0;
+			setMcdComposentGraphiquetFocus(null);
 		}
 		public void mouseClicked(MouseEvent e) {
 			
@@ -296,6 +302,7 @@ public class McdGraph extends JPanel{
 			for(McdComposentGraphique component : m_components){
 				if(((FormeGeometrique)component).contient(e.getPoint())){
 					if(component.isLinkable()){
+						setMcdComposentGraphiquetFocus(component);
 						m_objects[m_current++] = component;
 						break;
 					}
@@ -456,11 +463,10 @@ public class McdGraph extends JPanel{
 		private long m_time, m_interval;
 		
 		public McdGraphStateEdit() {
-			m_focus=null;
 			m_interval = 500;
 		}
 		public void enterState(){
-			m_focus=null;
+			setMcdComposentGraphiquetFocus(null);
 		}
 		public void mouseClicked(MouseEvent arg0) {
 			
@@ -481,7 +487,8 @@ public class McdGraph extends JPanel{
 					found=true;
 					if(component!=m_focus){
 						m_time=System.currentTimeMillis();
-						m_focus=component;
+						setMcdComposentGraphiquetFocus(component);
+						break;
 					}
 				}
 			}
@@ -491,7 +498,8 @@ public class McdGraph extends JPanel{
 						found=true;
 						if(component!=m_focus){
 							m_time=System.currentTimeMillis();
-							m_focus=component;
+							setMcdComposentGraphiquetFocus(component);
+							break;
 						}
 					}
 				}
@@ -507,7 +515,10 @@ public class McdGraph extends JPanel{
 				else if(m_focus instanceof CardinaliteGraph){
 					new FenetreEditionCardinalite(McdGraph.this, (CardinaliteGraph)m_focus).setVisible(true);
 				}
-				m_focus=null;
+				setMcdComposentGraphiquetFocus(null);
+			}
+			else if(!found){
+				setMcdComposentGraphiquetFocus(null);
 			}
 			
 		}
@@ -523,6 +534,15 @@ public class McdGraph extends JPanel{
 		public void mouseMoved(MouseEvent arg0) {
 			
 		}
-		
+	}
+	private void setMcdComposentGraphiquetFocus(McdComposentGraphique comp){
+		if(m_focus!=null){
+			m_focus.setFocus(false);
+		}
+		m_focus=comp;
+		if(m_focus!=null){
+			m_focus.setFocus(true);
+		}
+		repaint();
 	}
 }
