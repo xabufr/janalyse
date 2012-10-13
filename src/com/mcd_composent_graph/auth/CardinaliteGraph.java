@@ -23,7 +23,7 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 	private Boolean m_needUpdateGraphic;
 	private FormeGeometriqueLigne m_geometrie;
 	private Boolean m_registeredEntite;
-	private Point m_posRelation;
+	private final Point m_posRelation = new Point();
 	
 	public void setPointA(Point p){
 		m_geometrie.setPointA(p);
@@ -41,7 +41,6 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		m_geometrie = new FormeGeometriqueLigne(new Point(), new Point());
 		m_needUpdateGraphic=true;
 		m_registeredEntite=false;
-		m_posRelation = new Point();
 	}
 
 	public void dessiner(Graphics g) {
