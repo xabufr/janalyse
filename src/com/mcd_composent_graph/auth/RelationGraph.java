@@ -156,7 +156,6 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 		m_mcd=mcd;
 		m_mcd.registerLogic(m_relation, this);
 	}
-	McdGraph m_mcd;
 
 	public void prepareDelete() {
 		m_mcd.removeLogic(m_relation);

@@ -179,7 +179,6 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 	public Boolean isLinkable() {
 		return true;
 	}
-	McdGraph m_mcd;
 
 	public void prepareDelete() {
 		m_mcd.removeLogic(m_heritage);
