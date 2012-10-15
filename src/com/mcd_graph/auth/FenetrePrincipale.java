@@ -7,6 +7,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
@@ -24,6 +25,8 @@ import com.event.auth.QuitListener;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.awt.event.InputEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class FenetrePrincipale {
 	private McdGraph m_mcd;
@@ -36,6 +39,7 @@ public class FenetrePrincipale {
 	private JButton m_boutonInsertionHeritage;
 	private ArrayList<JButton> m_stateButtons;
 	private JButton m_boutonEdition;
+	private final JTabbedPane m_mcdContener = new JTabbedPane();
 	/**
 	 * Launch the application.
 	 */
@@ -59,8 +63,37 @@ public class FenetrePrincipale {
 	public FenetrePrincipale() {
 		m_stateButtons = new ArrayList<JButton>();
 		initialize();
-		m_mcd = new McdGraph();
-		frame.getContentPane().add(m_mcd);
+		m_mcdContener.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent event) {
+				m_mcd = (McdGraph) m_mcdContener.getSelectedComponent();
+				/*On remmet les boutons de mode d'édition en place en fonction du nouveau MCD*/
+				switch(m_mcd.getState()){
+				case EDIT:
+					setEnabledButton(m_boutonEdition);
+					break;
+				case INSERT_CONTRAINTE:
+					setEnabledButton(m_boutonInsertionContrainte);
+					break;
+				case INVALID:
+					m_mcd.setState(McdGraphStateE.INSERT_ENTITE);
+				case INSERT_ENTITE:
+					setEnabledButton(m_boutonInsertionEntite);
+					break;
+				case INSERT_HERITAGE:
+					setEnabledButton(m_boutonInsertionHeritage);
+					break;
+				case INSERT_LIEN:
+					setEnabledButton(m_boutonInsertionLien);
+					break;
+				case INSERT_RELATION:
+					setEnabledButton(m_boutonInsertionRelation);
+					break;
+				case MOVE:
+					setEnabledButton(m_boutonDeplacer);
+					break;
+				}
+			}
+		});
 	}
 	private void setEnabledButton(JButton b){
 		for(JButton button : m_stateButtons){
@@ -84,6 +117,11 @@ public class FenetrePrincipale {
 		menuBar.add(mnFichier);
 		
 		JMenuItem menuItem = new JMenuItem("Nouveau");
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createNewMcd();
+			}
+		});
 		mnFichier.add(menuItem);
 		
 		JMenuItem mntmOuvrir = new JMenuItem("Ouvrir");
@@ -210,53 +248,72 @@ public class FenetrePrincipale {
 		
 		m_boutonInsertionEntite.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)
+					return;
 				m_mcd.setState(McdGraphStateE.INSERT_ENTITE);
 				setEnabledButton(m_boutonInsertionEntite);
 			}
 		});
 		m_boutonInsertionRelation.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)
+					return;
 				m_mcd.setState(McdGraphStateE.INSERT_RELATION);
 				setEnabledButton(m_boutonInsertionRelation);
 			}
 		});
 		m_boutonInsertionContrainte.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)
+					return;
 				m_mcd.setState(McdGraphStateE.INSERT_CONTRAINTE);
 				setEnabledButton(m_boutonInsertionContrainte);
 			}
 		});
 		m_boutonInsertionHeritage.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)
+					return;
 				m_mcd.setState(McdGraphStateE.INSERT_HERITAGE);
 				setEnabledButton(m_boutonInsertionHeritage);
 			}
 		});
 		m_boutonInsertionLien.addActionListener(new ActionListener(){
 		public void actionPerformed(ActionEvent arg0) {
+			if(m_mcd==null)
+				return;
 			m_mcd.setState(McdGraphStateE.INSERT_LIEN);
 			setEnabledButton(m_boutonInsertionLien);
 		}
 		});
 		m_boutonDeplacer.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)
+					return;
 				m_mcd.setState(McdGraphStateE.MOVE);
 				setEnabledButton(m_boutonDeplacer);
 			}
 		});
 		m_boutonEdition.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)
+					return;
 				m_mcd.setState(McdGraphStateE.EDIT);
 				setEnabledButton(m_boutonEdition);
 			}
 		});
 		setEnabledButton(m_boutonDeplacer);
 		
-		
+		frame.getContentPane().add(m_mcdContener);
 	}
 
 	public void quitter() {
 		frame.dispose();
+	}
+	private void createNewMcd(){
+		McdGraph mcd = new McdGraph();
+		mcd.setState(McdGraphStateE.INSERT_ENTITE);
+		m_mcdContener.addTab("Nouveau MCD*", mcd);
 	}
 
 }
