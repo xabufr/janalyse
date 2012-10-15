@@ -3,7 +3,7 @@ package com.mcd_log.auth;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Entite{
+public class Entite implements Cloneable{
 	private String m_name;
 	private String m_commentaire;
 	private List<Propriete> m_proprietes;
@@ -58,5 +58,10 @@ public class Entite{
 	
 	public String toString(){
 		return m_name;
+	}
+	
+	public Entite clone() throws CloneNotSupportedException{
+		Entite e = (Entite) super.clone();
+		return e;
 	}
 }

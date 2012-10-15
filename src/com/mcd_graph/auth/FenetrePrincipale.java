@@ -32,6 +32,7 @@ import java.awt.event.MouseListener;
 
 import com.event.auth.QuitListener;
 
+import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
@@ -51,7 +52,6 @@ import javax.swing.filechooser.FileFilter;
 public class FenetrePrincipale {
 	private McdGraph m_mcd;
 	private JFrame frame;
-	private McdComposentGraphique m_copie;
 	private JButton m_boutonInsertionEntite;
 	private JButton m_boutonInsertionRelation;
 	private JButton m_boutonDeplacer;
@@ -212,10 +212,26 @@ public class FenetrePrincipale {
 		
 		JMenuItem mntmCopier = new JMenuItem("Copier");
 		mntmCopier.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK));
+		mntmCopier.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				if (m_mcd != null)
+					m_mcd.copyMcdComposent();
+			}
+		});
 		mnEdition.add(mntmCopier);
 		
 		JMenuItem mntmColler = new JMenuItem("Coller");
 		mntmColler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK));
+		mntmColler.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (m_mcd != null)
+					try {
+						m_mcd.pastMcdComposent();
+					} catch (CloneNotSupportedException e1) {
+						e1.printStackTrace();
+					}
+			}
+		});
 		mnEdition.add(mntmColler);
 		
 		JSeparator separator_2 = new JSeparator();

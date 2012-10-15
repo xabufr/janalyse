@@ -43,6 +43,7 @@ import com.preferences_mcd_logique.auth.PGroupe;
 
 public class McdGraph extends JPanel{
 	private McdComposentGraphique m_focus;
+	private McdComposentGraphique m_copie;
 	private Point m_deltaSelect;
 	private Hashtable<McdGraphStateE, McdGraphState> m_states;
 	private McdGraphStateE m_currentState;
@@ -744,6 +745,61 @@ public class McdGraph extends JPanel{
 			m_componentsFirst.remove(comp);
 		else
 			m_componentsSecond.remove(comp);
+	}
+	public void copyMcdComposent(){
+		m_copie = m_focus;
+	}
+	public void pastMcdComposent() throws CloneNotSupportedException{
+		if (m_copie != null){
+			if (m_copie instanceof EntiteGraph){
+				EntiteGraph eg = new EntiteGraph();
+				Entite e = ((EntiteGraph) m_copie).getEntite().clone();
+				
+				eg.setEntite(e);
+				eg.setPosition(getMousePosition());
+				eg.setMcd(McdGraph.this);
+				
+				m_components.add(eg);
+				m_componentsSecond.add(eg);
+				repaint();
+			}
+			else if (m_copie instanceof RelationGraph){
+				RelationGraph rg = new RelationGraph();
+				Relation r = ((RelationGraph) m_copie).getRelation().clone();
+				
+				rg.setRelation(r);
+				rg.setPosition(getMousePosition());
+				rg.setMcd(McdGraph.this);
+				
+				m_components.add(rg);
+				m_componentsSecond.add(rg);
+				repaint();
+			}
+			else if (m_copie instanceof ContrainteGraph){
+				ContrainteGraph cg = new ContrainteGraph();
+				Contrainte c = ((ContrainteGraph) m_copie).getContrainte().clone();
+				
+				cg.setContrainte(c);
+				cg.setPosition(getMousePosition());
+				cg.setMcd(McdGraph.this);
+				
+				m_components.add(cg);
+				m_componentsFirst.add(cg);
+				repaint();
+			}
+			else if (m_copie instanceof HeritageGraph){
+				HeritageGraph hg = new HeritageGraph();
+				Heritage h = ((HeritageGraph) m_copie).getHeritage().clone();
+				
+				hg.setHeritage(h);
+				hg.setPosition(getMousePosition());
+				hg.setMcd(McdGraph.this);
+				
+				m_components.add(hg);
+				m_componentsFirst.add(hg);
+				repaint();
+			}
+		}
 	}
 	private void setMcdComposentGraphiquetFocus(McdComposentGraphique comp){
 		if(m_focus!=null){

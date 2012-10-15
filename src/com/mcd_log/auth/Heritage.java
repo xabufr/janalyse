@@ -2,7 +2,7 @@ package com.mcd_log.auth;
 
 import java.util.ArrayList;
 
-public class Heritage {
+public class Heritage implements Cloneable{
 	public Heritage(HeritageType t){
 		setType(t);
 		m_enfants = new ArrayList<Entite>();
@@ -24,6 +24,10 @@ public class Heritage {
 	}
 	public void setType(HeritageType type) {
 		m_type = type;
+	}
+	public Heritage clone() throws CloneNotSupportedException{
+		Heritage h = (Heritage) super.clone();
+		return h;
 	}
 	private HeritageType m_type;
 	private ArrayList<Entite> m_enfants;
