@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import com.event.auth.QuitListener;
+import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 public class FenetrePrincipale {
 	private McdGraph m_mcd;
 	private JFrame frame;
+	private McdComposentGraphique m_copie;
 	private JButton m_boutonInsertionEntite;
 	private JButton m_boutonInsertionRelation;
 	private JButton m_boutonDeplacer;
@@ -78,6 +80,7 @@ public class FenetrePrincipale {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
+		frame.setTitle("JAnalyse");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -110,10 +113,6 @@ public class FenetrePrincipale {
 		JMenu mnEdition = new JMenu("Edition");
 		mnEdition.setMnemonic('E');
 		menuBar.add(mnEdition);
-		
-		JMenuItem mntmCouper = new JMenuItem("Couper");
-		mntmCouper.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK));
-		mnEdition.add(mntmCouper);
 		
 		JMenuItem mntmCopier = new JMenuItem("Copier");
 		mntmCopier.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK));

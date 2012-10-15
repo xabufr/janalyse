@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Timer;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.mcd_composent_graph.auth.CardinaliteGraph;
@@ -22,6 +23,8 @@ import com.mcd_composent_graph.auth.HeritageGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.RelationGraph;
 import com.mcd_composent_graph.auth.FormeGeometrique;
+import com.mcd_edition_fenetre.auth.FenetreEditionEntite;
+import com.mcd_edition_fenetre.auth.FenetreEditionHeritage;
 import com.mcd_edition_fenetre.auth.FenetreEditionRelation;
 import com.mcd_log.auth.Cardinalite;
 import com.mcd_log.auth.Contrainte;
@@ -348,10 +351,7 @@ public class McdGraph extends JPanel{
 					if(m_objects[0] instanceof EntiteGraph || m_objects[1] instanceof EntiteGraph){
 						EntiteGraph entite = (EntiteGraph) (m_objects[0] instanceof EntiteGraph ?
 								m_objects[0]:m_objects[1]);
-						if (heritage.getHeritage().getParent() == null)
-							heritage.getHeritage().setParent(entite.getEntite());
-						else
-							heritage.getHeritage().addEnfant(entite.getEntite());
+						heritage.getHeritage().addEnfant(entite.getEntite());
 					}
 					heritage.update();
 				}
@@ -491,6 +491,19 @@ public class McdGraph extends JPanel{
 				{
 					new FenetreEditionRelation(McdGraph.this, (RelationGraph)m_focus).setVisible(true);
 					((RelationGraph)m_focus).actualiser();
+				}
+				else if (m_focus instanceof ContrainteGraph){
+					String nom;
+					nom = JOptionPane.showInputDialog(null, "Type de contrainte:", "Edition Contrainte", JOptionPane.PLAIN_MESSAGE, null, ContrainteType.values(), ContrainteType.PLUS).toString();
+					((ContrainteGraph) m_focus).getContrainte().setNom(ContrainteType.valueOf(nom));
+					((ContrainteGraph) m_focus).update();
+				}
+				else if (m_focus instanceof HeritageGraph){
+					new FenetreEditionHeritage(McdGraph.this, (HeritageGraph)m_focus).setVisible(true);
+					((HeritageGraph)m_focus).update();
+				}
+				else if (m_focus instanceof EntiteGraph){
+					new FenetreEditionEntite(McdGraph.this, (EntiteGraph)m_focus).setVisible(true);
 				}
 				m_focus=null;
 			}
