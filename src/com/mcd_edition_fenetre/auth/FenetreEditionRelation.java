@@ -1,7 +1,6 @@
 package com.mcd_edition_fenetre.auth;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
@@ -12,20 +11,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JTextField;
 import javax.swing.JList;
-import javax.swing.JSeparator;
-import java.awt.GridLayout;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
-import javax.swing.JSplitPane;
 import javax.swing.JLabel;
-import javax.swing.ListModel;
-import javax.swing.SwingConstants;
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import java.awt.Color;
 import javax.swing.JTextPane;
 import javax.swing.JComboBox;
 
@@ -36,12 +26,12 @@ import com.mcd_log.auth.ProprieteType;
 import com.mcd_log.auth.ProprieteTypeE;
 import com.mcd_log.auth.Relation;
 
-import java.awt.Dialog.ModalityType;
 import javax.swing.JCheckBox;
 import javax.swing.JSpinner;
 import java.awt.Dimension;
 import javax.swing.SpinnerNumberModel;
 
+@SuppressWarnings("serial")
 public class FenetreEditionRelation extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();

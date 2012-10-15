@@ -16,6 +16,7 @@ import javax.swing.JSpinner;
 import javax.swing.JCheckBox;
 
 import com.mcd_composent_graph.auth.CardinaliteGraph;
+import com.mcd_composent_graph.auth.CardinaliteGraphType;
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Cardinalite;
 
@@ -25,8 +26,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.SpinnerListModel;
 import javax.swing.SpinnerNumberModel;
-import java.awt.Dialog.ModalityType;
+import javax.swing.JComboBox;
 
+@SuppressWarnings("serial")
 public class FenetreEditionCardinalite extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
@@ -36,22 +38,25 @@ public class FenetreEditionCardinalite extends JDialog {
 	private McdGraph m_mcd;
 	private CardinaliteGraph m_cardinaliteGraph;
 	private Cardinalite m_cardinalite;
+	private JComboBox m_selectStyle;
 
 	/**
 	 * Create the dialog.
 	 */
 	public FenetreEditionCardinalite(McdGraph mcd, CardinaliteGraph cardinalite) {
+		setMinimumSize(new Dimension(0, 185));
+		setModal(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		m_mcd=mcd;
 		m_cardinaliteGraph=cardinalite;
 		m_cardinalite = m_cardinaliteGraph.getCardinalite();
 
 		setTitle("Edition cardinalité");
-		setBounds(100, 100, 204, 157);
+		setBounds(100, 100, 248, 185);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[][73.00]", "[][][]"));
+		contentPanel.setLayout(new MigLayout("", "[grow][73.00,grow]", "[][][][][]"));
 		{
 			JLabel lblCardinalitMin = new JLabel("Cardinalité min");
 			contentPanel.add(lblCardinalitMin, "cell 0 0");
@@ -105,12 +110,24 @@ public class FenetreEditionCardinalite extends JDialog {
 		}
 		{
 			JLabel lblRelatif = new JLabel("Relatif");
-			contentPanel.add(lblRelatif, "cell 0 2");
+			contentPanel.add(lblRelatif, "flowy,cell 0 2");
 		}
 		{
 			m_relatif = new JCheckBox("");
 			m_relatif.setSelected(m_cardinalite.isRelatif());
 			contentPanel.add(m_relatif, "cell 1 2");
+		}
+		{
+			JLabel lblStyle = new JLabel("Style");
+			contentPanel.add(lblStyle, "cell 0 3");
+		}
+		{
+			m_selectStyle = new JComboBox();
+			for(CardinaliteGraphType s: CardinaliteGraphType.values()){
+				m_selectStyle.addItem(s);
+			}
+			m_selectStyle.setSelectedItem(m_cardinaliteGraph.getTypeDessin());
+			contentPanel.add(m_selectStyle, "cell 1 3,growx");
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -123,6 +140,7 @@ public class FenetreEditionCardinalite extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						m_cardinalite.setRelatif(m_relatif.isSelected());
 						m_cardinalite.setMin((Integer) m_min.getValue());
+						m_cardinaliteGraph.setTypeDessin((CardinaliteGraphType) m_selectStyle.getSelectedItem());
 						if(m_max.getValue().toString() != "n"){
 							m_cardinalite.setMax(Integer.parseInt(m_max.getValue().toString()));
 						}
