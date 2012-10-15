@@ -8,8 +8,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
-import java.awt.geom.Line2D.Double;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -64,12 +62,14 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 	public void dessiner(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		Point pos = getPosition();
-		Dimension dim = getDimension();
 		int x, y, widthMax=0, heightMax=0;
 		
 		
 		/*Calcul taille propriétés*/
-		g.setFont(prefs.getFont(PGroupe.ENTITE, PCle.FONT));
+		if(!m_focus)
+			g.setFont(prefs.getFont(PGroupe.ENTITE, PCle.FONT));
+		else
+			g.setFont(prefs.getFont(PGroupe.ENTITE, PCle.FONT_FOCUS));
 		FontMetrics font = g.getFontMetrics();
 		ProprieteGraph dessinPropriete = new ProprieteGraph();
 		
@@ -81,7 +81,10 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 		}
 		
 		/*Ajout taille nom*/
-		g.setFont(prefs.getFont(PGroupe.ENTITE, PCle.FONT_NOM));
+		if(!m_focus)
+			g.setFont(prefs.getFont(PGroupe.ENTITE, PCle.FONT_NOM));
+		else
+			g.setFont(prefs.getFont(PGroupe.ENTITE, PCle.FONT_NOM_FOCUS));
 		font = g.getFontMetrics();
 		
 		if (font.stringWidth(m_entite.getName()) > widthMax)
@@ -92,32 +95,48 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 		heightMax += 30;
 		
 		//cadre
-		g.setColor((Color) prefs.get(PGroupe.ENTITE, PCle.COLOR));
+		if(!m_focus)
+			g.setColor((Color) prefs.get(PGroupe.ENTITE, PCle.COLOR));
+		else
+			g.setColor((Color) prefs.get(PGroupe.ENTITE, PCle.COLOR_FOCUS));
 		g.fillRect(pos.x, pos.y, widthMax, heightMax);
 		if(!m_focus)
-			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR));
+			g.setColor((Color) prefs.get(PGroupe.ENTITE, PCle.COLOR_CONTOUR));
 		else
-			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS));
+			g.setColor((Color) prefs.get(PGroupe.ENTITE, PCle.COLOR_CONTOUR_FOCUS));
 		g.drawRect(pos.x, pos.y, widthMax, heightMax);
 		this.setRectangle(new Rectangle(pos.x, pos.y, widthMax, heightMax));
 		g.drawLine(pos.x, (pos.y+font.getHeight()+6), (pos.x+widthMax), (pos.y+font.getHeight()+6));
 		//titre
 		x = (pos.x + (widthMax / 2)) - (font.stringWidth(m_entite.getName()) / 2);
 		y = (pos.y + font.getHeight());
-		g.setColor((Color) prefs.get(PGroupe.ENTITE, PCle.FONT_NOM_COLOR));
+		if(!m_focus)
+			g.setColor((Color) prefs.get(PGroupe.ENTITE, PCle.FONT_NOM_COLOR));
+		else
+			g.setColor((Color) prefs.get(PGroupe.ENTITE, PCle.FONT_NOM_COLOR_FOCUS));
 		g.drawString(m_entite.getName(), x, y);
 		//propriete
-		g.setFont(prefs.getFont(PGroupe.ENTITE, PCle.FONT));
-		font = g.getFontMetrics();
+		Font ffont;
+		Color col;
+		if(!m_focus){
+			ffont = prefs.getFont(PGroupe.ENTITE, PCle.FONT);
+			col = (Color) prefs.get(PGroupe.ENTITE, PCle.FONT_COLOR);
+		}
+		else{
+			ffont = prefs.getFont(PGroupe.ENTITE, PCle.FONT_FOCUS);
+			col = (Color) prefs.get(PGroupe.ENTITE, PCle.FONT_COLOR_FOCUS);
+		}
+			
+		font = g.getFontMetrics(ffont);
 		x = pos.x+5;
 		y += font.getHeight()+10;
 		for (Propriete propriete : m_entite.getProprietes()){
 			dessinPropriete.setPropriete(propriete);
-			
 			dessinPropriete.dessiner(g,
-					prefs.getFont(PGroupe.ENTITE, PCle.FONT),
-					(Color) prefs.get(PGroupe.ENTITE, PCle.FONT_COLOR),
+					ffont,
+					col,
 					new Point(x, y));
+			
 			
 			y += font.getHeight() + 4;
 		}

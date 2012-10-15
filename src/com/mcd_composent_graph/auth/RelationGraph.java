@@ -80,14 +80,21 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 			this.actualiser();
 	
 			Dimension dim = new Dimension(0,0), dimEC;
-			Font font = prefs.getFont(PGroupe.RELATION, PCle.FONT_NOM);
+			Font font;
+			if(!m_focus)
+				font = prefs.getFont(PGroupe.RELATION, PCle.FONT_NOM);
+			else
+				font = prefs.getFont(PGroupe.RELATION, PCle.FONT_NOM_FOCUS);
 			
 			
 			FontMetrics metric = g.getFontMetrics(font);
 			m_widthNom = dim.width = metric.stringWidth(m_relation.getNom());
 			m_heightNom = metric.getHeight();
 			
-			font = prefs.getFont(PGroupe.RELATION, PCle.FONT);
+			if(!m_focus)
+				font = prefs.getFont(PGroupe.RELATION, PCle.FONT);
+			else
+				font = prefs.getFont(PGroupe.RELATION, PCle.FONT_FOCUS);
 			
 			for(int i=0;i<m_lastPropsNumber;++i){
 				dimEC=m_proprietes.get(i).getDimension(g, font);
@@ -100,6 +107,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 			dim.height *= 2;
 			dim.width += 60;
 			setDimension(dim);
+			m_calculerTaille=false;
 		}
 		Point pos = getPosition();
 		Dimension dim = getDimension();
@@ -111,8 +119,10 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 			dim.width = dim.height*2;
 		
 		setDimension(dim);
-		
-		g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR));
+		if(!m_focus)
+			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR));
+		else
+			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_FOCUS));
 		
 		g.fillOval(pos.x, pos.y, dim.width, dim.height);
 		if(!m_focus)
@@ -124,8 +134,14 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 		Point cursor = new Point(pos);
 		cursor.x += (dim.width/2)-(m_widthNom/2);
 		cursor.y += (dim.height/4)+(m_heightNom/2);
-		g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.FONT_NOM_COLOR));
-		g.setFont(prefs.getFont(PGroupe.RELATION, PCle.FONT_NOM));
+		if(!m_focus){
+			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.FONT_NOM_COLOR));
+			g.setFont(prefs.getFont(PGroupe.RELATION, PCle.FONT_NOM));
+		}
+		else{
+			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.FONT_NOM_COLOR_FOCUS));
+			g.setFont(prefs.getFont(PGroupe.RELATION, PCle.FONT_NOM_FOCUS));
+		}
 		g.drawString(m_relation.getNom(), cursor.x, cursor.y);
 		cursor.y = pos.y+(dim.height/2);
 		
@@ -135,8 +151,16 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS));
 		g.drawLine(pos.x, cursor.y, pos.x+dim.width, cursor.y);
 		
-		Font font = prefs.getFont(PGroupe.RELATION, PCle.FONT);
-		Color couleur = (Color) prefs.get(PGroupe.RELATION, PCle.FONT_COLOR);
+		Font font;
+		Color couleur;
+		if(!m_focus){
+			font = prefs.getFont(PGroupe.RELATION, PCle.FONT);
+			couleur = (Color) prefs.get(PGroupe.RELATION, PCle.FONT_COLOR);
+		}
+		else{
+			font = prefs.getFont(PGroupe.RELATION, PCle.FONT_FOCUS);
+			couleur = (Color) prefs.get(PGroupe.RELATION, PCle.FONT_COLOR_FOCUS);
+		}
 		Dimension dimEC;
 		cursor.y-=3;
 		for(int i=0;i<this.m_lastPropsNumber;++i){
@@ -161,5 +185,10 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 		m_mcd.removeLogic(m_relation);
 		m_relation.setProprietes(null);
 		m_relation=null;
+	}
+	
+	public void setFocus(Boolean f){
+		super.setFocus(f);
+		m_calculerTaille=true;
 	}
 }

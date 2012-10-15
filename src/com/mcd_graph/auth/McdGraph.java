@@ -72,6 +72,8 @@ public class McdGraph extends JPanel{
 		
 		prefs.setFont(PGroupe.RELATION, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
 		prefs.setFont(PGroupe.RELATION, PCle.FONT_NOM, "TimesRoman", Font.PLAIN, 10);
+		prefs.setFont(PGroupe.RELATION, PCle.FONT_FOCUS, "TimesRoman", Font.PLAIN, 10);
+		prefs.setFont(PGroupe.RELATION, PCle.FONT_NOM_FOCUS, "TimesRoman", Font.PLAIN, 10);
 		prefs.set(PGroupe.RELATION, PCle.FONT_COLOR, Color.GRAY);
 		prefs.set(PGroupe.RELATION, PCle.FONT_NOM_COLOR, Color.BLACK);
 		prefs.set(PGroupe.RELATION, PCle.COLOR, Color.GREEN);
@@ -80,6 +82,8 @@ public class McdGraph extends JPanel{
 		
 		prefs.setFont(PGroupe.ENTITE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
 		prefs.setFont(PGroupe.ENTITE, PCle.FONT_NOM, "TimesRoman", Font.PLAIN, 12);
+		prefs.setFont(PGroupe.ENTITE, PCle.FONT_FOCUS, "TimesRoman", Font.PLAIN, 10);
+		prefs.setFont(PGroupe.ENTITE, PCle.FONT_NOM_FOCUS, "TimesRoman", Font.PLAIN, 12);
 		prefs.set(PGroupe.ENTITE,  PCle.COLOR, Color.GREEN);
 		prefs.set(PGroupe.ENTITE, PCle.COLOR_CONTOUR, Color.RED);
 		prefs.set(PGroupe.ENTITE, PCle.FONT_COLOR, Color.RED);

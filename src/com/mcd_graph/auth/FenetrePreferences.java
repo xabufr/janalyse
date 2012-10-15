@@ -173,7 +173,7 @@ public class FenetrePreferences extends JDialog {
 								JButton btnCouleurNomFocus = new JButton("Couleur");
 								btnCouleurNomFocus.addActionListener(new ActionListener() {
 									public void actionPerformed(ActionEvent e) {
-										changeColor(PGroupe.ENTITE, PCle.FONT_COLOR_FOCUS, "Couleur nom entité focus");
+										changeColor(PGroupe.ENTITE, PCle.FONT_NOM_COLOR_FOCUS, "Couleur nom entité focus");
 									}
 								});
 								panel.add(btnCouleurNomFocus, "cell 2 1");
