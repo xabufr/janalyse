@@ -1,9 +1,12 @@
 package com.mcd_graph.auth;
 
 import java.awt.EventQueue;
+import java.awt.Graphics2D;
 import java.awt.Point;
 
+import javax.imageio.ImageIO;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -31,8 +34,13 @@ import com.event.auth.QuitListener;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.awt.event.InputEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.filechooser.FileFilter;
 
 public class FenetrePrincipale {
 	private McdGraph m_mcd;
@@ -139,6 +147,41 @@ public class FenetrePrincipale {
 		mnFichier.add(separator);
 		
 		JMenuItem mntmExporterEnPng = new JMenuItem("Exporter en PNG");
+		mntmExporterEnPng.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(m_mcd==null)
+					return;
+				JFileChooser chooser = new JFileChooser();
+				chooser.setFileFilter(new FileFilter(){
+					public boolean accept(File arg0) {
+						if(arg0.isDirectory())
+							return true;
+						if(getExtension(arg0)=="png")
+							return true;
+						return false;
+					}
+
+					public String getDescription() {
+						return "PNG Only";
+					}
+					
+				});
+				if(chooser.showSaveDialog(frame)==JFileChooser.APPROVE_OPTION){
+					BufferedImage outImage = new BufferedImage(m_mcd.getWidth(), m_mcd.getHeight(), BufferedImage.TYPE_INT_RGB);
+					
+					Graphics2D graphic = outImage.createGraphics();
+					m_mcd.paint(graphic);
+					File outFile = chooser.getSelectedFile();
+					if(getExtension(outFile)!="png")
+						outFile = new File(outFile.getAbsolutePath()+".png");
+					try {
+						ImageIO.write(outImage, "png", outFile);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
 		mnFichier.add(mntmExporterEnPng);
 		
 		JSeparator separator_1 = new JSeparator();
@@ -391,5 +434,16 @@ public class FenetrePrincipale {
 				return;
 			super.show(m_mcdContener, p.x, p.y);
 		}
+	}
+	private String getExtension(File f){
+		String ext=f.getName();
+		
+		int index = ext.lastIndexOf(".");
+		String ret = null;
+		if(index>0&&index<ext.length()-1){
+			ret = ext.substring(index+1).toLowerCase();
+		}
+		
+		return ret;
 	}
 }
