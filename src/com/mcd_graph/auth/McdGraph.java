@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -45,10 +46,12 @@ public class McdGraph extends JPanel{
 	private Hashtable<McdGraphStateE, McdGraphState> m_states;
 	private McdGraphStateE m_currentState;
 	private Hashtable<Object, McdComposentGraphique> m_logicObjects;
-	
+	private FenetrePrincipale m_fenetrePrincipale;
 	private ArrayList<McdComposentGraphique> m_components, m_componentsFirst, m_componentsSecond;
+	private Boolean m_isMoving;
 	
-	public McdGraph() {
+	public McdGraph(FenetrePrincipale fenPrinc) {
+		m_fenetrePrincipale = fenPrinc;
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		
 		prefs.setFont(PGroupe.HERITAGE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
@@ -106,6 +109,7 @@ public class McdGraph extends JPanel{
 		
 		m_logicObjects = new Hashtable<Object, McdComposentGraphique> ();
 		m_focus = null;
+		m_isMoving = false;
 		m_deltaSelect = new Point();
 		
 		this.setSize(new Dimension(80, 80));
@@ -116,13 +120,106 @@ public class McdGraph extends JPanel{
 	public void paintComponent(Graphics g){
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-
+		
+		Point min = new Point(0,0), max = new Point(0,0);
 		for(McdComposentGraphique component : m_componentsFirst){
 			component.dessiner(g);
+			if(component instanceof FormeGeometrique){
+				FormeGeometrique forme = (FormeGeometrique) component;
+				if(min.x>forme.getPosition().x){
+					min.x=forme.getPosition().x-50;
+				}
+				if(min.y>forme.getPosition().y){
+					min.y=forme.getPosition().y-50;
+				}
+				if(max.x<forme.getPosition().x){
+					max.x=forme.getPosition().x+50;
+				}
+				if(max.y<forme.getPosition().y){
+					max.y=forme.getPosition().y+50;
+				}
+			}
 		}
 		for(McdComposentGraphique component : m_componentsSecond){
 			component.dessiner(g);
+			if(component instanceof FormeGeometrique){
+				FormeGeometrique forme = (FormeGeometrique) component;
+				
+				if(component instanceof EntiteGraph){
+					EntiteGraph eg = (EntiteGraph) component;
+					Rectangle r = eg.getRectangle();
+					if(min.x>r.x){
+						min.x=r.x;
+					}
+					if(min.y>r.y){
+						min.y=r.y;
+					}
+					if(max.x<r.x+r.width){
+						max.x=r.x+r.width;
+					}
+					if(max.y<r.y+r.height){
+						max.y=r.y+r.height;
+					}
+				}
+				else if(component instanceof RelationGraph){
+					RelationGraph rg = (RelationGraph) component;
+					Rectangle r = rg.getRectangle();
+					if(min.x>r.x){
+						min.x=r.x;
+					}
+					if(min.y>r.y){
+						min.y=r.y;
+					}
+					if(max.x<r.x+r.width){
+						max.x=r.x+r.width;
+					}
+					if(max.y<r.y+r.height){
+						max.y=r.y+r.height;
+					}
+				}
+				else{
+					if(min.x>forme.getPosition().x){
+						min.x=forme.getPosition().x;
+					}
+					if(min.y>forme.getPosition().y){
+						min.y=forme.getPosition().y;
+					}
+					if(max.x<forme.getPosition().x){
+						max.x=forme.getPosition().x+50;
+					}
+					if(max.y<forme.getPosition().y){
+						max.y=forme.getPosition().y+50;
+					}
+				}
+			}
 		}
+		Dimension nouvelleDim = new Dimension(max.x,max.y);
+		if(min.x<0)
+			nouvelleDim.width-=min.x;
+		if(min.y<0)
+			nouvelleDim.height-=min.y;
+		if(!m_isMoving&&!getPreferredSize().equals(nouvelleDim))
+		{
+			if(min.x<0){
+				for(McdComposentGraphique component : m_components){
+					if(component instanceof EntiteGraph){
+						EntiteGraph eg = (EntiteGraph) component;
+						eg.setPosition(new Point(eg.getPosition().x-min.x, eg.getPosition().y));
+					}
+				}
+			}
+			if(min.y<0){
+				for(McdComposentGraphique component : m_components){
+					if(component instanceof EntiteGraph){
+						EntiteGraph eg = (EntiteGraph) component;
+						eg.setPosition(new Point(eg.getPosition().x, eg.getPosition().y-min.y));
+					}
+				}
+			}
+			setPreferredSize(nouvelleDim);
+			m_fenetrePrincipale.updateScrollBar();
+		}
+		
 	}
 	
 	public void registerLogic(Object o, McdComposentGraphique g){
@@ -259,6 +356,9 @@ public class McdGraph extends JPanel{
 		public void enterState(){
 			setMcdComposentGraphiquetFocus(null);
 		}
+		public void leftState(){
+			m_isMoving=false;
+		}
 		public void mouseClicked(MouseEvent e) {
 			
 		}
@@ -281,12 +381,14 @@ public class McdGraph extends JPanel{
 					setMcdComposentGraphiquetFocus(composant);
 					m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
 					m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
+					m_isMoving=true;
 				}
 			}
 		}
 
 		public void mouseReleased(MouseEvent e) {
 			setMcdComposentGraphiquetFocus(null); //Pour gérer la suppression, il faut garder le dernier click
+			m_isMoving=false;
 		}
 
 		public void mouseDragged(MouseEvent e) {

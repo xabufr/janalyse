@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
@@ -79,7 +80,9 @@ public class FenetrePrincipale {
 		initialize();
 		m_mcdContener.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent event) {
-				m_mcd = (McdGraph) m_mcdContener.getSelectedComponent();
+				if(m_mcdContener.getSelectedComponent()==null)
+					return;
+				m_mcd = (McdGraph) ((JScrollPane)m_mcdContener.getSelectedComponent()).getViewport().getView();
 				if(m_mcd==null)
 					return;
 				/*On remmet les boutons de mode d'édition en place en fonction du nouveau MCD*/
@@ -156,7 +159,10 @@ public class FenetrePrincipale {
 					public boolean accept(File arg0) {
 						if(arg0.isDirectory())
 							return true;
-						if(getExtension(arg0)=="png")
+						String ext = getExtension(arg0);
+						if(ext==null)
+							return false;
+						if(ext.equals("png"))
 							return true;
 						return false;
 					}
@@ -167,12 +173,13 @@ public class FenetrePrincipale {
 					
 				});
 				if(chooser.showSaveDialog(frame)==JFileChooser.APPROVE_OPTION){
-					BufferedImage outImage = new BufferedImage(m_mcd.getWidth(), m_mcd.getHeight(), BufferedImage.TYPE_INT_RGB);
+					BufferedImage outImage = new BufferedImage(
+							m_mcd.getPreferredSize().width+1, m_mcd.getPreferredSize().height+1, BufferedImage.TYPE_INT_RGB);
 					
 					Graphics2D graphic = outImage.createGraphics();
 					m_mcd.paint(graphic);
 					File outFile = chooser.getSelectedFile();
-					if(getExtension(outFile)!="png")
+					if(getExtension(outFile)==null||!getExtension(outFile).equals("png"))
 						outFile = new File(outFile.getAbsolutePath()+".png");
 					try {
 						ImageIO.write(outImage, "png", outFile);
@@ -378,17 +385,28 @@ public class FenetrePrincipale {
 		frame.dispose();
 	}
 	private void createNewMcd(){
-		McdGraph mcd = new McdGraph();
+		McdGraph mcd = new McdGraph(this);
 		mcd.setState(McdGraphStateE.INSERT_ENTITE);
 		mcd.setName("Nouveau MCD");
-		m_mcdContener.addTab("Nouveau MCD*", mcd);
+		m_mcdContener.addTab("Nouveau MCD*", new JScrollPane(mcd));
+	}
+	public void updateScrollBar(){
+		int nb = m_mcdContener.getTabCount();
+		for(int i=0;i<nb;++i){
+			JScrollPane sp = (JScrollPane) m_mcdContener.getComponentAt(i);
+			if(sp.getViewport().getView()==m_mcd){
+				sp.updateUI();
+			}
+		}
 	}
 	private void updateMcdNames(){
 		int nb = m_mcdContener.getTabCount();
 		for(int i=0;i<nb;++i){
 			m_mcdContener.setTitleAt(i, 
-					m_mcdContener.
-					getComponentAt(i).
+					((JScrollPane)m_mcdContener.
+					getComponentAt(i)).
+					getViewport().
+					getView().
 					getName());
 		}
 	}
@@ -417,12 +435,21 @@ public class FenetrePrincipale {
 				public void actionPerformed(ActionEvent arg0) {
 					if(m_mcd==null)
 						return;
-					int index = m_mcdContener.indexOfComponent(m_mcd);
+					int index = -1;
+					int nb = m_mcdContener.getTabCount();
+					for(int i=0;i<nb;++i){
+						if(((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()==m_mcd){
+							index=i;
+							break;
+						}
+					}
+					if(index==-1)
+						return;
 					m_mcdContener.remove(index);
 					m_mcd = null;
 					if(m_mcdContener.getTabCount()!=0){
 						m_mcdContener.setSelectedIndex(0);
-						m_mcd = (McdGraph) m_mcdContener.getSelectedComponent();
+						m_mcd = (McdGraph) ((JScrollPane)m_mcdContener.getSelectedComponent()).getViewport().getView();
 					}
 				}
 			});
