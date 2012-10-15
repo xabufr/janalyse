@@ -1,11 +1,14 @@
 package com.mcd_log.auth;
 
-public class Cardinalite {
+public class Cardinalite implements Cloneable{
 	
 	public Cardinalite(int min, int max, Boolean rel){
 		setMin(min);
 		setMax(max);
 		setRelatif(rel);
+	}
+	public Cardinalite clone() throws CloneNotSupportedException{
+		return (Cardinalite) super.clone();
 	}
 	public Cardinalite(){
 		this(0, -1, false);
@@ -46,11 +49,16 @@ public class Cardinalite {
 	}
 	
 	public String toString(){
-		String ret = String.valueOf(m_min)+",";
+		String ret="";
+		if(isRelatif())
+			ret="(";
+		ret += String.valueOf(m_min)+",";
 		if(m_max>0)
 			ret+=String.valueOf(m_max);
 		else
 			ret+="n";
+		if(isRelatif())
+			ret+=")";
 		return ret;
 	}
 

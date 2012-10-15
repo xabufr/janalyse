@@ -29,6 +29,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 	private Boolean m_needUpdateGraphic;
 	private McdGraph m_mcd;
 	private FormeGeometriqueRectangle m_geometrie;
+	private final Point m_centre = new Point();
 
 	public Rectangle getRectangle(){
 		return m_geometrie.getRectangle();
@@ -77,22 +78,29 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
                 0); 
 		
 		if(m_needUpdateGraphic&&m_mcd!=null){
+			for(EntiteGraph e : m_entiteGraph){
+				e.removeLien(this);
+			}
+			m_entiteGraph.clear();
 			for (Relation r : m_contrainte.getRelations())
 				m_relationGraph.add((RelationGraph) m_mcd.getGraphicComponent(r));
 			
-			for (Entite e : m_contrainte.getEntites())
-				m_entiteGraph.add((EntiteGraph) m_mcd.getGraphicComponent(e));
+			for (Entite e : m_contrainte.getEntites()){
+				EntiteGraph ent = (EntiteGraph) m_mcd.getGraphicComponent(e);
+				m_entiteGraph.add(ent);
+				ent.addLien(this, m_centre);
+			}
 			
 			m_needUpdateGraphic=false;
 		}
 		
 		dim.width = dim.height = 30;
 		
-		Point centreContrainte = getPosition();
+		m_centre.setLocation(getPosition());
 		Point centreObjet;
 		
-		centreContrainte.x += dim.width / 2;
-		centreContrainte.y += dim.height / 2;
+		m_centre.x += dim.width / 2;
+		m_centre.y += dim.height / 2;
 		
 		if (m_contrainte.getNom().equals("T") || m_contrainte.getNom().equals("+") || m_contrainte.getNom().equals("1") || m_contrainte.getNom().equals("X")){
 			g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR_LINE));
@@ -101,44 +109,24 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 				centreObjet.x += r.getDimension().width / 2;
 				centreObjet.y += r.getDimension().height / 2;
 				
-				g.drawLine(centreContrainte.x, centreContrainte.y, centreObjet.x, centreObjet.y);
+				g.drawLine(m_centre.x, m_centre.y, centreObjet.x, centreObjet.y);
 			}
 			
 			g2.setStroke(dashed);
 			
 			for (EntiteGraph e : m_entiteGraph){
-				centreObjet = e.getPosition();
-				centreObjet.x += e.getDimension().width / 2;
-				centreObjet.y += e.getDimension().height / 2;
-				
-				Rectangle obj = e.getRectangle();
-				Line2D l = new Line2D.Double(centreContrainte, centreObjet),
-						haut = new Line2D.Double(obj.x, obj.y, obj.x+obj.width, obj.y),
-						bas = new Line2D.Double(obj.x, obj.y+obj.height, obj.x+obj.width, obj.y+obj.height),
-						gauche = new Line2D.Double(obj.x, obj.y, obj.x, obj.y+obj.height),
-						droite = new Line2D.Double(obj.x+obj.width, obj.y, obj.x+obj.width, obj.y+obj.height);
-				
-				if (l.intersectsLine(haut)){
-					centreObjet.y -= obj.height/2; 
-				}
-				else if (l.intersectsLine(bas)){
-					centreObjet.y += obj.height/2;			
-				}
-				else if (l.intersectsLine(gauche)){
-					centreObjet.x -= obj.width/2;
-				}
-				else if (l.intersectsLine(droite)){
-					centreObjet.x += obj.height/2;
-				}
-				
-				g2.draw(new Line2D.Double(centreContrainte.x, centreContrainte.y, centreObjet.x, centreObjet.y));
+				Point p = e.getValidLinkPosition(this);
+				g2.draw(new Line2D.Double(m_centre.x, m_centre.y, p.x, p.y));
 			}
 			g2.setStroke(new BasicStroke(1.0f));
 		}
 		
 		g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR));
 		g.fillOval(pos.x, pos.y, dim.width, dim.height);
-		g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR));
+		if(!m_focus)
+			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR));
+		else
+			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS));
 		g.drawOval(pos.x, pos.y, dim.width, dim.height);
 		
 		this.setDimension(dim);
@@ -181,7 +169,11 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 	public Boolean isLinkable() {
 		return true;
 	}
-	public Boolean isMovable(){
-		return false;
+	public void prepareDelete() {
+		m_mcd.removeLogic(m_contrainte);
+		m_entiteGraph=null;
+		m_relationGraph=null;
+		m_contrainte=null;
 	}
+	
 }

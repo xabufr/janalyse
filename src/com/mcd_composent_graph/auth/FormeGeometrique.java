@@ -50,45 +50,58 @@ class FormeGeometriqueLigne implements FormeGeometrique{
 	public FormeGeometriqueLigne(Point a, Point b){
 		m_ligne = new Line2D.Double();
 		m_ligne.setLine(a, b);
-		m_tolerance=(float) 1.0;
+		m_a=new Point(a);
+		m_b=new Point(b);
+		m_tolerance=(float) 10.0;
 	}
 	public void setPointA(Point a){
+		m_a=a;
 		m_ligne.setLine(a, getPointB());
 	}
 	public void setPointB(Point b){
+		m_b=b;
 		m_ligne.setLine(getPointA(), b);
 	}
 	public Point getPointA(){
-		return new Point((int)m_ligne.getP1().getX(), (int)m_ligne.getP1().getY());
+		return m_a;
+		//return new Point((int)m_ligne.getP1().getX(), (int)m_ligne.getP1().getY());
 	}
 	public Point getPointB(){
-		return new Point((int)m_ligne.getP2().getX(), (int)m_ligne.getP2().getY());
+		return m_b;
+		//return new Point((int)m_ligne.getP2().getX(), (int)m_ligne.getP2().getY());
 	}
 	public Boolean contient(Point p) {
-		/*if(m_a==p||m_b==p)
+		if(m_a==p||m_b==p)
 			return true;
 		int min = m_a.y<m_b.y?m_a.y:m_b.y;
 		int max = m_a.y>m_b.y?m_a.y:m_b.y;
 		
 		if(m_a.x == m_b.x)
 		{
-			if(m_a.x != p.x)
+			if(p.x<m_a.x-m_tolerance||p.x>m_a.x+m_tolerance)
 				return false;
 			if(p.y < min || p.y>max)
 				return false;
 			return true;
 		}
+		if(m_a.y==m_b.y){
+			min = m_a.x<m_b.x?m_a.x:m_b.x;
+			max = m_a.x>m_b.x?m_a.x:m_b.x;
+			if(p.x>=min&&p.x<=max&&p.y>=m_a.y-m_tolerance&&p.y<=m_a.y+m_tolerance)
+				return true;
+			return false;
+		}
 		
 		float coefDirecteur, b;
 		
-		coefDirecteur=(m_a.y-m_b.y)/(m_a.x-m_b.x);
+		coefDirecteur=((float)m_a.y-m_b.y)/((float)m_a.x-m_b.x);
 		b=m_a.y-(coefDirecteur*m_a.x);
-		float y = p.x*coefDirecteur+b;
-		if(y >= p.y-m_tolerance && y <= p.y + m_tolerance && y >= min && y >= max)
+		float y = (p.x*coefDirecteur)+b;
+		if(y >= p.y-m_tolerance && y <= p.y + m_tolerance && y >= min && y <= max)
 			return true;
 		
-		return false;*/
-		return m_ligne.contains(p);
+		return false;
+		//return m_ligne.contains(p);
 	}
 	@Override
 	public void setPosition(Point p) {

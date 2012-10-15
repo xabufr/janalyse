@@ -1,12 +1,21 @@
 package com.mcd_graph.auth;
 
 import java.awt.EventQueue;
+import java.awt.Graphics2D;
+import java.awt.Point;
 
+import javax.imageio.ImageIO;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
@@ -14,14 +23,15 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import com.event.auth.QuitListener;
+
 import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
@@ -29,6 +39,14 @@ import com.preferences_mcd_logique.auth.PGroupe;
 
 import java.awt.Insets;
 import java.util.ArrayList;
+import java.awt.event.InputEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.filechooser.FileFilter;
 
 public class FenetrePrincipale {
 	private McdGraph m_mcd;
@@ -42,6 +60,7 @@ public class FenetrePrincipale {
 	private JButton m_boutonInsertionHeritage;
 	private ArrayList<JButton> m_stateButtons;
 	private JButton m_boutonEdition;
+	private final JTabbedPane m_mcdContener = new JTabbedPane();
 	/**
 	 * Launch the application.
 	 */
@@ -65,8 +84,41 @@ public class FenetrePrincipale {
 	public FenetrePrincipale() {
 		m_stateButtons = new ArrayList<JButton>();
 		initialize();
-		m_mcd = new McdGraph();
-		frame.getContentPane().add(m_mcd);
+		m_mcdContener.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent event) {
+				if(m_mcdContener.getSelectedComponent()==null)
+					return;
+				m_mcd = (McdGraph) ((JScrollPane)m_mcdContener.getSelectedComponent()).getViewport().getView();
+				if(m_mcd==null)
+					return;
+				/*On remmet les boutons de mode d'édition en place en fonction du nouveau MCD*/
+				switch(m_mcd.getState()){
+				case EDIT:
+					setEnabledButton(m_boutonEdition);
+					break;
+				case INSERT_CONTRAINTE:
+					setEnabledButton(m_boutonInsertionContrainte);
+					break;
+				case INVALID:
+					m_mcd.setState(McdGraphStateE.INSERT_ENTITE);
+				case INSERT_ENTITE:
+					setEnabledButton(m_boutonInsertionEntite);
+					break;
+				case INSERT_HERITAGE:
+					setEnabledButton(m_boutonInsertionHeritage);
+					break;
+				case INSERT_LIEN:
+					setEnabledButton(m_boutonInsertionLien);
+					break;
+				case INSERT_RELATION:
+					setEnabledButton(m_boutonInsertionRelation);
+					break;
+				case MOVE:
+					setEnabledButton(m_boutonDeplacer);
+					break;
+				}
+			}
+		});
 	}
 	private void setEnabledButton(JButton b){
 		for(JButton button : m_stateButtons){
@@ -91,6 +143,11 @@ public class FenetrePrincipale {
 		menuBar.add(mnFichier);
 		
 		JMenuItem menuItem = new JMenuItem("Nouveau");
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createNewMcd();
+			}
+		});
 		mnFichier.add(menuItem);
 		
 		JMenuItem mntmOuvrir = new JMenuItem("Ouvrir");
@@ -100,6 +157,45 @@ public class FenetrePrincipale {
 		mnFichier.add(separator);
 		
 		JMenuItem mntmExporterEnPng = new JMenuItem("Exporter en PNG");
+		mntmExporterEnPng.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(m_mcd==null)
+					return;
+				JFileChooser chooser = new JFileChooser();
+				chooser.setFileFilter(new FileFilter(){
+					public boolean accept(File arg0) {
+						if(arg0.isDirectory())
+							return true;
+						String ext = getExtension(arg0);
+						if(ext==null)
+							return false;
+						if(ext.equals("png"))
+							return true;
+						return false;
+					}
+
+					public String getDescription() {
+						return "PNG Only";
+					}
+					
+				});
+				if(chooser.showSaveDialog(frame)==JFileChooser.APPROVE_OPTION){
+					BufferedImage outImage = new BufferedImage(
+							m_mcd.getPreferredSize().width+1, m_mcd.getPreferredSize().height+1, BufferedImage.TYPE_INT_RGB);
+					
+					Graphics2D graphic = outImage.createGraphics();
+					m_mcd.paint(graphic);
+					File outFile = chooser.getSelectedFile();
+					if(getExtension(outFile)==null||!getExtension(outFile).equals("png"))
+						outFile = new File(outFile.getAbsolutePath()+".png");
+					try {
+						ImageIO.write(outImage, "png", outFile);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
 		mnFichier.add(mntmExporterEnPng);
 		
 		JSeparator separator_1 = new JSeparator();
@@ -121,6 +217,18 @@ public class FenetrePrincipale {
 		JMenuItem mntmColler = new JMenuItem("Coller");
 		mntmColler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK));
 		mnEdition.add(mntmColler);
+		
+		JSeparator separator_2 = new JSeparator();
+		mnEdition.add(separator_2);
+		
+		JMenuItem mntmPrfrences = new JMenuItem("Préférences");
+		mntmPrfrences.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK));
+		mntmPrfrences.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new FenetrePreferences(FenetrePrincipale.this).setVisible(true);
+			}
+		});
+		mnEdition.add(mntmPrfrences);
 		
 		JMenu mnAide = new JMenu("Aide");
 		mnAide.setMnemonic('A');
@@ -201,53 +309,171 @@ public class FenetrePrincipale {
 		
 		m_boutonInsertionEntite.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)
+					return;
 				m_mcd.setState(McdGraphStateE.INSERT_ENTITE);
 				setEnabledButton(m_boutonInsertionEntite);
 			}
 		});
 		m_boutonInsertionRelation.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)
+					return;
 				m_mcd.setState(McdGraphStateE.INSERT_RELATION);
 				setEnabledButton(m_boutonInsertionRelation);
 			}
 		});
 		m_boutonInsertionContrainte.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)
+					return;
 				m_mcd.setState(McdGraphStateE.INSERT_CONTRAINTE);
 				setEnabledButton(m_boutonInsertionContrainte);
 			}
 		});
 		m_boutonInsertionHeritage.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)
+					return;
 				m_mcd.setState(McdGraphStateE.INSERT_HERITAGE);
 				setEnabledButton(m_boutonInsertionHeritage);
 			}
 		});
 		m_boutonInsertionLien.addActionListener(new ActionListener(){
 		public void actionPerformed(ActionEvent arg0) {
+			if(m_mcd==null)
+				return;
 			m_mcd.setState(McdGraphStateE.INSERT_LIEN);
 			setEnabledButton(m_boutonInsertionLien);
 		}
 		});
 		m_boutonDeplacer.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)
+					return;
 				m_mcd.setState(McdGraphStateE.MOVE);
 				setEnabledButton(m_boutonDeplacer);
 			}
 		});
 		m_boutonEdition.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)
+					return;
 				m_mcd.setState(McdGraphStateE.EDIT);
 				setEnabledButton(m_boutonEdition);
 			}
 		});
 		setEnabledButton(m_boutonDeplacer);
 		
+		frame.getContentPane().add(m_mcdContener);
 		
+		m_mcdContener.addMouseListener(new MouseListener() {
+			private final menuMcdOptions menu = new menuMcdOptions();
+			public void mouseReleased(MouseEvent arg0) {
+			}
+			public void mousePressed(MouseEvent arg0) {
+				if(arg0.getButton()==MouseEvent.BUTTON3)
+					menu.show(arg0.getPoint());
+			}
+			public void mouseExited(MouseEvent arg0) {				
+			}
+			public void mouseEntered(MouseEvent arg0) {				
+			}
+			public void mouseClicked(MouseEvent arg0) {
+			}
+		});
 	}
 
 	public void quitter() {
 		frame.dispose();
 	}
-
+	private void createNewMcd(){
+		McdGraph mcd = new McdGraph(this);
+		mcd.setState(McdGraphStateE.INSERT_ENTITE);
+		mcd.setName("Nouveau MCD");
+		m_mcdContener.addTab("Nouveau MCD*", new JScrollPane(mcd));
+	}
+	public void updateScrollBar(){
+		int nb = m_mcdContener.getTabCount();
+		for(int i=0;i<nb;++i){
+			JScrollPane sp = (JScrollPane) m_mcdContener.getComponentAt(i);
+			if(sp.getViewport().getView()==m_mcd){
+				sp.updateUI();
+			}
+		}
+	}
+	private void updateMcdNames(){
+		int nb = m_mcdContener.getTabCount();
+		for(int i=0;i<nb;++i){
+			m_mcdContener.setTitleAt(i, 
+					((JScrollPane)m_mcdContener.
+					getComponentAt(i)).
+					getViewport().
+					getView().
+					getName());
+		}
+	}
+	@SuppressWarnings("serial")
+	private class menuMcdOptions extends JPopupMenu{
+		public menuMcdOptions() {
+			JMenuItem itemRenommer = new JMenuItem("Renommer");
+			JMenuItem itemFermer = new JMenuItem("Fermer");
+			itemRenommer.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if(m_mcd==null)
+						return;
+					 String newName = (String) JOptionPane.showInputDialog(null, 
+							 "Entrez le nouveau nom pour le MCD '"+m_mcd.getName()+"'", 
+							 "Renommer un MCD", 
+							 JOptionPane.PLAIN_MESSAGE, 
+							 null, null, 
+							 m_mcd.getName());
+					if(newName!=null&&!newName.trim().isEmpty()){
+						m_mcd.setName(newName);
+						updateMcdNames();
+					}
+				}
+			});
+			itemFermer.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if(m_mcd==null)
+						return;
+					int index = -1;
+					int nb = m_mcdContener.getTabCount();
+					for(int i=0;i<nb;++i){
+						if(((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()==m_mcd){
+							index=i;
+							break;
+						}
+					}
+					if(index==-1)
+						return;
+					m_mcdContener.remove(index);
+					m_mcd = null;
+					if(m_mcdContener.getTabCount()!=0){
+						m_mcdContener.setSelectedIndex(0);
+						m_mcd = (McdGraph) ((JScrollPane)m_mcdContener.getSelectedComponent()).getViewport().getView();
+					}
+				}
+			});
+			add(itemRenommer);
+			add(itemFermer);
+		}
+		public void show(Point p){
+			if(m_mcd==null)
+				return;
+			super.show(m_mcdContener, p.x, p.y);
+		}
+	}
+	private String getExtension(File f){
+		String ext=f.getName();
+		
+		int index = ext.lastIndexOf(".");
+		String ret = null;
+		if(index>0&&index<ext.length()-1){
+			ret = ext.substring(index+1).toLowerCase();
+		}
+		
+		return ret;
+	}
 }

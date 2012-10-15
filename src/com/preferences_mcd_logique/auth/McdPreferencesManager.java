@@ -1,12 +1,14 @@
 package com.preferences_mcd_logique.auth;
 
 import java.awt.Font;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class McdPreferencesManager {
 
 	private McdPreferencesManager() {
 		m_proprietes = new Hashtable<PGroupe, Hashtable<PCle, Object>>();
+		m_proprietesPush = new Hashtable<PGroupe, Hashtable<PCle,Object>>();
 	}
 	public static McdPreferencesManager getInstance(){
 		if(m_instance==null){
@@ -38,8 +40,27 @@ public class McdPreferencesManager {
 	public Font getFont(PGroupe g, PCle c){
 		return (Font) get(g, c);
 	}
-	
+	public void push(){
+		copyPreferences(m_proprietes, m_proprietesPush);
+	}
+	public void pop(){
+		copyPreferences(m_proprietesPush, m_proprietes);
+	}
+	private void copyPreferences(Hashtable<PGroupe, Hashtable<PCle, Object>> from, Hashtable<PGroupe, Hashtable<PCle, Object>> to){
+		to.clear();
+		Enumeration<PGroupe> groupes = from.keys();
+		while(groupes.hasMoreElements()){
+			PGroupe g = groupes.nextElement();
+			to.put(g, new Hashtable<PCle, Object>());
+			Enumeration<PCle> cles = from.get(g).keys();
+			while(cles.hasMoreElements()){
+				PCle c = cles.nextElement();
+				to.get(g).put(c, from.get(g).get(c));
+			}
+		}
+	}
 	private static McdPreferencesManager m_instance;
 	private Hashtable<PGroupe, Hashtable<PCle, Object>> m_proprietes;
+	private Hashtable<PGroupe, Hashtable<PCle, Object>> m_proprietesPush;
 }
 
