@@ -1,11 +1,15 @@
 package com.mcd_graph.auth;
 
 import java.awt.EventQueue;
+import java.awt.Point;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
@@ -19,6 +23,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import com.event.auth.QuitListener;
 
@@ -66,6 +72,8 @@ public class FenetrePrincipale {
 		m_mcdContener.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent event) {
 				m_mcd = (McdGraph) m_mcdContener.getSelectedComponent();
+				if(m_mcd==null)
+					return;
 				/*On remmet les boutons de mode d'édition en place en fonction du nouveau MCD*/
 				switch(m_mcd.getState()){
 				case EDIT:
@@ -305,6 +313,22 @@ public class FenetrePrincipale {
 		setEnabledButton(m_boutonDeplacer);
 		
 		frame.getContentPane().add(m_mcdContener);
+		
+		m_mcdContener.addMouseListener(new MouseListener() {
+			private final menuMcdOptions menu = new menuMcdOptions();
+			public void mouseReleased(MouseEvent arg0) {
+			}
+			public void mousePressed(MouseEvent arg0) {
+				if(arg0.getButton()==MouseEvent.BUTTON3)
+					menu.show(arg0.getPoint());
+			}
+			public void mouseExited(MouseEvent arg0) {				
+			}
+			public void mouseEntered(MouseEvent arg0) {				
+			}
+			public void mouseClicked(MouseEvent arg0) {
+			}
+		});
 	}
 
 	public void quitter() {
@@ -313,7 +337,59 @@ public class FenetrePrincipale {
 	private void createNewMcd(){
 		McdGraph mcd = new McdGraph();
 		mcd.setState(McdGraphStateE.INSERT_ENTITE);
+		mcd.setName("Nouveau MCD");
 		m_mcdContener.addTab("Nouveau MCD*", mcd);
 	}
-
+	private void updateMcdNames(){
+		int nb = m_mcdContener.getTabCount();
+		for(int i=0;i<nb;++i){
+			m_mcdContener.setTitleAt(i, 
+					m_mcdContener.
+					getComponentAt(i).
+					getName());
+		}
+	}
+	@SuppressWarnings("serial")
+	private class menuMcdOptions extends JPopupMenu{
+		public menuMcdOptions() {
+			JMenuItem itemRenommer = new JMenuItem("Renommer");
+			JMenuItem itemFermer = new JMenuItem("Fermer");
+			itemRenommer.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if(m_mcd==null)
+						return;
+					 String newName = (String) JOptionPane.showInputDialog(null, 
+							 "Entrez le nouveau nom pour le MCD '"+m_mcd.getName()+"'", 
+							 "Renommer un MCD", 
+							 JOptionPane.PLAIN_MESSAGE, 
+							 null, null, 
+							 m_mcd.getName());
+					if(newName!=null&&!newName.trim().isEmpty()){
+						m_mcd.setName(newName);
+						updateMcdNames();
+					}
+				}
+			});
+			itemFermer.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if(m_mcd==null)
+						return;
+					int index = m_mcdContener.indexOfComponent(m_mcd);
+					m_mcdContener.remove(index);
+					m_mcd = null;
+					if(m_mcdContener.getTabCount()!=0){
+						m_mcdContener.setSelectedIndex(0);
+						m_mcd = (McdGraph) m_mcdContener.getSelectedComponent();
+					}
+				}
+			});
+			add(itemRenommer);
+			add(itemFermer);
+		}
+		public void show(Point p){
+			if(m_mcd==null)
+				return;
+			super.show(m_mcdContener, p.x, p.y);
+		}
+	}
 }
