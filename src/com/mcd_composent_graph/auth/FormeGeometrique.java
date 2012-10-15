@@ -78,11 +78,18 @@ class FormeGeometriqueLigne implements FormeGeometrique{
 		
 		if(m_a.x == m_b.x)
 		{
-			if(m_a.x != p.x)
+			if(p.x<m_a.x-m_tolerance||p.x>m_a.x+m_tolerance)
 				return false;
 			if(p.y < min || p.y>max)
 				return false;
 			return true;
+		}
+		if(m_a.y==m_b.y){
+			min = m_a.x<m_b.x?m_a.x:m_b.x;
+			max = m_a.x>m_b.x?m_a.x:m_b.x;
+			if(p.x>=min&&p.x<=max&&p.y>=m_a.y-m_tolerance&&p.y<=m_a.y+m_tolerance)
+				return true;
+			return false;
 		}
 		
 		float coefDirecteur, b;
