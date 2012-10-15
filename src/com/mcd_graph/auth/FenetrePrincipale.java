@@ -14,20 +14,16 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import com.event.auth.QuitListener;
-import com.preferences_mcd_logique.auth.McdPreferencesManager;
-import com.preferences_mcd_logique.auth.PCle;
-import com.preferences_mcd_logique.auth.PGroupe;
 
 import java.awt.Insets;
 import java.util.ArrayList;
+import java.awt.event.InputEvent;
 
 public class FenetrePrincipale {
 	private McdGraph m_mcd;
@@ -122,6 +118,18 @@ public class FenetrePrincipale {
 		JMenuItem mntmColler = new JMenuItem("Coller");
 		mntmColler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK));
 		mnEdition.add(mntmColler);
+		
+		JSeparator separator_2 = new JSeparator();
+		mnEdition.add(separator_2);
+		
+		JMenuItem mntmPrfrences = new JMenuItem("Préférences");
+		mntmPrfrences.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK));
+		mntmPrfrences.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new FenetrePreferences(FenetrePrincipale.this).setVisible(true);
+			}
+		});
+		mnEdition.add(mntmPrfrences);
 		
 		JMenu mnAide = new JMenu("Aide");
 		mnAide.setMnemonic('A');
