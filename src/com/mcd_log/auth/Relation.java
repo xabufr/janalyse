@@ -2,7 +2,7 @@ package com.mcd_log.auth;
 
 import java.util.ArrayList;
 
-public class Relation {
+public class Relation implements Cloneable{
 	public Relation(){
 		this("");
 		this.m_cardinalites = new Cardinalite[2];
@@ -50,6 +50,10 @@ public class Relation {
 	}
 	public void addPropriete(Propriete p){
 		m_proprietes.add(p);
+	}
+	public Relation clone() throws CloneNotSupportedException{
+		Relation r = (Relation) super.clone();
+		return r;
 	}
 	private String m_nom;
 	private String m_commentaire;

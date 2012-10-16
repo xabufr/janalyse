@@ -3,7 +3,7 @@ package com.mcd_log.auth;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Contrainte {
+public class Contrainte implements Cloneable{
 	private ContrainteType m_type;
 	private List<Entite> m_entites;
 	private List<Relation> m_relations;
@@ -42,5 +42,10 @@ public class Contrainte {
 
 	public void setRelations(List<Relation> relations) {
 		m_relations = relations;
+	}
+	
+	public Contrainte clone() throws CloneNotSupportedException{
+		Contrainte c = (Contrainte) super.clone();
+		return c;
 	}
 }

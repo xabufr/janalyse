@@ -4,7 +4,19 @@ public enum ContrainteType {
 	T,
 	X,
 	I,
-	PLUS,
-	UNICITE,
-	EGALITE
+	PLUS{
+		public String toString(){
+			return "+";
+		}
+	},
+	UNICITE{
+		public String toString(){
+			return "1";
+		}
+	},
+	EGALITE{
+		public String toString(){
+			return "=";
+		}
+	}
 }

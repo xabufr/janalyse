@@ -32,6 +32,12 @@ import java.awt.event.MouseListener;
 
 import com.event.auth.QuitListener;
 
+import com.mcd_composent_graph.auth.EntiteGraph;
+import com.mcd_composent_graph.auth.McdComposentGraphique;
+import com.preferences_mcd_logique.auth.McdPreferencesManager;
+import com.preferences_mcd_logique.auth.PCle;
+import com.preferences_mcd_logique.auth.PGroupe;
+
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.awt.event.InputEvent;
@@ -126,6 +132,7 @@ public class FenetrePrincipale {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
+		frame.setTitle("JAnalyse");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -203,16 +210,28 @@ public class FenetrePrincipale {
 		mnEdition.setMnemonic('E');
 		menuBar.add(mnEdition);
 		
-		JMenuItem mntmCouper = new JMenuItem("Couper");
-		mntmCouper.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK));
-		mnEdition.add(mntmCouper);
-		
 		JMenuItem mntmCopier = new JMenuItem("Copier");
 		mntmCopier.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK));
+		mntmCopier.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				if (m_mcd != null)
+					m_mcd.copyMcdComposent();
+			}
+		});
 		mnEdition.add(mntmCopier);
 		
 		JMenuItem mntmColler = new JMenuItem("Coller");
 		mntmColler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK));
+		mntmColler.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (m_mcd != null)
+					try {
+						m_mcd.pastMcdComposent();
+					} catch (CloneNotSupportedException e1) {
+						e1.printStackTrace();
+					}
+			}
+		});
 		mnEdition.add(mntmColler);
 		
 		JSeparator separator_2 = new JSeparator();

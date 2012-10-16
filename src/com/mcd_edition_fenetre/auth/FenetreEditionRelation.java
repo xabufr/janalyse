@@ -1,6 +1,7 @@
 package com.mcd_edition_fenetre.auth;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
@@ -30,6 +31,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JSpinner;
 import java.awt.Dimension;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
 
 @SuppressWarnings("serial")
 public class FenetreEditionRelation extends JDialog {
@@ -57,6 +60,7 @@ public class FenetreEditionRelation extends JDialog {
 		m_relationCopie = new Relation(relation.getRelation());
 		m_mcd=mcd;
 		
+		setTitle("Edition Relation");
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setModal(true);
 		
@@ -67,6 +71,7 @@ public class FenetreEditionRelation extends JDialog {
 		contentPanel.setLayout(new MigLayout("", "[218px,grow][200px,grow]", "[grow][][228px,grow]"));
 		{
 			JPanel panel = new JPanel();
+			panel.setBorder(new LineBorder(Color.GRAY));
 			contentPanel.add(panel, "cell 0 0 2 1,grow");
 			panel.setLayout(new MigLayout("", "[][grow]", "[][grow][36.00][]"));
 			{
@@ -91,6 +96,7 @@ public class FenetreEditionRelation extends JDialog {
 		}
 		{
 			JPanel panel = new JPanel();
+			panel.setBorder(new LineBorder(Color.GRAY));
 			contentPanel.add(panel, "cell 0 2,grow");
 			panel.setLayout(new MigLayout("", "[][grow]", "[][][][][grow][][][]"));
 			{
@@ -163,10 +169,12 @@ public class FenetreEditionRelation extends JDialog {
 		}
 		{
 			JPanel panel = new JPanel();
+			panel.setBorder(new LineBorder(Color.GRAY));
 			contentPanel.add(panel, "cell 1 2,grow");
 			panel.setLayout(new MigLayout("", "[181px][]", "[100px][][][][]"));
 			{
 				m_listeProprietes = new JList();
+				m_listeProprietes.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 				m_model = new DefaultListModel();
 				for(Propriete prop : m_relationCopie.getProprietes()){
 					m_model.addElement(prop);
@@ -238,7 +246,7 @@ public class FenetreEditionRelation extends JDialog {
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton("Annuler");
 				cancelButton.addActionListener(new annulerModifications());
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
