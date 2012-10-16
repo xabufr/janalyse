@@ -158,6 +158,14 @@ public class FenetrePrincipale {
 		JSeparator separator = new JSeparator();
 		mnFichier.add(separator);
 		
+		JMenuItem mntmSauvegarder = new JMenuItem("Sauvegarder");
+		mntmSauvegarder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				m_mcd.saveMcdComposent();
+			}
+		});
+		mnFichier.add(mntmSauvegarder);
+		
 		JMenuItem mntmExporterEnPng = new JMenuItem("Exporter en PNG");
 		mntmExporterEnPng.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

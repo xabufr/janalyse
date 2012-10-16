@@ -171,7 +171,7 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 				m_entitesGraph.add(ent);
 				ent.addLien(this, m_centre);
 				if (e.isMere()){
-					m_entiteGraphMere = (EntiteGraph) m_mcd.getGraphicComponent(m_entiteGraphMere);
+					m_entiteGraphMere = (EntiteGraph) m_mcd.getGraphicComponent(e);
 					m_entiteGraphMere.addLien(this, m_centre);
 				}
 			}

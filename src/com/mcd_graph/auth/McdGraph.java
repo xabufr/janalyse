@@ -11,6 +11,12 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -19,6 +25,7 @@ import java.util.Timer;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import com.event.auth.Sauvegarde;
 import com.mcd_composent_graph.auth.CardinaliteGraph;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
@@ -35,6 +42,7 @@ import com.mcd_log.auth.Contrainte;
 import com.mcd_log.auth.ContrainteType;
 import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.HeritageType;
+import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
 import com.mcd_log.auth.Entite;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
@@ -762,6 +770,9 @@ public class McdGraph extends JPanel{
 				repaint();
 			}
 		}
+	}
+	public void saveMcdComposent(){
+		Sauvegarde save = new Sauvegarde(m_components);
 	}
 	private void setMcdComposentGraphiquetFocus(McdComposentGraphique comp){
 		if(m_focus!=null){
