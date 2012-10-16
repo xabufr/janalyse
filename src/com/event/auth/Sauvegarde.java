@@ -108,7 +108,7 @@ public class Sauvegarde {
 			}
 		}
 		
-		int i = 1; 
+		int i = 0; 
 		Element allEntite = new Element("All-entite");
 		for (EntiteGraph eg : entiteGraph){
 			Entite e = eg.getEntite();
@@ -245,7 +245,7 @@ public class Sauvegarde {
 			cardinalite.setAttribute(relatif);
 			
 			for (int j=0; j<entiteGraph.size(); ++j)
-				if (entiteGraph.get(j).equals(c.getEntite())){
+				if (entiteGraph.get(j).getEntite() == c.getEntite()){
 					Element entite = new Element("Entite");
 					entite.setAttribute(new Attribute("id", String.valueOf(j)));
 					
@@ -253,9 +253,9 @@ public class Sauvegarde {
 				}
 			
 			for (int j=0; j<relationGraph.size(); ++j)
-				if (relationGraph.get(j).equals(c.getRelation())){
+				if (relationGraph.get(j).getRelation() == c.getRelation()){
 					Element relation = new Element("Relation");
-					relation.setAttribute(new Attribute("id", String.valueOf(j)));
+					relation.setAttribute(new Attribute("id", String.valueOf(j+entiteGraph.size())));
 					
 					cardinalite.addContent(relation);
 				}
@@ -280,7 +280,7 @@ public class Sauvegarde {
 			
 			for (int j=0; j<entiteGraph.size(); ++j)
 				for (int u=0; u<h.getEnfants().size(); ++u)
-					if (entiteGraph.get(j).equals(h.getEnfants().get(u))){
+					if (entiteGraph.get(j).getEntite() == h.getEnfants().get(u)){
 						Element entite = new Element("Entite");
 						entite.setAttribute(new Attribute("id", String.valueOf(j)));
 						
@@ -307,7 +307,7 @@ public class Sauvegarde {
 			
 			for (int j=0; j<entiteGraph.size(); ++j)
 				for (int u=0; u<c.getEntites().size(); ++u)
-					if (entiteGraph.get(j).equals(c.getEntites().get(u))){
+					if (entiteGraph.get(j).getEntite() == c.getEntites().get(u)){
 						Element entite = new Element("Entite");
 						entite.setAttribute(new Attribute("id", String.valueOf(j)));
 						
@@ -316,9 +316,9 @@ public class Sauvegarde {
 			
 			for (int j=0; j<relationGraph.size(); ++j)
 				for (int u=0; u<c.getRelations().size(); ++u)
-					if (entiteGraph.get(j).equals(c.getRelations().get(u))){
+					if (relationGraph.get(j).getRelation() == c.getRelations().get(u)){
 						Element relation = new Element("Relation");
-						relation.setAttribute(new Attribute("id", String.valueOf(j)));
+						relation.setAttribute(new Attribute("id", String.valueOf(j+entiteGraph.size())));
 						
 						contrainte.addContent(relation);
 					}

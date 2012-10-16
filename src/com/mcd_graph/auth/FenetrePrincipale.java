@@ -161,7 +161,7 @@ public class FenetrePrincipale {
 		mntmSauvegarder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String nom = m_mcd.saveMcdComposent();
-				m_mcdContener.getSelectedComponent().setName(nom);
+				m_mcdContener.setTitleAt(m_mcdContener.getSelectedIndex(), nom);
 			}
 		});
 		mnFichier.add(mntmSauvegarder);
