@@ -15,7 +15,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
+//import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -636,11 +636,13 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
+			requestFocusInWindow();
 			Boolean found=false;
 			for(McdComposentGraphique component : m_componentsSecond){
 				if(((FormeGeometrique)component).contient(e.getPoint())){
 					found=true;
 					if(component!=m_focus){
+						m_focus=component;
 						m_time=System.currentTimeMillis();
 						setMcdComposentGraphiquetFocus(component);
 						break;
@@ -652,6 +654,7 @@ public class McdGraph extends JPanel{
 					if(((FormeGeometrique)component).contient(e.getPoint())){
 						found=true;
 						if(component!=m_focus){
+							m_focus=component;
 							m_time=System.currentTimeMillis();
 							setMcdComposentGraphiquetFocus(component);
 							break;
