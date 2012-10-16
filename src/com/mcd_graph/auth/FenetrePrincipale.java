@@ -246,6 +246,29 @@ public class FenetrePrincipale {
 				new FenetrePreferences(FenetrePrincipale.this).setVisible(true);
 			}
 		});
+		
+		JMenuItem mntmAnnuler = new JMenuItem("Annuler");
+		mntmAnnuler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
+		mntmAnnuler.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd != null)
+					m_mcd.annuler();
+			}
+		});
+		mnEdition.add(mntmAnnuler);
+		
+		JMenuItem mntmRefaire = new JMenuItem("Refaire");
+		mntmRefaire.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd != null)
+					m_mcd.refaire();
+			}
+		});
+		mntmRefaire.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		mnEdition.add(mntmRefaire);
+		
+		JSeparator separator_3 = new JSeparator();
+		mnEdition.add(separator_3);
 		mnEdition.add(mntmPrfrences);
 		
 		JMenu mnAide = new JMenu("Aide");
