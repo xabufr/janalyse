@@ -67,7 +67,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		Dimension dim = new Dimension(0,0);
 		Point pos = getPosition();
-		FontMetrics font = g.getFontMetrics();
+		
 		Graphics2D g2 = (Graphics2D) g;
 		float style[] = {5.0f};
 		BasicStroke dashed = new BasicStroke(1.0f,
@@ -120,15 +120,17 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 			}
 			g2.setStroke(new BasicStroke(1.0f));
 		}
-		
-		g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR));
+		if(!m_focus)
+			g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR));
+		else
+			g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR_FOCUS));
 		g.fillOval(pos.x, pos.y, dim.width, dim.height);
 		if(!m_focus)
 			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR));
 		else
 			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS));
 		g.drawOval(pos.x, pos.y, dim.width, dim.height);
-		
+		FontMetrics font = g.getFontMetrics();
 		this.setDimension(dim);
 		
 		if (m_contrainte.getNom().equals("T") || m_contrainte.getNom().equals("X") || m_contrainte.getNom().equals("1")){
@@ -143,9 +145,14 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 			pos.x += (dim.width/2)-(font.getStringBounds(m_contrainte.getNom(), g).getWidth()/3)-1;
 			pos.y += (dim.height/2)+(font.getStringBounds(m_contrainte.getNom(), g).getHeight()/2)-1;
 		}
-		
-		g.setFont((Font)prefs.getFont(PGroupe.CONTRAINTE, PCle.FONT));
-		g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.FONT_COLOR));
+		if(!m_focus){
+			g.setFont((Font)prefs.getFont(PGroupe.CONTRAINTE, PCle.FONT));
+			g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.FONT_COLOR));
+		}
+		else{
+			g.setFont((Font)prefs.getFont(PGroupe.CONTRAINTE, PCle.FONT_FOCUS));
+			g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.FONT_COLOR_FOCUS));
+		}
 		g.drawString(m_contrainte.getNom(), pos.x, pos.y);
 	}
 

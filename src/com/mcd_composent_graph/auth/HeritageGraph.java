@@ -66,7 +66,11 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 	public void dessiner(Graphics g) {
 		Dimension dim = new Dimension();
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
-		Font font = prefs.getFont(PGroupe.HERITAGE, PCle.FONT);
+		Font font = null;
+		if(!m_focus)
+			prefs.getFont(PGroupe.HERITAGE, PCle.FONT);
+		else
+			prefs.getFont(PGroupe.HERITAGE, PCle.FONT_FOCUS);
 		if(!m_needUpdateGraphic)
 		{
 			FontMetrics metric = g.getFontMetrics(font);
@@ -135,7 +139,10 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 				g.drawLine(m_centre.x, m_centre.y, e.x, e.y);
 			}
 		}
-		g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR));
+		if(!m_focus)
+			g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR));
+		else
+			g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR_FOCUS));
 		g.fillArc(pos.x, pos.y, dim.width, dim.height, 0, 180);
 		g.fillRect(pos.x, pos.y+dim.height/2, dim.width, dim.height/2);
 		
@@ -149,7 +156,10 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		g.drawLine(pos.x, pos.y+dim.height-1, pos.x+dim.width, pos.y+dim.height-1);
 		
 		g.setFont(font);
-		g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.FONT_COLOR));
+		if(!m_focus)
+			g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.FONT_COLOR));
+		else
+			g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.FONT_COLOR_FOCUS));
 		
 		FontMetrics metric = g.getFontMetrics(g.getFont());
 		int widthType = metric.stringWidth(m_heritage.getType().toString());
@@ -193,5 +203,9 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		m_heritage=null;
 		m_entiteGraphMere=null;
 		m_entitesGraph=null;
+	}
+	public void setFocus(Boolean f){
+		super.setFocus(f);
+		update();
 	}
 }

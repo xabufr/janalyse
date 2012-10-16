@@ -786,7 +786,6 @@ public class McdGraph extends JPanel{
 	public void saveModification(){
 		m_listeAnnuler.push(copyLogicGraph(m_logicObjects));
 		m_listeRefaire.clear();
-		System.out.println("save");
 	}
 	
 	private Hashtable<Object, McdComposentGraphique> copyLogicGraph(Hashtable<Object, McdComposentGraphique> from){
