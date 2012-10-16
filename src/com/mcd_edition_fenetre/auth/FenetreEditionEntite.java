@@ -252,6 +252,9 @@ public class FenetreEditionEntite extends JDialog{
 			if (!m_nomEntite.getText().equals(null) && !m_nomEntite.getText().equals(""));
 				m_entite.setName(m_nomEntite.getText());
 				
+			if (!m_commentaireEntite.getText().equals(null) && !m_commentaireEntite.getText().equals(""));
+				m_entite.setCommentaire(m_commentaireEntite.getText());
+				
 			FenetreEditionEntite.this.setVisible(false);
 			m_mcd.repaint();
 		}

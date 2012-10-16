@@ -29,6 +29,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import com.event.auth.Chargement;
 import com.event.auth.QuitListener;
 
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
@@ -146,6 +147,11 @@ public class FenetrePrincipale {
 		mnFichier.add(menuItem);
 		
 		JMenuItem mntmOuvrir = new JMenuItem("Ouvrir");
+		mntmOuvrir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Chargement charge = new Chargement();
+			}
+		});
 		mnFichier.add(mntmOuvrir);
 		
 		JSeparator separator = new JSeparator();
@@ -154,7 +160,8 @@ public class FenetrePrincipale {
 		JMenuItem mntmSauvegarder = new JMenuItem("Sauvegarder");
 		mntmSauvegarder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				m_mcd.saveMcdComposent();
+				String nom = m_mcd.saveMcdComposent();
+				m_mcdContener.getSelectedComponent().setName(nom);
 			}
 		});
 		mnFichier.add(mntmSauvegarder);
