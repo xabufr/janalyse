@@ -145,36 +145,38 @@ public class McdGraph extends JPanel{
 			if(component instanceof FormeGeometrique){
 				FormeGeometrique forme = (FormeGeometrique) component;
 				
-				if(component instanceof EntiteGraph){
-					EntiteGraph eg = (EntiteGraph) component;
-					Rectangle r = eg.getRectangle();
+				if(component instanceof EntiteGraph||
+						component instanceof RelationGraph||
+						component instanceof ContrainteGraph||
+						component instanceof HeritageGraph){
+					Rectangle r = null;
+					if(component instanceof EntiteGraph){
+						EntiteGraph eg = (EntiteGraph) component;
+						r = eg.getRectangle();
+					}
+					else if(component instanceof RelationGraph){
+						RelationGraph rg = (RelationGraph) component;
+						r = rg.getRectangle();
+					}
+					else if(component instanceof ContrainteGraph){
+						ContrainteGraph cg = (ContrainteGraph) component;
+						r = cg.getRectangle();
+					}
+					else{
+						HeritageGraph hg = (HeritageGraph) component;
+						r = hg.getRectangle();
+					}
 					if(min.x>r.x){
-						min.x=r.x;
+						min.x=r.x-1;
 					}
 					if(min.y>r.y){
-						min.y=r.y;
+						min.y=r.y-1;
 					}
 					if(max.x<r.x+r.width){
-						max.x=r.x+r.width;
+						max.x=r.x+r.width+1;
 					}
 					if(max.y<r.y+r.height){
-						max.y=r.y+r.height;
-					}
-				}
-				else if(component instanceof RelationGraph){
-					RelationGraph rg = (RelationGraph) component;
-					Rectangle r = rg.getRectangle();
-					if(min.x>r.x){
-						min.x=r.x;
-					}
-					if(min.y>r.y){
-						min.y=r.y;
-					}
-					if(max.x<r.x+r.width){
-						max.x=r.x+r.width;
-					}
-					if(max.y<r.y+r.height){
-						max.y=r.y+r.height;
+						max.y=r.y+r.height+1;
 					}
 				}
 				else{
@@ -185,10 +187,10 @@ public class McdGraph extends JPanel{
 						min.y=forme.getPosition().y;
 					}
 					if(max.x<forme.getPosition().x){
-						max.x=forme.getPosition().x+50;
+						max.x=forme.getPosition().x+10;
 					}
 					if(max.y<forme.getPosition().y){
-						max.y=forme.getPosition().y+50;
+						max.y=forme.getPosition().y+10;
 					}
 				}
 			}
