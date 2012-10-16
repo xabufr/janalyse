@@ -1,13 +1,10 @@
 package com.mcd_graph.auth;
 
-import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
 import javax.imageio.ImageIO;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -34,11 +31,8 @@ import java.awt.event.MouseListener;
 
 import com.event.auth.QuitListener;
 
-import com.mcd_composent_graph.auth.EntiteGraph;
-import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
-import com.preferences_mcd_logique.auth.PCle;
-import com.preferences_mcd_logique.auth.PGroupe;
+
 
 import java.awt.Insets;
 import java.util.ArrayList;

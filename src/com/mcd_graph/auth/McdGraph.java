@@ -2,7 +2,6 @@ package com.mcd_graph.auth;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -11,18 +10,15 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Stack;
-import java.util.Timer;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.mcd_composent_graph.auth.CardinaliteGraph;
-import com.mcd_composent_graph.auth.CardinaliteGraphType;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
@@ -40,10 +36,8 @@ import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.HeritageType;
 import com.mcd_log.auth.Relation;
 import com.mcd_log.auth.Entite;
-import com.preferences_mcd_logique.auth.McdPreferencesManager;
-import com.preferences_mcd_logique.auth.PCle;
-import com.preferences_mcd_logique.auth.PGroupe;
 
+@SuppressWarnings("serial")
 public class McdGraph extends JPanel{
 	private McdComposentGraphique m_focus;
 	private McdComposentGraphique m_copie;
