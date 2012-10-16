@@ -2,7 +2,6 @@ package com.mcd_graph.auth;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -19,8 +18,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Timer;
+import java.util.Stack;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -45,10 +45,8 @@ import com.mcd_log.auth.HeritageType;
 import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
 import com.mcd_log.auth.Entite;
-import com.preferences_mcd_logique.auth.McdPreferencesManager;
-import com.preferences_mcd_logique.auth.PCle;
-import com.preferences_mcd_logique.auth.PGroupe;
 
+@SuppressWarnings("serial")
 public class McdGraph extends JPanel{
 	private McdComposentGraphique m_focus;
 	private McdComposentGraphique m_copie;
@@ -58,6 +56,7 @@ public class McdGraph extends JPanel{
 	private Hashtable<Object, McdComposentGraphique> m_logicObjects;
 	private FenetrePrincipale m_fenetrePrincipale;
 	private ArrayList<McdComposentGraphique> m_components, m_componentsFirst, m_componentsSecond;
+	private Stack<Hashtable<Object, McdComposentGraphique>> m_listeAnnuler, m_listeRefaire;
 	private Boolean m_isMoving;
 	
 	public McdGraph(FenetrePrincipale fenPrinc) {
@@ -78,6 +77,8 @@ public class McdGraph extends JPanel{
 		m_componentsSecond = new ArrayList<McdComposentGraphique>();
 		
 		m_logicObjects = new Hashtable<Object, McdComposentGraphique> ();
+		m_listeAnnuler = new Stack<Hashtable<Object,McdComposentGraphique>>();
+		m_listeRefaire = new Stack<Hashtable<Object,McdComposentGraphique>>();
 		m_focus = null;
 		m_isMoving = false;
 		m_deltaSelect = new Point();
@@ -94,6 +95,8 @@ public class McdGraph extends JPanel{
 		Point min = new Point(0,0), max = new Point(0,0);
 		for(McdComposentGraphique component : m_componentsFirst){
 			component.dessiner(g);
+			if(component instanceof CardinaliteGraph)
+				continue;
 			if(component instanceof FormeGeometrique){
 				FormeGeometrique forme = (FormeGeometrique) component;
 				if(min.x>forme.getPosition().x){
@@ -245,6 +248,7 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
+			saveModification();
 			EntiteGraph eg = new EntiteGraph();
 			eg.setEntite(new Entite("Entite"+(m_last++)));
 			eg.setPosition(e.getPoint());
@@ -290,6 +294,7 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
+			saveModification();
 			RelationGraph eg = new RelationGraph();
 			eg.setRelation(new Relation("Relation"+(m_last++)));
 			eg.setPosition(e.getPoint());
@@ -354,6 +359,7 @@ public class McdGraph extends JPanel{
 					m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
 					m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
 					m_isMoving=true;
+					saveModification();
 				}
 			}
 		}
@@ -431,6 +437,7 @@ public class McdGraph extends JPanel{
 					clear();
 					return;
 				}
+				saveModification();
 				//Cas relation entite/relation
 				if((m_objects[0] instanceof EntiteGraph &&
 						m_objects[1] instanceof RelationGraph)||
@@ -517,6 +524,7 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
+			saveModification();
 			ContrainteGraph contG = new ContrainteGraph();
 			Contrainte cont = new Contrainte(ContrainteType.X);
 			
@@ -569,6 +577,7 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
+			saveModification();
 			HeritageGraph herG = new HeritageGraph();
 			Heritage her = new Heritage(HeritageType.XT);
 			
@@ -653,6 +662,7 @@ public class McdGraph extends JPanel{
 			if(found&&(System.currentTimeMillis()-m_time>=m_interval)||
 					e.getClickCount()==2)
 			{
+				saveModification();
 				if(m_focus instanceof RelationGraph)
 				{
 					new FenetreEditionRelation(McdGraph.this, (RelationGraph)m_focus).setVisible(true);
@@ -674,7 +684,6 @@ public class McdGraph extends JPanel{
 				else if(m_focus instanceof CardinaliteGraph){
 					new FenetreEditionCardinalite(McdGraph.this, (CardinaliteGraph)m_focus).setVisible(true);
 				}
-				m_focus=null;
 				setMcdComposentGraphiquetFocus(null);
 			}
 			else if(!found){
@@ -707,6 +716,7 @@ public class McdGraph extends JPanel{
 		}
 	}
 	private void deleteMcdComposent(McdComposentGraphique comp){
+		saveModification();
 		if(comp==m_focus)
 			setMcdComposentGraphiquetFocus(null);
 		comp.prepareDelete();
@@ -721,6 +731,7 @@ public class McdGraph extends JPanel{
 	}
 	public void pastMcdComposent() throws CloneNotSupportedException{
 		if (m_copie != null){
+			saveModification();
 			if (m_copie instanceof EntiteGraph){
 				EntiteGraph eg = new EntiteGraph();
 				Entite e = ((EntiteGraph) m_copie).getEntite().clone();
@@ -782,6 +793,148 @@ public class McdGraph extends JPanel{
 		if(m_focus!=null){
 			m_focus.setFocus(true);
 		}
+		repaint();
+	}
+	public void saveModification(){
+		m_listeAnnuler.push(copyLogicGraph(m_logicObjects));
+		m_listeRefaire.clear();
+	}
+	
+	private Hashtable<Object, McdComposentGraphique> copyLogicGraph(Hashtable<Object, McdComposentGraphique> from){
+		Hashtable<Object, McdComposentGraphique> tmp = new Hashtable<Object, McdComposentGraphique>();
+		Hashtable<Object, Object> correspondances = new Hashtable<Object, Object>();
+		Enumeration<Object> keys = from.keys();
+		while(keys.hasMoreElements()){
+			Object key = keys.nextElement();
+			if(key instanceof Entite){
+				Entite e=null;
+				try {
+					e = ((Entite) key).clone();
+				} catch (CloneNotSupportedException e1) {
+					e1.printStackTrace();
+				}
+				EntiteGraph eg = new EntiteGraph();
+				eg.setEntite(e);
+				eg.setPosition(((EntiteGraph)from.get(key)).getPosition());
+				tmp.put(e, eg);
+				correspondances.put(key, e);
+			}
+			else if(key instanceof Relation){
+				Relation r = new Relation((Relation)key);
+				RelationGraph rg = new RelationGraph();
+				rg.setRelation(r);
+				rg.setPosition(((RelationGraph)from.get(key)).getPosition());
+				tmp.put(r, rg);
+				correspondances.put(key, r);
+			}
+		}
+		keys = from.keys();
+		while(keys.hasMoreElements()){
+			Object key = keys.nextElement();
+			if(key instanceof Entite||key instanceof Relation){
+				continue;
+			}
+			if(key instanceof Cardinalite){
+				Cardinalite c=null;
+				try {
+					c = ((Cardinalite)key).clone();
+				} catch (CloneNotSupportedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				c.setEntite((Entite) correspondances.get(((Cardinalite)key).getEntite()));
+				c.setRelation((Relation) correspondances.get(((Cardinalite)key).getRelation()));
+				CardinaliteGraph cg = new CardinaliteGraph();
+				CardinaliteGraph acg = (CardinaliteGraph)from.get(key);
+				cg.setTypeDessin(acg.getTypeDessin());
+				cg.setCardinalite(c);
+				tmp.put(c, cg);
+			}
+			else if(key instanceof Heritage){
+				Heritage h=null;
+				try {
+					h = ((Heritage)key).clone();
+				} catch (CloneNotSupportedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				Heritage anc = (Heritage)key;
+				
+				h.setEnfants(new ArrayList<Entite>());
+				for(Entite e : anc.getEnfants()){
+					Entite nouveau = (Entite) correspondances.get(e);
+					h.addEnfant(nouveau);
+				}
+				
+				HeritageGraph hg = new HeritageGraph();
+				hg.setPosition(((HeritageGraph)from.get(key)).getPosition());
+				hg.setHeritage(h);
+				tmp.put(h, hg);
+			}
+			else if(key instanceof Contrainte){
+				Contrainte c = null;
+				try {
+					c = ((Contrainte)key).clone();
+				} catch (CloneNotSupportedException e1) {
+					e1.printStackTrace();
+				}
+				c.setEntites(new ArrayList<Entite>());
+				c.setRelations(new ArrayList<Relation>());
+				Contrainte anc = (Contrainte)key;
+				for(Entite e : anc.getEntites()){
+					Entite nouvelle = (Entite) correspondances.get(e);
+					c.addEntite(nouvelle);
+				}
+				for(Relation r : anc.getRelations()){
+					Relation nouvelle = (Relation) correspondances.get(r);
+					c.addRelation(nouvelle);
+				}
+				
+				ContrainteGraph cg = new ContrainteGraph();
+				ContrainteGraph acg = (ContrainteGraph) from.get(key);
+				cg.setPosition(acg.getPosition());
+				cg.setContrainte(c);
+				tmp.put(c, cg);
+			}
+		}
+		return tmp;
+	}
+	public void annuler(){
+		if(m_listeAnnuler.isEmpty())
+			return;
+		if(m_listeRefaire.isEmpty())
+			saveModification();
+		setMcdComposentGraphiquetFocus(null);
+		Hashtable<Object, McdComposentGraphique> nouvelleLogique = m_listeAnnuler.pop();
+		m_listeRefaire.push(nouvelleLogique);
+		setCurrentObjects(nouvelleLogique);
+	}
+	public void refaire(){
+		if(m_listeRefaire.isEmpty())
+			return;
+		setMcdComposentGraphiquetFocus(null);
+		Hashtable<Object, McdComposentGraphique> nouvelleLogique = m_listeRefaire.pop();
+		m_listeAnnuler.push(nouvelleLogique);
+		setCurrentObjects(nouvelleLogique);
+	}
+	private void setCurrentObjects(Hashtable<Object, McdComposentGraphique> objs){
+		setMcdComposentGraphiquetFocus(null);
+		Hashtable<Object, McdComposentGraphique> nouvelleLogique = copyLogicGraph(objs);
+		m_components.clear();
+		m_componentsFirst.clear();
+		m_componentsSecond.clear();
+		for(McdComposentGraphique comp : nouvelleLogique.values()){
+			m_components.add(comp);
+			if(comp instanceof ContrainteGraph||
+					comp instanceof HeritageGraph||
+					comp instanceof CardinaliteGraph)
+				m_componentsFirst.add(comp);
+			else
+				m_componentsSecond.add(comp);
+		}
+		for(McdComposentGraphique comp : m_components)
+			comp.setMcd(this);
+		m_logicObjects=nouvelleLogique;
 		repaint();
 	}
 }

@@ -1,13 +1,10 @@
 package com.mcd_graph.auth;
 
-import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
 import javax.imageio.ImageIO;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -34,11 +31,8 @@ import java.awt.event.MouseListener;
 
 import com.event.auth.QuitListener;
 
-import com.mcd_composent_graph.auth.EntiteGraph;
-import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
-import com.preferences_mcd_logique.auth.PCle;
-import com.preferences_mcd_logique.auth.PGroupe;
+
 
 import java.awt.Insets;
 import java.util.ArrayList;
@@ -131,7 +125,6 @@ public class FenetrePrincipale {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		McdPreferencesManager.getInstance();
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setTitle("JAnalyse");
@@ -254,6 +247,29 @@ public class FenetrePrincipale {
 				new FenetrePreferences(FenetrePrincipale.this).setVisible(true);
 			}
 		});
+		
+		JMenuItem mntmAnnuler = new JMenuItem("Annuler");
+		mntmAnnuler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
+		mntmAnnuler.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd != null)
+					m_mcd.annuler();
+			}
+		});
+		mnEdition.add(mntmAnnuler);
+		
+		JMenuItem mntmRefaire = new JMenuItem("Refaire");
+		mntmRefaire.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd != null)
+					m_mcd.refaire();
+			}
+		});
+		mntmRefaire.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		mnEdition.add(mntmRefaire);
+		
+		JSeparator separator_3 = new JSeparator();
+		mnEdition.add(separator_3);
 		mnEdition.add(mntmPrfrences);
 		
 		JMenu mnAide = new JMenu("Aide");

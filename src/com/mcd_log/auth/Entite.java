@@ -62,6 +62,10 @@ public class Entite implements Cloneable{
 	
 	public Entite clone() throws CloneNotSupportedException{
 		Entite e = (Entite) super.clone();
+		e.m_proprietes = new ArrayList<Propriete>();
+		for(Propriete p : m_proprietes){
+			e.m_proprietes.add(p.clone());
+		}
 		return e;
 	}
 }

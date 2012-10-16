@@ -103,7 +103,6 @@ public class McdPreferencesManager {
 	private void saveObject(String key, Object o){
 		key=key.replace("_", "-");
 		byte objectParts[][] = null;
-		System.out.println(key);
 		try {
 			objectParts = splitByteArray(object2bytes(o));
 		} catch (IOException e) {
@@ -187,44 +186,60 @@ public class McdPreferencesManager {
 	
 	//Rien de bien interessant au delà, juste du travail de chinois...
 	private void loadDefault(){
-		setFont(PGroupe.HERITAGE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
+		setFont(PGroupe.HERITAGE, PCle.FONT, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.HERITAGE, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
 		set(PGroupe.HERITAGE,  PCle.COLOR, Color.GREEN);
-		set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR, Color.RED);
+		set(PGroupe.HERITAGE,  PCle.COLOR_FOCUS, Color.WHITE);
+		set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
 		set(PGroupe.HERITAGE, PCle.COLOR_LINE, Color.BLACK);
 		set(PGroupe.HERITAGE, PCle.FONT_COLOR, Color.BLACK);
-		set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		set(PGroupe.HERITAGE, PCle.FONT_COLOR_FOCUS, Color.BLACK);
 		
-		setFont(PGroupe.CONTRAINTE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
+		
+		setFont(PGroupe.CONTRAINTE, PCle.FONT, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.CONTRAINTE, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
 		set(PGroupe.CONTRAINTE,  PCle.COLOR, Color.CYAN);
+		set(PGroupe.CONTRAINTE,  PCle.COLOR_FOCUS, Color.WHITE);
 		set(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
 		set(PGroupe.CONTRAINTE, PCle.COLOR_LINE, Color.BLACK);
 		set(PGroupe.CONTRAINTE, PCle.FONT_COLOR, Color.BLACK);
-		set(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		set(PGroupe.CONTRAINTE, PCle.FONT_COLOR_FOCUS, Color.BLACK);
 		
-		setFont(PGroupe.CARDINALITE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
+		
+		setFont(PGroupe.CARDINALITE, PCle.FONT, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.CARDINALITE, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
 		set(PGroupe.CARDINALITE, PCle.FONT_COLOR, Color.BLACK);
+		set(PGroupe.CARDINALITE, PCle.FONT_COLOR_FOCUS, Color.BLACK);
 		set(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR, Color.BLACK);
 		set(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
 		
-		setFont(PGroupe.RELATION, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
-		setFont(PGroupe.RELATION, PCle.FONT_NOM, "TimesRoman", Font.PLAIN, 10);
-		setFont(PGroupe.RELATION, PCle.FONT_FOCUS, "TimesRoman", Font.PLAIN, 10);
-		setFont(PGroupe.RELATION, PCle.FONT_NOM_FOCUS, "TimesRoman", Font.PLAIN, 10);
+		setFont(PGroupe.RELATION, PCle.FONT, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.RELATION, PCle.FONT_NOM, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.RELATION, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.RELATION, PCle.FONT_NOM_FOCUS, "Serif", Font.PLAIN, 10);
 		set(PGroupe.RELATION, PCle.FONT_COLOR, Color.GRAY);
+		set(PGroupe.RELATION, PCle.FONT_COLOR_FOCUS, Color.BLACK);
 		set(PGroupe.RELATION, PCle.FONT_NOM_COLOR, Color.BLACK);
+		set(PGroupe.RELATION, PCle.FONT_NOM_COLOR_FOCUS, Color.BLACK);
 		set(PGroupe.RELATION, PCle.COLOR, Color.GREEN);
+		set(PGroupe.RELATION, PCle.COLOR_FOCUS, Color.WHITE);
 		set(PGroupe.RELATION, PCle.COLOR_CONTOUR, Color.BLACK);
 		set(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
 		
-		setFont(PGroupe.ENTITE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
-		setFont(PGroupe.ENTITE, PCle.FONT_NOM, "TimesRoman", Font.PLAIN, 12);
-		setFont(PGroupe.ENTITE, PCle.FONT_FOCUS, "TimesRoman", Font.PLAIN, 10);
-		setFont(PGroupe.ENTITE, PCle.FONT_NOM_FOCUS, "TimesRoman", Font.PLAIN, 12);
+		setFont(PGroupe.ENTITE, PCle.FONT, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.ENTITE, PCle.FONT_NOM, "Serif", Font.PLAIN, 12);
+		setFont(PGroupe.ENTITE, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.ENTITE, PCle.FONT_NOM_FOCUS, "Serif", Font.PLAIN, 12);
 		set(PGroupe.ENTITE,  PCle.COLOR, Color.GREEN);
-		set(PGroupe.ENTITE, PCle.COLOR_CONTOUR, Color.RED);
-		set(PGroupe.ENTITE, PCle.FONT_COLOR, Color.RED);
-		set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR, Color.BLACK);
+		set(PGroupe.ENTITE,  PCle.COLOR_FOCUS, Color.GREEN);
+		set(PGroupe.ENTITE, PCle.COLOR_CONTOUR, Color.BLACK);
 		set(PGroupe.ENTITE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		set(PGroupe.ENTITE, PCle.FONT_COLOR, Color.GRAY);
+		set(PGroupe.ENTITE, PCle.FONT_COLOR_FOCUS, Color.BLACK);
+		set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR, Color.BLACK);
+		set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR_FOCUS, Color.RED);
 	}
 }
 

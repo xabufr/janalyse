@@ -70,7 +70,11 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		
 		Dimension dimCardinalite = new Dimension();
 		
-		Font font = prefs.getFont(PGroupe.CARDINALITE, PCle.FONT);
+		Font font=null;
+		if(!m_focus)
+			font= prefs.getFont(PGroupe.CARDINALITE, PCle.FONT);
+		else
+			font= prefs.getFont(PGroupe.CARDINALITE, PCle.FONT_FOCUS);
 		g.setFont(font);
 		FontMetrics fm = g.getFontMetrics();
 		dimCardinalite.height = fm.getHeight();
@@ -147,7 +151,10 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 			}
 			break;
 		}
-		g.setColor((Color) prefs.get(PGroupe.CARDINALITE, PCle.FONT_COLOR));
+		if(!m_focus)
+			g.setColor((Color) prefs.get(PGroupe.CARDINALITE, PCle.FONT_COLOR));
+		else
+			g.setColor((Color) prefs.get(PGroupe.CARDINALITE, PCle.FONT_COLOR_FOCUS));
 		g.drawString(m_cardinalite.toString(), positionCard.x, positionCard.y);
 	}
 
