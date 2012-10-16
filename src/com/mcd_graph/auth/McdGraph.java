@@ -13,13 +13,16 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Stack;
 import java.util.Timer;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.mcd_composent_graph.auth.CardinaliteGraph;
+import com.mcd_composent_graph.auth.CardinaliteGraphType;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
@@ -50,6 +53,7 @@ public class McdGraph extends JPanel{
 	private Hashtable<Object, McdComposentGraphique> m_logicObjects;
 	private FenetrePrincipale m_fenetrePrincipale;
 	private ArrayList<McdComposentGraphique> m_components, m_componentsFirst, m_componentsSecond;
+	private Stack<Hashtable<Object, McdComposentGraphique>> m_listeModificiations;
 	private Boolean m_isMoving;
 	
 	public McdGraph(FenetrePrincipale fenPrinc) {
@@ -772,5 +776,91 @@ public class McdGraph extends JPanel{
 			m_focus.setFocus(true);
 		}
 		repaint();
+	}
+	public void saveModification(){
+		Hashtable<Object, McdComposentGraphique> tmp = new Hashtable<Object, McdComposentGraphique>();
+		Hashtable<Object, Object> correspondances = new Hashtable<Object, Object>();
+		Enumeration<Object> keys = m_logicObjects.keys();
+		while(keys.hasMoreElements()){
+			Object key = keys.nextElement();
+			if(key instanceof Entite){
+				Entite e = ((Entite) key).clone();
+				EntiteGraph eg = new EntiteGraph();
+				eg.setEntite(e);
+				eg.setPosition(((EntiteGraph)m_logicObjects.get(key)).getPosition());
+				tmp.put(e, eg);
+				correspondances.put(key, e);
+			}
+			else if(key instanceof Relation){
+				Relation r = new Relation((Relation)key);
+				RelationGraph rg = new RelationGraph();
+				rg.setRelation(r);
+				rg.setPosition(((EntiteGraph)m_logicObjects.get(key)).getPosition());
+				tmp.put(r, rg);
+				correspondances.put(key, r);
+			}
+		}
+		keys = m_logicObjects.keys();
+		while(keys.hasMoreElements()){
+			Object key = keys.nextElement();
+			if(key instanceof Entite||key instanceof Relation){
+				continue;
+			}
+			if(key instanceof Cardinalite){
+				Cardinalite c = ((Cardinalite)key).clone();
+				c.setEntite((Entite) correspondances.get(((Cardinalite)key).getEntite()));
+				c.setRelation((Relation) correspondances.get(((Cardinalite)key).getRelation()));
+				CardinaliteGraph cg = new CardinaliteGraph();
+				CardinaliteGraph acg = (CardinaliteGraph)m_logicObjects.get(key);
+				cg.setTypeDessin(acg.getTypeDessin());
+				cg.setCardinalite(c);
+				tmp.put(c, cg);
+			}
+			else if(key instanceof Heritage){
+				Heritage h = ((Heritage)key).clone();
+				Heritage anc = (Heritage)key;
+				
+				h.setEnfants(new ArrayList<Entite>());
+				for(Entite e : anc.getEnfants()){
+					Entite nouveau = (Entite) correspondances.get(e);
+					h.addEnfant(nouveau);
+				}
+				
+				HeritageGraph hg = new HeritageGraph();
+				hg.setPosition(((HeritageGraph)m_logicObjects.get(key)).getPosition());
+				hg.setHeritage(h);
+				tmp.put(h, hg);
+			}
+			else if(key instanceof Contrainte){
+				Contrainte c = ((Contrainte)key).clone();
+				c.setEntites(new ArrayList<Entite>());
+				c.setRelations(new ArrayList<Relation>());
+				Contrainte anc = (Contrainte)key;
+				for(Entite e : anc.getEntites()){
+					Entite nouvelle = (Entite) correspondances.get(e);
+					c.addEntite(nouvelle);
+				}
+				for(Relation r : anc.getRelations()){
+					Relation nouvelle = (Relation) correspondances.get(r);
+					c.addRelation(r);
+				}
+				
+				ContrainteGraph cg = new ContrainteGraph();
+				ContrainteGraph acg = (ContrainteGraph) m_logicObjects.get(key);
+				cg.setPosition(acg.getPosition());
+				cg.setContrainte(c);
+				tmp.put(c, cg);
+			}
+		}
+		m_listeModificiations.push(tmp);
+	}
+	public void annuler(){
+		if(m_listeModificiations.isEmpty())
+			return;
+		setMcdComposentGraphiquetFocus(null);
+		
+	}
+	public void refaire(){
+		setMcdComposentGraphiquetFocus(null);
 	}
 }
