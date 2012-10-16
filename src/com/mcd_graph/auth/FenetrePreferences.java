@@ -64,7 +64,7 @@ public class FenetrePreferences extends JDialog {
 				{
 					JPanel panelCardinalite = new JPanel();
 					tabbedPaneMcd.addTab("Cardinalités", null, panelCardinalite, null);
-					initializeWithoutProperties(panelCardinalite, PGroupe.CARDINALITE);
+					initializeWithoutPropertiesWithoutBackground(panelCardinalite, PGroupe.CARDINALITE);
 				}
 				{
 					JPanel panelContraines = new JPanel();
@@ -238,6 +238,109 @@ public class FenetrePreferences extends JDialog {
 						}
 					});
 					panel.add(focusChoisirCFond, "cell 1 3");
+				}
+				{
+					JLabel lblCouleurContours_1 = new JLabel("Couleur contours");
+					panel.add(lblCouleurContours_1, "cell 0 4");
+				}
+				{
+					JButton focusChoisirCContour = new JButton("Choisir");
+					focusChoisirCContour.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							changeColor(g, PCle.COLOR_CONTOUR_FOCUS, "Couleur contours entités focus");
+							
+						}
+					});
+					panel.add(focusChoisirCContour, "cell 1 4");
+				}
+			}
+		}
+	}
+	private void initializeWithoutPropertiesWithoutBackground(JPanel parentPanel, final PGroupe g){
+		parentPanel.setLayout(new MigLayout("", "[398.00px,grow]", "[grow]"));
+		{
+			JSplitPane splitPane = new JSplitPane();
+			parentPanel.add(splitPane, "cell 0 0,grow");
+			{
+				JPanel panel = new JPanel();
+				splitPane.setLeftComponent(panel);
+				panel.setLayout(new MigLayout("", "[][][][]", "[][][][][]"));
+				{
+					JLabel lblSansFocus_1 = new JLabel("Sans focus");
+					panel.add(lblSansFocus_1, "cell 0 0");
+				}
+				{
+					JLabel lblPoliceNom_1 = new JLabel("Police nom");
+					panel.add(lblPoliceNom_1, "flowx,cell 0 1");
+				}
+				{
+					JButton choisirPNom = new JButton("Choisir");
+					choisirPNom.addActionListener(new ActionListener() {
+						
+						public void actionPerformed(ActionEvent arg0) {
+							changeFont(g, PCle.FONT);
+						}
+					});
+					panel.add(choisirPNom, "flowx,cell 1 1");
+				}
+				{
+					JButton btnCouleurNom = new JButton("Couleur");
+					btnCouleurNom.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							changeColor(g, PCle.FONT_COLOR, "Couleur nom entité");
+						}
+					});
+					panel.add(btnCouleurNom, "cell 3 1");
+				}
+				{
+					JLabel lblCouleurContours = new JLabel("Couleur contours");
+					panel.add(lblCouleurContours, "cell 0 4");
+				}
+				{
+					JButton choisirCContour = new JButton("Choisir");
+					choisirCContour.addActionListener(new ActionListener() {
+						
+						public void actionPerformed(ActionEvent e) {
+							changeColor(g, PCle.COLOR_CONTOUR, "Couleur contours entité");
+							
+						}
+					});
+					panel.add(choisirCContour, "cell 1 4 3 1");
+				}
+			}
+			{
+				JPanel panel = new JPanel();
+				splitPane.setRightComponent(panel);
+				panel.setLayout(new MigLayout("", "[][][]", "[][][][][]"));
+				{
+					JLabel lblAvecFocus_1 = new JLabel("Avec focus");
+					panel.add(lblAvecFocus_1, "cell 0 0");
+				}
+				{
+					JLabel label = new JLabel("Police nom");
+					panel.add(label, "cell 0 1");
+				}
+				{
+					JButton focusChoisirPNom = new JButton("Choisir");
+					focusChoisirPNom.addActionListener(new ActionListener() {
+						
+						public void actionPerformed(ActionEvent e) {
+							changeFont(g, PCle.FONT_FOCUS);
+							
+						}
+					});
+					panel.add(focusChoisirPNom, "cell 1 1");
+				}
+				{
+					JButton btnCouleurNomFocus = new JButton("Couleur");
+					btnCouleurNomFocus.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							changeColor(g, PCle.FONT_COLOR_FOCUS, "Couleur nom entité focus");
+						}
+					});
+					panel.add(btnCouleurNomFocus, "cell 2 1");
 				}
 				{
 					JLabel lblCouleurContours_1 = new JLabel("Couleur contours");
