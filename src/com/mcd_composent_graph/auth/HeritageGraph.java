@@ -68,9 +68,9 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		Font font = null;
 		if(!m_focus)
-			prefs.getFont(PGroupe.HERITAGE, PCle.FONT);
+			font=prefs.getFont(PGroupe.HERITAGE, PCle.FONT);
 		else
-			prefs.getFont(PGroupe.HERITAGE, PCle.FONT_FOCUS);
+			font=prefs.getFont(PGroupe.HERITAGE, PCle.FONT_FOCUS);
 		if(!m_needUpdateGraphic)
 		{
 			FontMetrics metric = g.getFontMetrics(font);
@@ -147,9 +147,9 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		g.fillRect(pos.x, pos.y+dim.height/2, dim.width, dim.height/2);
 		
 		if(!m_focus)
-			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR));
+			g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR_CONTOUR));
 		else
-			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS));
+			g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR_CONTOUR_FOCUS));
 		g.drawArc(pos.x, pos.y, dim.width, dim.height, 0, 180);
 		g.drawLine(pos.x, pos.y+dim.height/2, pos.x, pos.y+dim.height-1);
 		g.drawLine(pos.x+dim.width, pos.y+dim.height/2, pos.x+dim.width, pos.y+dim.height-1);

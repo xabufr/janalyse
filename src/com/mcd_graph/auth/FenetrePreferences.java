@@ -149,7 +149,7 @@ public class FenetrePreferences extends JDialog {
 					choisirPNom.addActionListener(new ActionListener() {
 						
 						public void actionPerformed(ActionEvent arg0) {
-							changeFont(g, PCle.FONT_NOM);
+							changeFont(g, PCle.FONT);
 						}
 					});
 					panel.add(choisirPNom, "flowx,cell 1 1");
@@ -158,7 +158,7 @@ public class FenetrePreferences extends JDialog {
 					JButton btnCouleurNom = new JButton("Couleur");
 					btnCouleurNom.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.FONT_NOM_COLOR, "Couleur nom entité");
+							changeColor(g, PCle.FONT_COLOR, "Couleur nom entité");
 						}
 					});
 					panel.add(btnCouleurNom, "cell 3 1");
@@ -209,7 +209,7 @@ public class FenetrePreferences extends JDialog {
 					focusChoisirPNom.addActionListener(new ActionListener() {
 						
 						public void actionPerformed(ActionEvent e) {
-							changeFont(g, PCle.FONT_NOM_FOCUS);
+							changeFont(g, PCle.FONT_FOCUS);
 							
 						}
 					});
@@ -219,7 +219,7 @@ public class FenetrePreferences extends JDialog {
 					JButton btnCouleurNomFocus = new JButton("Couleur");
 					btnCouleurNomFocus.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.FONT_NOM_COLOR_FOCUS, "Couleur nom entité focus");
+							changeColor(g, PCle.FONT_COLOR_FOCUS, "Couleur nom entité focus");
 						}
 					});
 					panel.add(btnCouleurNomFocus, "cell 2 1");

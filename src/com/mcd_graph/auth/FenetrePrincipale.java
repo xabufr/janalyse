@@ -125,7 +125,6 @@ public class FenetrePrincipale {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		McdPreferencesManager.getInstance();
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setTitle("JAnalyse");
