@@ -430,6 +430,7 @@ public class FenetrePreferences extends JDialog {
 					
 					public void actionPerformed(ActionEvent e) {
 						setVisible(false);
+						McdPreferencesManager.getInstance().save();
 					}
 				});
 				buttonPane.add(okButton);

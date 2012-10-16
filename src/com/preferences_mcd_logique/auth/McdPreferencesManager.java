@@ -1,14 +1,26 @@
 package com.preferences_mcd_logique.auth;
 
+import java.awt.Color;
 import java.awt.Font;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
+
+import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 public class McdPreferencesManager {
 
 	private McdPreferencesManager() {
 		m_proprietes = new Hashtable<PGroupe, Hashtable<PCle, Object>>();
 		m_proprietesPush = new Hashtable<PGroupe, Hashtable<PCle,Object>>();
+		loadDefault();
+		load();
 	}
 	public static McdPreferencesManager getInstance(){
 		if(m_instance==null){
@@ -20,7 +32,36 @@ public class McdPreferencesManager {
 		}
 		return m_instance;
 	}
-	
+	public void save(){
+		Enumeration<PGroupe> groupes = m_proprietes.keys();
+		while(groupes.hasMoreElements()){
+			PGroupe g = groupes.nextElement();
+			Enumeration<PCle> cles = m_proprietes.get(g).keys();
+			while(cles.hasMoreElements()){
+				PCle c = cles.nextElement();
+				saveObject(g.toString()+":"+c.toString(), m_proprietes.get(g).get(c));
+			}
+		}
+	}
+	public void load(){
+		for(PGroupe g  : PGroupe.values()){
+			for(PCle c : PCle.values()){
+				Object o = loadObject(g.toString()+":"+c.toString());
+				if(o!=null){
+					if(!m_proprietes.containsKey(g))
+						m_proprietes.put(g, new Hashtable<PCle, Object>());
+					if(o instanceof Font){
+						Font f = (Font) o;
+						f = PoliceManager.get().getFont(f); //Éviter les doublons
+						m_proprietes.get(g).put(c, f);
+					}
+					else{
+						m_proprietes.get(g).put(c, o);
+					}
+				}
+			}
+		}
+	}
 	public void set(PGroupe g, PCle c, Object o){
 		if(!m_proprietes.containsKey(g)){
 			m_proprietes.put(g, new Hashtable<PCle, Object>());
@@ -59,8 +100,131 @@ public class McdPreferencesManager {
 			}
 		}
 	}
+	private void saveObject(String key, Object o){
+		key=key.replace("_", "-");
+		byte objectParts[][] = null;
+		System.out.println(key);
+		try {
+			objectParts = splitByteArray(object2bytes(o));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		Preferences node = m_preferences.node(key);
+		for(int i=0;i<objectParts.length;++i)
+			node.putByteArray(""+i, objectParts[i]);
+		node.putInt("partNum", objectParts.length);
+	}
+	private Object loadObject(String key) {
+		key=key.replace("_", "-");
+		try {
+			if(!m_preferences.nodeExists(key))
+				return null;
+		} catch (BackingStoreException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+		Preferences node = m_preferences.node(key);
+		int partNum = node.getInt("partNum", 0);
+		if(partNum == 0)
+			return null;
+		byte parts[][] = new byte[partNum][];
+		for(int i=0;i<partNum;++i){
+			parts[i] = node.getByteArray(""+i, null);
+		}
+		try {
+			return byte2object(combineBytesArray(parts));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	private byte[] object2bytes(Object o) throws IOException{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(o);
+		return baos.toByteArray();
+	}
+	private Object byte2object(byte[] array) throws IOException, ClassNotFoundException{
+		ByteArrayInputStream bais = new ByteArrayInputStream(array);
+		ObjectInputStream ois = new ObjectInputStream(bais);
+		Object o = ois.readObject();
+		return o;
+	}
+	private byte[][] splitByteArray(byte[] bytes){
+		int partLength = (int) ((int)Preferences.MAX_VALUE_LENGTH*0.75);
+		int nbPart = (bytes.length + partLength - 1) / partLength;
+		byte parts[][] = new byte[nbPart][];
+		for(int i=0;i<nbPart;++i){
+			int startByte=i*partLength;
+			int endByte = startByte + partLength;
+			if(endByte>bytes.length) endByte = bytes.length;
+			int length = endByte-startByte;
+			parts[i] = new byte[length];
+			System.arraycopy(bytes, startByte, parts[i], 0, length);
+		}
+		return parts;
+	}
+	private byte[] combineBytesArray(byte[][] parts){
+		int length=0;
+		for(int i=0;i<parts.length;++i)
+			length+=parts[i].length;
+		byte bytes[] = new byte[length];
+		int curseur = 0;
+		for(int i=0;i<parts.length;++i){
+			System.arraycopy(parts[i], 0, bytes, curseur, parts[i].length);
+			curseur+=parts[i].length;
+		}
+		return bytes;
+	}
 	private static McdPreferencesManager m_instance;
 	private Hashtable<PGroupe, Hashtable<PCle, Object>> m_proprietes;
 	private Hashtable<PGroupe, Hashtable<PCle, Object>> m_proprietesPush;
+	final private Preferences m_preferences = Preferences.userNodeForPackage(getClass());
+	
+	
+	//Rien de bien interessant au delà, juste du travail de chinois...
+	private void loadDefault(){
+		setFont(PGroupe.HERITAGE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
+		set(PGroupe.HERITAGE,  PCle.COLOR, Color.GREEN);
+		set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR, Color.RED);
+		set(PGroupe.HERITAGE, PCle.COLOR_LINE, Color.BLACK);
+		set(PGroupe.HERITAGE, PCle.FONT_COLOR, Color.BLACK);
+		set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		
+		setFont(PGroupe.CONTRAINTE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
+		set(PGroupe.CONTRAINTE,  PCle.COLOR, Color.CYAN);
+		set(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.CONTRAINTE, PCle.COLOR_LINE, Color.BLACK);
+		set(PGroupe.CONTRAINTE, PCle.FONT_COLOR, Color.BLACK);
+		set(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		
+		setFont(PGroupe.CARDINALITE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
+		set(PGroupe.CARDINALITE, PCle.FONT_COLOR, Color.BLACK);
+		set(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		
+		setFont(PGroupe.RELATION, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
+		setFont(PGroupe.RELATION, PCle.FONT_NOM, "TimesRoman", Font.PLAIN, 10);
+		setFont(PGroupe.RELATION, PCle.FONT_FOCUS, "TimesRoman", Font.PLAIN, 10);
+		setFont(PGroupe.RELATION, PCle.FONT_NOM_FOCUS, "TimesRoman", Font.PLAIN, 10);
+		set(PGroupe.RELATION, PCle.FONT_COLOR, Color.GRAY);
+		set(PGroupe.RELATION, PCle.FONT_NOM_COLOR, Color.BLACK);
+		set(PGroupe.RELATION, PCle.COLOR, Color.GREEN);
+		set(PGroupe.RELATION, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		
+		setFont(PGroupe.ENTITE, PCle.FONT, "TimesRoman", Font.PLAIN, 10);
+		setFont(PGroupe.ENTITE, PCle.FONT_NOM, "TimesRoman", Font.PLAIN, 12);
+		setFont(PGroupe.ENTITE, PCle.FONT_FOCUS, "TimesRoman", Font.PLAIN, 10);
+		setFont(PGroupe.ENTITE, PCle.FONT_NOM_FOCUS, "TimesRoman", Font.PLAIN, 12);
+		set(PGroupe.ENTITE,  PCle.COLOR, Color.GREEN);
+		set(PGroupe.ENTITE, PCle.COLOR_CONTOUR, Color.RED);
+		set(PGroupe.ENTITE, PCle.FONT_COLOR, Color.RED);
+		set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR, Color.BLACK);
+		set(PGroupe.ENTITE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+	}
 }
 

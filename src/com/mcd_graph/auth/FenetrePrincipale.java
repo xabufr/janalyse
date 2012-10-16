@@ -1,6 +1,8 @@
 package com.mcd_graph.auth;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
@@ -77,7 +79,6 @@ public class FenetrePrincipale {
 			}
 		});
 	}
-
 	/**
 	 * Create the application.
 	 */
@@ -130,6 +131,7 @@ public class FenetrePrincipale {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		McdPreferencesManager.getInstance();
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setTitle("JAnalyse");

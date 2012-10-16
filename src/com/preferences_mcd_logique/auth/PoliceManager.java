@@ -36,12 +36,22 @@ public class PoliceManager {
 		}
 		return font;
 	}
+	public Font getFont(Font f){
+		String fontName=f.getFontName();
+		int style = f.getStyle();
+		int size = f.getSize();
+		return getFont(fontName,style,size);
+	}
 	public void clearFonts(){
 		m_polices.clear();
 	}
 	public void eraseFont(String policeName, int style, int size){
 		String key = policeName + "-" + String.valueOf(style) + "-" + String.valueOf(size);
 		m_polices.remove(key);
+	}
+	public Boolean contains(Font f){
+		String key = f.getFontName() + "-" + String.valueOf(f.getStyle()) + "-" + String.valueOf(f.getSize());
+		return m_polices.containsKey(key);
 	}
 	Hashtable<String, Font> m_polices;
 	
