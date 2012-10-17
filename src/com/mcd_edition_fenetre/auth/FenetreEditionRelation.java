@@ -34,6 +34,8 @@ import java.awt.Dimension;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 @SuppressWarnings("serial")
 public class FenetreEditionRelation extends JDialog {
@@ -52,6 +54,7 @@ public class FenetreEditionRelation extends JDialog {
 	private JSpinner m_taille;
 	private JTextPane m_txtpnCommentaire;
 	private JCheckBox m_autoIncrement;
+	private JButton m_btnCreer;
 	/**
 	 * Create the dialog.
 	 */
@@ -111,6 +114,13 @@ public class FenetreEditionRelation extends JDialog {
 			}
 			{
 				m_nomPropriete = new JTextField();
+				m_nomPropriete.addKeyListener(new KeyAdapter() {
+					public void keyPressed(KeyEvent e) {
+						if(e.getKeyCode() == KeyEvent.VK_ENTER){
+							m_btnCreer.doClick();
+						}
+					}
+				});
 				panel.add(m_nomPropriete, "cell 1 1,growx");
 				m_nomPropriete.setColumns(10);
 			}
@@ -164,9 +174,9 @@ public class FenetreEditionRelation extends JDialog {
 				panel.add(btnModifier, "cell 0 7,growx");
 			}
 			{
-				JButton btnCrer = new JButton("Créer");
-				panel.add(btnCrer, "cell 1 7,growx");
-				btnCrer.addActionListener(new createurPropriete());
+				m_btnCreer = new JButton("Créer");
+				panel.add(m_btnCreer, "cell 1 7,growx");
+				m_btnCreer.addActionListener(new createurPropriete());
 			}
 		}
 		{
@@ -246,7 +256,6 @@ public class FenetreEditionRelation extends JDialog {
 				okButton.setActionCommand("OK");
 				okButton.addActionListener(new validerModifications());
 				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
 			}
 			{
 				JButton cancelButton = new JButton("Annuler");
@@ -299,6 +308,7 @@ public class FenetreEditionRelation extends JDialog {
 
 			m_model.addElement(prop);
 			m_relationCopie.addPropriete(prop);
+			m_nomPropriete.setText("");
 		}
 	}
 	private class modifierPropriete implements ActionListener{

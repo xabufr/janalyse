@@ -33,6 +33,8 @@ import java.awt.event.ActionListener;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 @SuppressWarnings("serial")
 public class FenetreEditionEntite extends JDialog{
@@ -103,6 +105,13 @@ public class FenetreEditionEntite extends JDialog{
 					m_type.addItem(p);
 				
 				m_nomPropriete = new JTextField();
+				m_nomPropriete.addKeyListener(new KeyAdapter() {
+					public void keyPressed(KeyEvent e) {
+						if(e.getKeyCode() == KeyEvent.VK_ENTER){
+							m_boutonCreer.doClick();
+						}
+					}
+				});
 				panel_1.add(m_nomPropriete, "cell 1 1,growx");
 				m_nomPropriete.setColumns(10);
 				
