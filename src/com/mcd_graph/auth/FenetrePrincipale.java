@@ -151,7 +151,7 @@ public class FenetrePrincipale {
 		JMenuItem mntmOuvrir = new JMenuItem("Ouvrir");
 		mntmOuvrir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Chargement charge = new Chargement();
+				Chargement charge = new Chargement(m_mcd);
 			}
 		});
 		mnFichier.add(mntmOuvrir);
@@ -163,8 +163,10 @@ public class FenetrePrincipale {
 		mntmSauvegarder.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
 		mntmSauvegarder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String nom = m_mcd.saveMcdComposent();
-				m_mcdContener.setTitleAt(m_mcdContener.getSelectedIndex(), nom);
+				if (m_mcd!=null){
+					m_mcd.saveMcdComposent();
+					updateMcdNames();
+				}
 			}
 		});
 		mnFichier.add(mntmSauvegarder);

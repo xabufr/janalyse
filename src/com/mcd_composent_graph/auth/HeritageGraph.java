@@ -85,13 +85,13 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		if (m_needUpdateGraphic && m_mcd != null){
 			if (m_heritage.getEnfants() != null){
 				m_entitesGraph.clear();
-				for (Entite e : m_heritage.getEnfants()){
-					if (e.isMere())
-						m_entiteGraphMere = (EntiteGraph) m_mcd.getGraphicComponent(e);
-					else
+				for (Entite e : m_heritage.getEnfants())
 						m_entitesGraph.add((EntiteGraph) m_mcd.getGraphicComponent(e));
-				}
 			}
+			
+			if (m_heritage.getMere() != null)
+				m_entiteGraphMere = (EntiteGraph) m_mcd.getGraphicComponent(m_heritage.getMere());
+			
 			reloadGraph();
 		}
 		
@@ -99,34 +99,6 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		m_centre.setLocation(getPosition());
 		m_centre.x += getDimension().width/2;
 		m_centre.y += getDimension().height/2;
-
-		/*if (m_entiteGraphMere != null){
-			Point e = m_entiteGraphMere.getPosition();
-			e.x += m_entiteGraphMere.getDimension().width / 2;
-			e.y += m_entiteGraphMere.getDimension().height / 2;
-			
-			Rectangle obj = m_entiteGraphMere.getRectangle();
-			Line2D l = new Line2D.Double(h, e),
-					haut = new Line2D.Double(obj.x, obj.y, obj.x+obj.width, obj.y),
-					bas = new Line2D.Double(obj.x, obj.y+obj.height, obj.x+obj.width, obj.y+obj.height),
-					gauche = new Line2D.Double(obj.x, obj.y, obj.x, obj.y+obj.height),
-					droite = new Line2D.Double(obj.x+obj.width, obj.y, obj.x+obj.width, obj.y+obj.height);
-			
-			if (l.intersectsLine(haut)){
-				e.y -= obj.height/2;
-			}
-			else if (l.intersectsLine(bas)){
-				e.y += obj.height/2;
-			}
-			else if (l.intersectsLine(gauche)){
-				e.x -= obj.width/2;
-			}
-			else if (l.intersectsLine(droite)){
-				e.x += obj.width/2;
-			}
-			
-			g.drawLine(h.x, h.y, e.x, e.y);
-		}*/
 
 		if (m_entiteGraphMere != null){	
 			Point e = m_entiteGraphMere.getValidLinkPosition(this);
@@ -180,11 +152,12 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 				EntiteGraph ent = (EntiteGraph) m_mcd.getGraphicComponent(e);
 				m_entitesGraph.add(ent);
 				ent.addLien(this, m_centre);
-				if (e.isMere()){
-					m_entiteGraphMere = (EntiteGraph) m_mcd.getGraphicComponent(e);
-					m_entiteGraphMere.addLien(this, m_centre);
-				}
 			}
+		
+		if (m_heritage.getMere() != null){
+			m_entiteGraphMere = (EntiteGraph) m_mcd.getGraphicComponent(m_heritage.getMere());
+			m_entiteGraphMere.addLien(this, m_centre);
+		}
 	}
 
 	public void setMcd(McdGraph mcd) {
@@ -200,6 +173,7 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 	public void prepareDelete() {
 		m_mcd.removeLogic(m_heritage);
 		m_heritage.setEnfants(null);
+		m_heritage.setMere(null);
 		m_heritage=null;
 		m_entiteGraphMere=null;
 		m_entitesGraph=null;

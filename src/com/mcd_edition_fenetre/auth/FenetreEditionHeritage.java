@@ -29,6 +29,7 @@ public class FenetreEditionHeritage extends JDialog{
 	private McdGraph m_mcd;
 	private HeritageGraph m_heritageGraph;
 	private Heritage m_heritage;
+	private Entite m_oldEntite;
 	private JComboBox m_type;
 	private JComboBox m_entiteMere;
 	private DefaultListModel m_model;
@@ -52,13 +53,10 @@ public class FenetreEditionHeritage extends JDialog{
 		getContentPane().add(lblNewLabel_1, "cell 0 0,alignx right");
 		
 		m_type = new JComboBox();
-		int i=0;
 		for (HeritageType s : HeritageType.values()){
 			m_type.addItem(s);
 			if (s.toString().equals(m_heritage.getType().toString()))
-				m_type.setSelectedIndex(i);
-			
-			++i;
+				m_type.setSelectedItem(s);
 		}
 		getContentPane().add(m_type, "cell 1 0");
 		
@@ -71,14 +69,29 @@ public class FenetreEditionHeritage extends JDialog{
 			m_model.addElement(e);
 		
 		m_entiteMere = new JComboBox();
-		i=0;
-		for (Entite e : m_heritage.getEnfants()){
-			m_entiteMere.addItem(e);
-			if (e.isMere())
-				m_entiteMere.setSelectedIndex(i);
-			
-			++i;
+		if (m_heritage.getMere() != null){
+			m_entiteMere.addItem(m_heritage.getMere());
+			m_entiteMere.setSelectedItem(m_heritage.getMere());
 		}
+		
+		for (Entite e : m_heritage.getEnfants())
+			m_entiteMere.addItem(e);
+		
+		m_entiteMere.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (m_oldEntite != null){
+					m_model.addElement(m_oldEntite);
+					m_heritage.addEnfant(m_oldEntite);
+				}
+				
+				m_model.removeElement(m_entiteMere.getSelectedItem());
+				m_heritage.getEnfants().remove(m_entiteMere.getSelectedItem());
+				m_heritage.setMere((Entite) m_entiteMere.getSelectedItem());
+
+				m_oldEntite = (Entite) m_entiteMere.getSelectedItem();
+			}
+		});
+		
 		getContentPane().add(m_entiteMere, "cell 1 1");
 		
 		JLabel lblEntitFilles = new JLabel("Entité Filles:");
@@ -132,13 +145,10 @@ public class FenetreEditionHeritage extends JDialog{
 	private class BoutonOkListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			m_heritage.setType((HeritageType) m_type.getSelectedItem());
+			m_heritage.setMere((Entite) m_entiteMere.getSelectedItem());
 			
-			for (Entite enfant : m_heritage.getEnfants()){
-				if (enfant.getName().equals(m_entiteMere.getSelectedItem().toString()))
-					enfant.setMere(true);
-				else
-					enfant.setMere(false);
-			}
+			for (int i=0; i<m_model.getSize(); ++i)
+				m_heritage.addEnfant((Entite) m_model.get(i));
 			
 			m_heritageGraph.update();
 			m_mcd.repaint();
