@@ -57,7 +57,8 @@ public class McdGraph extends JPanel{
 	private FenetrePrincipale m_fenetrePrincipale;
 	private ArrayList<McdComposentGraphique> m_components, m_componentsFirst, m_componentsSecond;
 	private Stack<Hashtable<Object, McdComposentGraphique>> m_listeAnnuler, m_listeRefaire;
-	private Boolean m_isMoving;
+	private Boolean m_isMoving, m_isSaved;
+	private File m_file;
 	
 	public McdGraph(FenetrePrincipale fenPrinc) {
 		m_fenetrePrincipale = fenPrinc;
@@ -81,7 +82,9 @@ public class McdGraph extends JPanel{
 		m_listeRefaire = new Stack<Hashtable<Object,McdComposentGraphique>>();
 		m_focus = null;
 		m_isMoving = false;
+		m_isSaved=false;
 		m_deltaSelect = new Point();
+		setFile(null);
 		
 		this.setSize(new Dimension(80, 80));
 		this.setState(McdGraphStateE.MOVE);
@@ -802,6 +805,7 @@ public class McdGraph extends JPanel{
 	public void saveModification(){
 		m_listeAnnuler.push(copyLogicGraph(m_logicObjects));
 		m_listeRefaire.clear();
+		m_isSaved=false;
 	}
 	
 	private Hashtable<Object, McdComposentGraphique> copyLogicGraph(Hashtable<Object, McdComposentGraphique> from){
@@ -940,5 +944,26 @@ public class McdGraph extends JPanel{
 			comp.setMcd(this);
 		m_logicObjects=nouvelleLogique;
 		repaint();
+	}
+	public String getName(){
+		String name = super.getName();
+		if(!m_isSaved)
+			name += "*";
+		return name;
+	}
+	public String getLogicName(){
+		return super.getName();
+	}
+	public void setSaved(Boolean s){
+		m_isSaved=s;
+	}
+	public Boolean isSaved(){
+		return m_isSaved;
+	}
+	public File getFile() {
+		return m_file;
+	}
+	public void setFile(File file) {
+		m_file = file;
 	}
 }
