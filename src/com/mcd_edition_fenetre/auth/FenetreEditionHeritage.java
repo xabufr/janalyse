@@ -2,12 +2,10 @@ package com.mcd_edition_fenetre.auth;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import java.awt.Color;
 
 
 import javax.swing.DefaultListModel;
@@ -25,6 +23,7 @@ import net.miginfocom.swing.MigLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+@SuppressWarnings("serial")
 public class FenetreEditionHeritage extends JDialog{
 	private McdGraph m_mcd;
 	private HeritageGraph m_heritageGraph;

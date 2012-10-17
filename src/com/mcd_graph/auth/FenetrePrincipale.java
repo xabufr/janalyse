@@ -34,9 +34,6 @@ import java.awt.event.WindowListener;
 import com.event.auth.Chargement;
 import com.event.auth.QuitListener;
 
-import com.preferences_mcd_logique.auth.McdPreferencesManager;
-
-
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.awt.event.InputEvent;

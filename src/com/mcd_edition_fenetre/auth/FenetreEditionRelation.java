@@ -40,7 +40,7 @@ public class FenetreEditionRelation extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField m_nom;
 	private JTextField m_nomPropriete;
-	private JTextPane m_commentaire;
+	private JTextField m_commentaire;
 	private JComboBox m_typePropriete;
 	private JList m_listeProprietes;
 	private McdGraph m_mcd;
@@ -73,7 +73,7 @@ public class FenetreEditionRelation extends JDialog {
 			JPanel panel = new JPanel();
 			panel.setBorder(new LineBorder(Color.GRAY));
 			contentPanel.add(panel, "cell 0 0 2 1,grow");
-			panel.setLayout(new MigLayout("", "[][grow]", "[][grow][36.00][]"));
+			panel.setLayout(new MigLayout("", "[][grow]", "[][grow][36.00][18.00]"));
 			{
 				JLabel lblNom = new JLabel("Nom");
 				panel.add(lblNom, "cell 0 0,alignx trailing");
@@ -89,23 +89,24 @@ public class FenetreEditionRelation extends JDialog {
 				panel.add(lblCommentaire, "cell 0 1");
 			}
 			{
-				m_commentaire = new JTextPane();
+				m_commentaire = new JTextField();
+				m_commentaire.setColumns(10);
 				m_commentaire.setText(m_relationCopie.getCommentaire());
-				panel.add(m_commentaire, "cell 1 1 1 3,grow");
+				panel.add(m_commentaire, "cell 1 1 1 3,growx");
 			}
 		}
 		{
 			JPanel panel = new JPanel();
 			panel.setBorder(new LineBorder(Color.GRAY));
 			contentPanel.add(panel, "cell 0 2,grow");
-			panel.setLayout(new MigLayout("", "[][grow]", "[][][][][grow][][][]"));
+			panel.setLayout(new MigLayout("", "[][grow,center]", "[][][][][grow][][][]"));
 			{
 				JLabel lblProprietes = new JLabel("Propriete");
-				panel.add(lblProprietes, "cell 0 0");
+				panel.add(lblProprietes, "cell 0 0 2 1,alignx center");
 			}
 			{
 				JLabel lblNom_1 = new JLabel("Nom");
-				panel.add(lblNom_1, "cell 0 1,alignx trailing");
+				panel.add(lblNom_1, "cell 0 1");
 			}
 			{
 				m_nomPropriete = new JTextField();
@@ -114,7 +115,7 @@ public class FenetreEditionRelation extends JDialog {
 			}
 			{
 				JLabel lblType = new JLabel("Type");
-				panel.add(lblType, "cell 0 2,alignx trailing");
+				panel.add(lblType, "cell 0 2");
 			}
 			{
 				m_typePropriete = new JComboBox();
@@ -133,7 +134,7 @@ public class FenetreEditionRelation extends JDialog {
 				{
 					m_taille = new JSpinner();
 					m_taille.setModel(new SpinnerNumberModel(0, 0, 255, 1));
-					panel.add(m_taille, "cell 1 3");
+					panel.add(m_taille, "cell 1 3,growx");
 				}
 				{
 					JLabel lblCommentaire_1 = new JLabel("Commentaire");
@@ -159,11 +160,11 @@ public class FenetreEditionRelation extends JDialog {
 					m_autoIncrement = new JCheckBox("");
 					panel.add(m_autoIncrement, "cell 1 6");
 				}
-				panel.add(btnModifier, "cell 0 7");
+				panel.add(btnModifier, "cell 0 7,growx");
 			}
 			{
 				JButton btnCrer = new JButton("Créer");
-				panel.add(btnCrer, "cell 1 7");
+				panel.add(btnCrer, "cell 1 7,growx");
 				btnCrer.addActionListener(new createurPropriete());
 			}
 		}

@@ -5,7 +5,6 @@ import javax.swing.JDialog;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Entite;
-import com.mcd_log.auth.HeritageType;
 import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.ProprieteType;
 import com.mcd_log.auth.ProprieteTypeE;
@@ -27,7 +26,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -35,13 +33,13 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+@SuppressWarnings("serial")
 public class FenetreEditionEntite extends JDialog{
 	private JTextField m_nomEntite;
 	private JTextField m_commentaireEntite;
 	private JTextField m_nomPropriete;
 	private JTextField m_commentairePropriete;
 	private McdGraph m_mcd;
-	private EntiteGraph m_entiteGraph;
 	private Entite m_entite;
 	private DefaultListModel m_model;
 	private JComboBox m_type;
@@ -56,7 +54,6 @@ public class FenetreEditionEntite extends JDialog{
 	public FenetreEditionEntite(McdGraph mcd, EntiteGraph entite) {
 		
 		m_mcd = mcd;
-		m_entiteGraph = entite;
 		m_entite = entite.getEntite();
 		
 		setTitle("Edition Entité");
@@ -67,7 +64,7 @@ public class FenetreEditionEntite extends JDialog{
 		
 		JPanel content = new JPanel();
 		getContentPane().add(content, BorderLayout.CENTER);
-		content.setLayout(new MigLayout("", "[314px][237px]", "[56px][267px][35px]"));
+		content.setLayout(new MigLayout("", "[314px,fill][237px]", "[56px][267px][35px]"));
 		{
 			JPanel panel = new JPanel();
 			panel.setBorder(new LineBorder(Color.GRAY));
@@ -91,40 +88,42 @@ public class FenetreEditionEntite extends JDialog{
 			}
 			JPanel panel_1 = new JPanel();
 			panel_1.setBorder(new LineBorder(Color.GRAY));
-			content.add(panel_1, "cell 0 1,alignx left,growy");
-			panel_1.setLayout(new MigLayout("", "[][][grow]", "[][][][][][][][][][]"));
+			content.add(panel_1, "cell 0 1,grow");
+			panel_1.setLayout(new MigLayout("", "[][137.00,center]", "[][][][][][][][][][]"));
 			{
+				m_type = new JComboBox();
+				
 				JLabel lblProprit = new JLabel("Propriété");
-				panel_1.add(lblProprit, "cell 0 0");
+				panel_1.add(lblProprit, "cell 0 0 2 1,alignx center");
 				
 				JLabel lblNom_1 = new JLabel("Nom");
-				panel_1.add(lblNom_1, "cell 1 1,alignx trailing");
-				
-				m_nomPropriete = new JTextField();
-				panel_1.add(m_nomPropriete, "cell 2 1,growx");
-				m_nomPropriete.setColumns(10);
-				
-				JLabel lblType = new JLabel("Type");
-				panel_1.add(lblType, "cell 1 2,alignx trailing");
-				
-				m_type = new JComboBox();
+				panel_1.add(lblNom_1, "cell 0 1");
 				for (ProprieteTypeE p : ProprieteTypeE.values())
 					m_type.addItem(p);
 				
-				panel_1.add(m_type, "cell 2 2,growx");
+				m_nomPropriete = new JTextField();
+				panel_1.add(m_nomPropriete, "cell 1 1,growx");
+				m_nomPropriete.setColumns(10);
+				
+				JLabel lblType = new JLabel("Type");
+				panel_1.add(lblType, "cell 0 2,growx");
+				
+				
+				
+				panel_1.add(m_type, "cell 1 2,growx");
 				
 				JLabel lblTaille = new JLabel("Taille");
 				panel_1.add(lblTaille, "cell 0 3");
 				
 				m_taille = new JSpinner();
 				m_taille.setModel(new SpinnerNumberModel(0, 0, 255, 1));
-				panel_1.add(m_taille, "cell 1 3");
+				panel_1.add(m_taille, "cell 1 3,growx");
 				
 				JLabel lblCommentaire_1 = new JLabel("Commentaire");
 				panel_1.add(lblCommentaire_1, "cell 0 4");
 				
 				m_commentairePropriete = new JTextField();
-				panel_1.add(m_commentairePropriete, "cell 1 4 2 1,growx");
+				panel_1.add(m_commentairePropriete, "cell 1 4,growx");
 				m_commentairePropriete.setColumns(10);
 				
 				JLabel lblClPrimaire = new JLabel("Clé primaire");
@@ -137,22 +136,22 @@ public class FenetreEditionEntite extends JDialog{
 				panel_1.add(lblNull, "cell 0 6");
 				
 				m_isNull = new JCheckBox("");
-				panel_1.add(m_isNull, "cell 1 6");
+				panel_1.add(m_isNull, "cell 1 6,alignx center");
 				
 				JLabel lblAutoincrment = new JLabel("Auto-incrémenté");
 				panel_1.add(lblAutoincrment, "cell 0 7");
 				
 				m_isAutoIncremente = new JCheckBox("");
-				panel_1.add(m_isAutoIncremente, "cell 1 7");
+				panel_1.add(m_isAutoIncremente, "cell 1 7,alignx center");
 				
 				m_boutonModifier = new JButton("Modifier");
 				m_boutonModifier.addActionListener(new BoutonModifierListener());
-				panel_1.add(m_boutonModifier, "cell 0 8");
-				
-				m_boutonCreer = new JButton("Créer");
-				m_boutonCreer.addActionListener(new BoutonCreerListener());
-				panel_1.add(m_boutonCreer, "cell 2 8");
+				panel_1.add(m_boutonModifier, "cell 0 8,growx");
 			}
+			
+			m_boutonCreer = new JButton("Créer");
+			m_boutonCreer.addActionListener(new BoutonCreerListener());
+			panel_1.add(m_boutonCreer, "cell 1 8,growx");
 				JPanel panel_2 = new JPanel();
 				content.add(panel_2, "cell 0 2 2 1,growx,aligny top");
 				{

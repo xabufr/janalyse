@@ -21,7 +21,9 @@ public class Contrainte implements Cloneable{
 	public void setNom(ContrainteType nom) {
 		m_type = nom;
 	}
-
+	public ContrainteType getType(){
+		return m_type;
+	}
 	public List<Entite> getEntites() {
 		return m_entites;
 	}

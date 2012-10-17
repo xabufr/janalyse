@@ -27,7 +27,6 @@ import java.awt.Color;
 @SuppressWarnings("serial")
 public class FenetrePreferences extends JDialog {
 
-	private FenetrePrincipale m_fenPrinc;
 	private final JPanel contentPanel = new JPanel();
 
 	public FenetrePreferences(FenetrePrincipale princ) {
@@ -35,7 +34,6 @@ public class FenetrePreferences extends JDialog {
 		setModal(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setTitle("Préférences");
-		m_fenPrinc = princ;
 		McdPreferencesManager.getInstance().push();
 
 		setBounds(100, 100, 674, 316);

@@ -595,8 +595,7 @@ public class McdGraph extends JPanel{
 					}
 				}
 			}
-			
-			if(m_focus!=null&&e.getClickCount()==1&&found){
+			if(m_focus!=null&&e.getClickCount()==1&&found){ // 1 click -> mode move
 					if(!m_focus.isMovable())
 						return;
 					FormeGeometrique forme = (FormeGeometrique)m_focus;
@@ -610,7 +609,7 @@ public class McdGraph extends JPanel{
 					}
 				
 			}
-			else if(found&&(System.currentTimeMillis()-m_time>=m_interval)||
+			else if(found&&(System.currentTimeMillis()-m_time>=m_interval)|| // doubleclick
 					e.getClickCount()==2)
 			{
 				saveAnnulerModification();
@@ -620,9 +619,9 @@ public class McdGraph extends JPanel{
 					((RelationGraph)m_focus).actualiser();
 				}
 				else if (m_focus instanceof ContrainteGraph){
-					String nom;
-					nom = JOptionPane.showInputDialog(null, "Type de contrainte:", "Edition Contrainte", JOptionPane.PLAIN_MESSAGE, null, ContrainteType.values(), ContrainteType.PLUS).toString();
-					((ContrainteGraph) m_focus).getContrainte().setNom(ContrainteType.valueOf(nom));
+					ContrainteType type=null;
+					type = (ContrainteType) JOptionPane.showInputDialog(null, "Type de contrainte:", "Edition Contrainte", JOptionPane.PLAIN_MESSAGE, null, ContrainteType.values(), ((ContrainteGraph) m_focus).getContrainte().getType());
+					((ContrainteGraph) m_focus).getContrainte().setNom(type);
 					((ContrainteGraph) m_focus).update();
 				}
 				else if (m_focus instanceof HeritageGraph){
@@ -637,7 +636,7 @@ public class McdGraph extends JPanel{
 				}
 				setMcdComposentGraphiquetFocus(null);
 			}
-			else if(!found){
+			else if(!found){//Click en dehors
 				setMcdComposentGraphiquetFocus(null);
 			}
 			
@@ -800,7 +799,6 @@ public class McdGraph extends JPanel{
 				try {
 					c = ((Cardinalite)key).clone();
 				} catch (CloneNotSupportedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				c.setEntite((Entite) correspondances.get(((Cardinalite)key).getEntite()));
@@ -816,7 +814,6 @@ public class McdGraph extends JPanel{
 				try {
 					h = ((Heritage)key).clone();
 				} catch (CloneNotSupportedException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				Heritage anc = (Heritage)key;
