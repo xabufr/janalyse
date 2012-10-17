@@ -10,13 +10,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 //import java.nio.file.Files;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -42,7 +37,6 @@ import com.mcd_log.auth.Contrainte;
 import com.mcd_log.auth.ContrainteType;
 import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.HeritageType;
-import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
 import com.mcd_log.auth.Entite;
 
@@ -64,7 +58,6 @@ public class McdGraph extends JPanel{
 		m_fenetrePrincipale = fenPrinc;
 		
 		m_states = new Hashtable<McdGraphStateE,McdGraphState>();
-		m_states.put(McdGraphStateE.MOVE, new McdGraphStateMove());
 		m_states.put(McdGraphStateE.INSERT_ENTITE, new McdGraphStateInsertEntite());
 		m_states.put(McdGraphStateE.INSERT_RELATION, new McdGraphStateInsertRelation());
 		m_states.put(McdGraphStateE.INSERT_LIEN, new McdGraphStateInsertLien());
@@ -87,7 +80,7 @@ public class McdGraph extends JPanel{
 		setFile(null);
 		
 		this.setSize(new Dimension(80, 80));
-		this.setState(McdGraphStateE.MOVE);
+		this.setState(McdGraphStateE.INSERT_ENTITE);
 		this.setFocusable(true);
 	}
 	
@@ -332,71 +325,6 @@ public class McdGraph extends JPanel{
 		}
 		
 	}
-	private class McdGraphStateMove extends McdGraphState{
-		public void enterState(){
-			setMcdComposentGraphiquetFocus(null);
-		}
-		public void leftState(){
-			m_isMoving=false;
-		}
-		public void mouseClicked(MouseEvent e) {
-			
-		}
-
-		public void mouseEntered(MouseEvent e) {
-			
-		}
-
-		public void mouseExited(MouseEvent e) {
-			
-		}
-
-		public void mousePressed(MouseEvent e) {
-			for (McdComposentGraphique composant : m_components){
-				if(!composant.isMovable())
-					continue;
-				FormeGeometrique forme = (FormeGeometrique)composant;
-				if (forme.contient(
-						e.getPoint())){
-					setMcdComposentGraphiquetFocus(composant);
-					m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
-					m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
-					m_isMoving=true;
-					saveAnnulerModification();
-				}
-			}
-		}
-
-		public void mouseReleased(MouseEvent e) {
-			setMcdComposentGraphiquetFocus(null); //Pour gérer la suppression, il faut garder le dernier click
-			m_isMoving=false;
-		}
-
-		public void mouseDragged(MouseEvent e) {
-			if (m_focus != null){
-				FormeGeometrique forme = (FormeGeometrique)m_focus;
-				Point tmp = new Point();
-				tmp.x = e.getPoint().x - m_deltaSelect.x;
-				tmp.y = e.getPoint().y - m_deltaSelect.y;
-				forme.setPosition(tmp);
-				repaint(); //Intéressant n'est-ce pas ? Note que le McdGraph.this. est facultatif ici...
-			}
-		}
-
-		public void mouseMoved(MouseEvent e) {
-			
-		}
-		public void keyPressed(KeyEvent e) {
-			
-		}
-		public void keyReleased(KeyEvent e) {
-			
-		}
-		public void keyTyped(KeyEvent e) {
-			
-		}
-	}
-
 	class McdGraphStateInsertLien extends McdGraphState{
 		private McdComposentGraphique m_objects[];
 		private int m_current;
@@ -625,6 +553,10 @@ public class McdGraph extends JPanel{
 		}
 		public void enterState(){
 			setMcdComposentGraphiquetFocus(null);
+			m_isMoving=false;
+		}
+		public void leftState(){
+			m_isMoving=false;
 		}
 		public void mouseClicked(MouseEvent arg0) {
 			
@@ -645,7 +577,6 @@ public class McdGraph extends JPanel{
 				if(((FormeGeometrique)component).contient(e.getPoint())){
 					found=true;
 					if(component!=m_focus){
-						m_focus=component;
 						m_time=System.currentTimeMillis();
 						setMcdComposentGraphiquetFocus(component);
 						break;
@@ -657,7 +588,6 @@ public class McdGraph extends JPanel{
 					if(((FormeGeometrique)component).contient(e.getPoint())){
 						found=true;
 						if(component!=m_focus){
-							m_focus=component;
 							m_time=System.currentTimeMillis();
 							setMcdComposentGraphiquetFocus(component);
 							break;
@@ -665,7 +595,22 @@ public class McdGraph extends JPanel{
 					}
 				}
 			}
-			if(found&&(System.currentTimeMillis()-m_time>=m_interval)||
+			
+			if(m_focus!=null&&e.getClickCount()==1&&found){
+					if(!m_focus.isMovable())
+						return;
+					FormeGeometrique forme = (FormeGeometrique)m_focus;
+					if (forme.contient(
+							e.getPoint())){
+						setMcdComposentGraphiquetFocus(m_focus);
+						m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
+						m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
+						m_isMoving=true;
+						saveAnnulerModification();
+					}
+				
+			}
+			else if(found&&(System.currentTimeMillis()-m_time>=m_interval)||
 					e.getClickCount()==2)
 			{
 				saveAnnulerModification();
@@ -699,11 +644,18 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
-			
+			m_isMoving=false;
 		}
 
-		public void mouseDragged(MouseEvent arg0) {
-			
+		public void mouseDragged(MouseEvent e) {
+			if (m_focus != null&&m_isMoving){
+				FormeGeometrique forme = (FormeGeometrique)m_focus;
+				Point tmp = new Point();
+				tmp.x = e.getPoint().x - m_deltaSelect.x;
+				tmp.y = e.getPoint().y - m_deltaSelect.y;
+				forme.setPosition(tmp);
+				repaint(); //Intéressant n'est-ce pas ? Note que le McdGraph.this. est facultatif ici...
+			}
 		}
 
 		public void mouseMoved(MouseEvent arg0) {
