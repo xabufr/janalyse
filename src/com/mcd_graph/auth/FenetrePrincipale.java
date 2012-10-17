@@ -33,7 +33,9 @@ import java.awt.event.WindowListener;
 
 import com.event.auth.Chargement;
 import com.event.auth.QuitListener;
-import com.ui_help.auth.APropos;
+
+import com.preferences_mcd_logique.auth.McdPreferencesManager;
+
 
 import java.awt.Insets;
 import java.util.ArrayList;
@@ -51,14 +53,13 @@ public class FenetrePrincipale {
 	private JFrame frame;
 	private JButton m_boutonInsertionEntite;
 	private JButton m_boutonInsertionRelation;
+	private JButton m_boutonDeplacer;
 	private JButton m_boutonInsertionLien;
 	private JButton m_boutonInsertionContrainte;
 	private JButton m_boutonInsertionHeritage;
 	private ArrayList<JButton> m_stateButtons;
 	private JButton m_boutonEdition;
 	private final JTabbedPane m_mcdContener = new JTabbedPane();
-	private JMenuItem m_mntmAnnuler;
-	private JMenuItem m_mntmRefaire;
 	/**
 	 * Launch the application.
 	 */
@@ -110,8 +111,10 @@ public class FenetrePrincipale {
 				case INSERT_RELATION:
 					setEnabledButton(m_boutonInsertionRelation);
 					break;
+				case MOVE:
+					setEnabledButton(m_boutonDeplacer);
+					break;
 				}
-				updateMcdUi(m_mcd);
 			}
 		});
 	}
@@ -138,7 +141,6 @@ public class FenetrePrincipale {
 		menuBar.add(mnFichier);
 		
 		JMenuItem menuItem = new JMenuItem("Nouveau");
-		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				createNewMcd();
@@ -147,10 +149,12 @@ public class FenetrePrincipale {
 		mnFichier.add(menuItem);
 		
 		JMenuItem mntmOuvrir = new JMenuItem("Ouvrir");
-		mntmOuvrir.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
 		mntmOuvrir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				createNewMcd();
 				Chargement charge = new Chargement(m_mcd);
+				updateMcdNames();
+				m_mcd.repaint();
 			}
 		});
 		mnFichier.add(mntmOuvrir);
@@ -171,7 +175,6 @@ public class FenetrePrincipale {
 		mnFichier.add(mntmSauvegarder);
 		
 		JMenuItem mntmExporterEnPng = new JMenuItem("Exporter en PNG");
-		mntmExporterEnPng.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_MASK));
 		mntmExporterEnPng.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(m_mcd==null)
@@ -260,29 +263,25 @@ public class FenetrePrincipale {
 			}
 		});
 		
-		m_mntmAnnuler = new JMenuItem("Annuler");
-		m_mntmAnnuler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
-		m_mntmAnnuler.addActionListener(new ActionListener() {
+		JMenuItem mntmAnnuler = new JMenuItem("Annuler");
+		mntmAnnuler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
+		mntmAnnuler.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(m_mcd != null){
+				if(m_mcd != null)
 					m_mcd.annuler();
-					updateMcdUi(m_mcd);
-				}
 			}
 		});
-		mnEdition.add(m_mntmAnnuler);
+		mnEdition.add(mntmAnnuler);
 		
-		m_mntmRefaire = new JMenuItem("Refaire");
-		m_mntmRefaire.addActionListener(new ActionListener() {
+		JMenuItem mntmRefaire = new JMenuItem("Refaire");
+		mntmRefaire.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(m_mcd != null){
+				if(m_mcd != null)
 					m_mcd.refaire();
-					updateMcdUi(m_mcd);
-				}
 			}
 		});
-		m_mntmRefaire.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
-		mnEdition.add(m_mntmRefaire);
+		mntmRefaire.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		mnEdition.add(mntmRefaire);
 		
 		JSeparator separator_3 = new JSeparator();
 		mnEdition.add(separator_3);
@@ -293,12 +292,6 @@ public class FenetrePrincipale {
 		menuBar.add(mnAide);
 		
 		JMenuItem mntmAPropos = new JMenuItem("A propos...");
-		mntmAPropos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				new APropos().setVisible(true);
-			}
-		});
-		mntmAPropos.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		mnAide.add(mntmAPropos);
 		
 		JToolBar toolBar = new JToolBar();
@@ -324,6 +317,14 @@ public class FenetrePrincipale {
 		m_stateButtons.add(m_boutonInsertionRelation);
 		toolBar.add(m_boutonInsertionRelation);
 		
+		m_boutonDeplacer = new JButton("");
+		m_boutonDeplacer.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/edition.png")));
+		m_boutonDeplacer.setPreferredSize(new Dimension(32, 32));
+		m_boutonDeplacer.setMinimumSize(new Dimension(32, 32));
+		m_boutonDeplacer.setMaximumSize(new Dimension(32, 32));
+		m_boutonDeplacer.setMargin(new Insets(0, 0, 0, 0));
+		m_stateButtons.add(m_boutonDeplacer);
+		toolBar.add(m_boutonDeplacer);
 		
 		m_boutonInsertionLien = new JButton("");
 		m_boutonInsertionLien.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/lien.png")));
@@ -403,6 +404,14 @@ public class FenetrePrincipale {
 			setEnabledButton(m_boutonInsertionLien);
 		}
 		});
+		m_boutonDeplacer.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)
+					return;
+				m_mcd.setState(McdGraphStateE.MOVE);
+				setEnabledButton(m_boutonDeplacer);
+			}
+		});
 		m_boutonEdition.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				if(m_mcd==null)
@@ -411,7 +420,7 @@ public class FenetrePrincipale {
 				setEnabledButton(m_boutonEdition);
 			}
 		});
-		setEnabledButton(m_boutonInsertionEntite);
+		setEnabledButton(m_boutonDeplacer);
 		
 		frame.getContentPane().add(m_mcdContener);
 		
@@ -431,20 +440,34 @@ public class FenetrePrincipale {
 			}
 		});
 		frame.addWindowListener(new WindowListener() {
-			public void windowOpened(WindowEvent arg0) {				
+			public void windowOpened(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
 			}
-			public void windowIconified(WindowEvent arg0) {				
+			public void windowIconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
 			}
-			public void windowDeiconified(WindowEvent arg0) {				
+			public void windowDeiconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
 			}
-			public void windowDeactivated(WindowEvent arg0) {				
+			public void windowDeactivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
 			}
+			
 			public void windowClosing(WindowEvent arg0) {
 				quitter();
+				
 			}
-			public void windowClosed(WindowEvent arg0) {				
+			public void windowClosed(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
 			}
-			public void windowActivated(WindowEvent arg0) {				
+			public void windowActivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -563,12 +586,5 @@ public class FenetrePrincipale {
 			}
 		}
 		return true;
-	}
-	public void updateMcdUi(McdGraph mcd){
-		if(m_mcd==mcd){
-			m_mntmAnnuler.setEnabled(m_mcd.peutAnnuler());
-			m_mntmRefaire.setEnabled(m_mcd.peutRefaire());
-		}
-		updateMcdNames();
 	}
 }

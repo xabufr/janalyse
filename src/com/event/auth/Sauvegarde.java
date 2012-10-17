@@ -238,6 +238,9 @@ public class Sauvegarde {
 			Attribute relatif = new Attribute("relatif", String.valueOf(c.isRelatif()));
 			cardinalite.setAttribute(relatif);
 			
+			Attribute style = new Attribute("style", cg.getTypeDessin().toString());
+			cardinalite.setAttribute(style);
+			
 			for (int j=0; j<entiteGraph.size(); ++j)
 				if (entiteGraph.get(j).getEntite() == c.getEntite()){
 					Element entite = new Element("Entite");
@@ -272,8 +275,8 @@ public class Sauvegarde {
 			Attribute type = new Attribute("type", h.getType().toString());
 			heritage.setAttribute(type);
 			
-			for (int j=0; j<entiteGraph.size(); ++j)
-				for (int u=0; u<h.getEnfants().size(); ++u)
+			for (int j=0; j<entiteGraph.size(); ++j){
+				for (int u=0; u<h.getEnfants().size(); ++u){
 					if (entiteGraph.get(j).getEntite() == h.getEnfants().get(u)){
 						Element entite = new Element("Entite");
 						entite.setAttribute(new Attribute("id", String.valueOf(j)));
@@ -281,6 +284,15 @@ public class Sauvegarde {
 						heritage.addContent(entite);
 					}
 			
+					if	(entiteGraph.get(j).getEntite() == h.getMere()){
+						Element entite = new Element("Entite-mere");
+						entite.setAttribute(new Attribute("id", String.valueOf(j)));
+						
+						heritage.addContent(entite);
+					}
+						
+				}
+			}
 			allHeritage.addContent(heritage);
 		}
 		mcd.addContent(allHeritage);

@@ -744,6 +744,15 @@ public class McdGraph extends JPanel{
 		return m_components;
 	}
 	
+	public void addMcdComponents(McdComposentGraphique c){
+		if (c instanceof EntiteGraph ||c instanceof RelationGraph)
+			m_componentsSecond.add(c);
+		else
+			m_componentsFirst.add(c);
+		
+		m_components.add(c);
+	}
+	
 	public void saveMcdComposent(){
 		Sauvegarde save = new Sauvegarde(this);
 	}

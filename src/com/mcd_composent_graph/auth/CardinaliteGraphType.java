@@ -16,5 +16,4 @@ public enum CardinaliteGraphType {
 			return "Deux cassures";
 		}
 	}
-	
 }
