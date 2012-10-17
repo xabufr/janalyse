@@ -806,6 +806,7 @@ public class McdGraph extends JPanel{
 		m_listeAnnuler.push(copyLogicGraph(m_logicObjects));
 		m_listeRefaire.clear();
 		m_isSaved=false;
+		m_fenetrePrincipale.updateMcdUi(this);
 	}
 	
 	private Hashtable<Object, McdComposentGraphique> copyLogicGraph(Hashtable<Object, McdComposentGraphique> from){
@@ -965,5 +966,11 @@ public class McdGraph extends JPanel{
 	}
 	public void setFile(File file) {
 		m_file = file;
+	}
+	public Boolean peutAnnuler(){
+		return !m_listeAnnuler.isEmpty();
+	}
+	public Boolean peutRefaire(){
+		return !m_listeRefaire.isEmpty();
 	}
 }

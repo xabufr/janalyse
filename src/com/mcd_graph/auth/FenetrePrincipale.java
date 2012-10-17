@@ -60,6 +60,8 @@ public class FenetrePrincipale {
 	private ArrayList<JButton> m_stateButtons;
 	private JButton m_boutonEdition;
 	private final JTabbedPane m_mcdContener = new JTabbedPane();
+	private JMenuItem m_mntmAnnuler;
+	private JMenuItem m_mntmRefaire;
 	/**
 	 * Launch the application.
 	 */
@@ -115,6 +117,7 @@ public class FenetrePrincipale {
 					setEnabledButton(m_boutonDeplacer);
 					break;
 				}
+				updateMcdUi(m_mcd);
 			}
 		});
 	}
@@ -258,25 +261,29 @@ public class FenetrePrincipale {
 			}
 		});
 		
-		JMenuItem mntmAnnuler = new JMenuItem("Annuler");
-		mntmAnnuler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
-		mntmAnnuler.addActionListener(new ActionListener() {
+		m_mntmAnnuler = new JMenuItem("Annuler");
+		m_mntmAnnuler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
+		m_mntmAnnuler.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(m_mcd != null)
+				if(m_mcd != null){
 					m_mcd.annuler();
+					updateMcdUi(m_mcd);
+				}
 			}
 		});
-		mnEdition.add(mntmAnnuler);
+		mnEdition.add(m_mntmAnnuler);
 		
-		JMenuItem mntmRefaire = new JMenuItem("Refaire");
-		mntmRefaire.addActionListener(new ActionListener() {
+		m_mntmRefaire = new JMenuItem("Refaire");
+		m_mntmRefaire.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(m_mcd != null)
+				if(m_mcd != null){
 					m_mcd.refaire();
+					updateMcdUi(m_mcd);
+				}
 			}
 		});
-		mntmRefaire.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
-		mnEdition.add(mntmRefaire);
+		m_mntmRefaire.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+		mnEdition.add(m_mntmRefaire);
 		
 		JSeparator separator_3 = new JSeparator();
 		mnEdition.add(separator_3);
@@ -567,5 +574,12 @@ public class FenetrePrincipale {
 			}
 		}
 		return true;
+	}
+	public void updateMcdUi(McdGraph mcd){
+		if(m_mcd==mcd){
+			m_mntmAnnuler.setEnabled(m_mcd.peutAnnuler());
+			m_mntmRefaire.setEnabled(m_mcd.peutRefaire());
+		}
+		updateMcdNames();
 	}
 }
