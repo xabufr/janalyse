@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JList;
 import javax.swing.DefaultListModel;
@@ -175,12 +176,13 @@ public class FenetreEditionRelation extends JDialog {
 			panel.setLayout(new MigLayout("", "[181px][]", "[100px][][][][]"));
 			{
 				m_listeProprietes = new JList();
-				m_listeProprietes.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+				JScrollPane scrollPane = new JScrollPane(m_listeProprietes);
+				scrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 				m_model = new DefaultListModel();
 				for(Propriete prop : m_relationCopie.getProprietes()){
 					m_model.addElement(prop);
 				}
-				panel.add(m_listeProprietes, "cell 0 0 1 5,grow");
+				panel.add(scrollPane, "cell 0 0 1 5,grow");
 				m_listeProprietes.setModel(m_model);
 				m_listeProprietes.addListSelectionListener(new SelectionProprieteListener());
 			}

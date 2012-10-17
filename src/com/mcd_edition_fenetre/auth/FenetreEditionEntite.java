@@ -18,6 +18,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JSpinner;
@@ -224,7 +225,8 @@ public class FenetreEditionEntite extends JDialog{
 					m_model.addElement(p);
 				
 				m_lstPropriete = new JList();
-				m_lstPropriete.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+				JScrollPane scrollPane = new JScrollPane(m_lstPropriete);
+				scrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 				m_lstPropriete.setModel(m_model);
 				m_lstPropriete.addListSelectionListener(new ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent e) {
@@ -240,7 +242,7 @@ public class FenetreEditionEntite extends JDialog{
 						}
 					}
 				});
-				panel_3.add(m_lstPropriete, "cell 0 0 1 5,grow");
+				panel_3.add(scrollPane, "cell 0 0 1 5,grow");
 			}
 		}
 		
