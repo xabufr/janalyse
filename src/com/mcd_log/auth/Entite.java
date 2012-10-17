@@ -7,14 +7,12 @@ public class Entite implements Cloneable{
 	private String m_name;
 	private String m_commentaire;
 	private List<Propriete> m_proprietes;
-	private boolean m_mere;
 	
 	public Entite(String name){
 		setProprietes(new ArrayList<Propriete>());
 		
 		setName(name);
 		setCommentaire("");
-		setMere(false);
 	}
 
 	public String getName() {
@@ -48,15 +46,6 @@ public class Entite implements Cloneable{
 	public void delPropriete(Propriete p){
 		m_proprietes.remove(p);
 	}
-
-	public boolean isMere() {
-		return m_mere;
-	}
-
-	public void setMere(boolean mere) {
-		m_mere = mere;
-	}
-	
 	public String toString(){
 		return m_name;
 	}

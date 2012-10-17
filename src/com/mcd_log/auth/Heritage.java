@@ -29,6 +29,13 @@ public class Heritage implements Cloneable{
 		Heritage h = (Heritage) super.clone();
 		return h;
 	}
+	public Entite getMere(){
+		return m_entiteMere;
+	}
+	public void setMere(Entite e){
+		m_entiteMere=e;
+	}
 	private HeritageType m_type;
 	private ArrayList<Entite> m_enfants;
+	Entite m_entiteMere;
 }

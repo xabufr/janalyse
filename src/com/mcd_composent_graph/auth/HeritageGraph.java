@@ -83,12 +83,12 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		if (m_needUpdateGraphic && m_mcd != null){
 			if (m_heritage.getEnfants() != null){
 				m_entitesGraph.clear();
-				for (Entite e : m_heritage.getEnfants()){
-					if (e.isMere())
-						m_entiteGraphMere = (EntiteGraph) m_mcd.getGraphicComponent(e);
-					else
-						m_entitesGraph.add((EntiteGraph) m_mcd.getGraphicComponent(e));
+				for (Entite e : m_heritage.getEnfants()){	
+					m_entitesGraph.add((EntiteGraph) m_mcd.getGraphicComponent(e));
 				}
+			}
+			if(m_heritage.getMere()!=null){
+				m_entiteGraphMere = (EntiteGraph) m_mcd.getGraphicComponent(m_heritage.getMere());
 			}
 			reloadGraph();
 		}
@@ -173,16 +173,21 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 			e.removeLien(this);
 		}
 		m_entitesGraph.clear();
-		if (m_heritage.getEnfants() != null)
+		if (m_heritage.getEnfants() != null){
 			for (Entite e : m_heritage.getEnfants()){
 				EntiteGraph ent = (EntiteGraph) m_mcd.getGraphicComponent(e);
 				m_entitesGraph.add(ent);
 				ent.addLien(this, m_centre);
-				if (e.isMere()){
-					m_entiteGraphMere = (EntiteGraph) m_mcd.getGraphicComponent(e);
-					m_entiteGraphMere.addLien(this, m_centre);
-				}
 			}
+		}
+		if(m_heritage.getMere()!=null){
+			Entite e = m_heritage.getMere();
+			EntiteGraph ent = (EntiteGraph) m_mcd.getGraphicComponent(e);
+			m_entitesGraph.add(ent);
+			ent.addLien(this, m_centre);
+			m_entiteGraphMere = (EntiteGraph) m_mcd.getGraphicComponent(e);
+			m_entiteGraphMere.addLien(this, m_centre);
+		}
 	}
 
 	public void setMcd(McdGraph mcd) {

@@ -73,7 +73,7 @@ public class FenetreEditionHeritage extends JDialog{
 		i=0;
 		for (Entite e : m_heritage.getEnfants()){
 			m_entiteMere.addItem(e);
-			if (e.isMere())
+			if (e == m_heritage.getMere())
 				m_entiteMere.setSelectedIndex(i);
 			
 			++i;
