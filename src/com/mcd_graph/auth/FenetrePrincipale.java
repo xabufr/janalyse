@@ -28,6 +28,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import com.event.auth.Chargement;
 import com.event.auth.QuitListener;
@@ -432,16 +434,59 @@ public class FenetrePrincipale {
 			public void mouseClicked(MouseEvent arg0) {
 			}
 		});
+		frame.addWindowListener(new WindowListener() {
+			public void windowOpened(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			public void windowIconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			public void windowDeiconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			public void windowDeactivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void windowClosing(WindowEvent arg0) {
+				quitter();
+				
+			}
+			public void windowClosed(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			public void windowActivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
 
 	public void quitter() {
+		ArrayList<McdGraph> mcds = new ArrayList<McdGraph>();
+		int nb = m_mcdContener.getTabCount();
+		for(int i=0;i<nb;++i){
+			mcds.add((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView());
+		}
+		for(McdGraph mcd : mcds){
+			if(!fermerMcd(mcd)){
+				return;
+			}
+		}
 		frame.dispose();
 	}
 	private void createNewMcd(){
 		McdGraph mcd = new McdGraph(this);
 		mcd.setState(McdGraphStateE.INSERT_ENTITE);
 		mcd.setName("Nouveau MCD");
-		m_mcdContener.addTab("Nouveau MCD*", new JScrollPane(mcd));
+		m_mcdContener.addTab("", new JScrollPane(mcd));
+		updateMcdNames();
 	}
 	public void updateScrollBar(){
 		int nb = m_mcdContener.getTabCount();
@@ -486,24 +531,7 @@ public class FenetrePrincipale {
 			});
 			itemFermer.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					if(m_mcd==null)
-						return;
-					int index = -1;
-					int nb = m_mcdContener.getTabCount();
-					for(int i=0;i<nb;++i){
-						if(((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()==m_mcd){
-							index=i;
-							break;
-						}
-					}
-					if(index==-1)
-						return;
-					m_mcdContener.remove(index);
-					m_mcd = null;
-					if(m_mcdContener.getTabCount()!=0){
-						m_mcdContener.setSelectedIndex(0);
-						m_mcd = (McdGraph) ((JScrollPane)m_mcdContener.getSelectedComponent()).getViewport().getView();
-					}
+					fermerMcd(m_mcd);
 				}
 			});
 			add(itemRenommer);
@@ -525,5 +553,33 @@ public class FenetrePrincipale {
 		}
 		
 		return ret;
+	}
+	private Boolean fermerMcd(McdGraph mcd){
+		if(mcd==null)
+			return false;
+		if(!mcd.isSaved()){
+			if(JOptionPane.showConfirmDialog(null,"MCD non sauvegardé, voulez-vous le fermer ?")!=
+					JOptionPane.OK_OPTION)
+				return false;
+		}
+		int index = -1;
+		int nb = m_mcdContener.getTabCount();
+		for(int i=0;i<nb;++i){
+			if(((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()==mcd){
+				index=i;
+				break;
+			}
+		}
+		if(index==-1)
+			return false;
+		m_mcdContener.remove(index);
+		if(mcd==m_mcd){
+			m_mcd = null;
+			if(m_mcdContener.getTabCount()!=0){
+				m_mcdContener.setSelectedIndex(0);
+				m_mcd = (McdGraph) ((JScrollPane)m_mcdContener.getSelectedComponent()).getViewport().getView();
+			}
+		}
+		return true;
 	}
 }

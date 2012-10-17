@@ -5,17 +5,11 @@ import java.util.ArrayList;
 public class Relation implements Cloneable{
 	public Relation(){
 		this("");
-		this.m_cardinalites = new Cardinalite[2];
-		this.m_cardinalites[0] = new Cardinalite();
-		this.m_cardinalites[1] = new Cardinalite();
-		m_proprietes = new ArrayList<Propriete> ();
 	}
 	public Relation(String nom){
 		m_nom=nom;
-		this.m_cardinalites = new Cardinalite[2];
-		this.m_cardinalites[0] = new Cardinalite();
-		this.m_cardinalites[1] = new Cardinalite();
 		m_proprietes = new ArrayList<Propriete> ();
+		setCommentaire("");
 	}
 	public Relation(Relation r){
 		m_nom=r.m_nom;
@@ -57,7 +51,6 @@ public class Relation implements Cloneable{
 	}
 	private String m_nom;
 	private String m_commentaire;
-	private Cardinalite m_cardinalites[];
 	private ArrayList<Propriete> m_proprietes;
 	
 }

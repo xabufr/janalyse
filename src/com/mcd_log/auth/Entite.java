@@ -13,6 +13,7 @@ public class Entite implements Cloneable{
 		setProprietes(new ArrayList<Propriete>());
 		
 		setName(name);
+		setCommentaire("");
 		setMere(false);
 	}
 
