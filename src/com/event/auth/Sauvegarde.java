@@ -1,16 +1,12 @@
 package com.event.auth;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.jdom2.Attribute;
@@ -25,6 +21,7 @@ import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.RelationGraph;
+import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Cardinalite;
 import com.mcd_log.auth.Contrainte;
 import com.mcd_log.auth.Entite;
@@ -36,46 +33,57 @@ public class Sauvegarde {
 	private ArrayList<McdComposentGraphique> m_components;
 	private String m_mcdNom;
 	
-	public Sauvegarde(ArrayList<McdComposentGraphique> components) {
-		m_components = components;
-		if (m_components != null){
-			JFileChooser chooser = new JFileChooser();
-			chooser.setFileFilter(new FileFilter(){
-				public boolean accept(File arg0) {
-					if(arg0.isDirectory())
-						return true;
-					String ext = getExtension(arg0);
-					if(ext==null)
+	public Sauvegarde(McdGraph mcd) {
+		m_components = mcd.getMcdComponents();
+		m_mcdNom = mcd.getLogicName();
+		
+		if(mcd.getFile() == null){
+			if (m_components != null){
+				JFileChooser chooser = new JFileChooser();
+				chooser.setFileFilter(new FileFilter(){
+					public boolean accept(File arg0) {
+						if(arg0.isDirectory())
+							return true;
+						String ext = getExtension(arg0);
+						if(ext==null)
+							return false;
+						if(ext.equals("xml"))
+							return true;
 						return false;
-					if(ext.equals("xml"))
-						return true;
-					return false;
-				}
-
-				public String getDescription() {
-					return "XML Only";
-				}
-				
-			});
-			if(chooser.showSaveDialog(null)==JFileChooser.APPROVE_OPTION){
-				File file = chooser.getSelectedFile();
-				if(getExtension(file)==null||!getExtension(file).equals("xml"))
-					file = new File(file.getAbsolutePath()+".xml");
-					try {
-						m_mcdNom = file.getName();
-						Document doc = arborescence(m_mcdNom);
-						XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
-					    sortie.output(doc, new FileOutputStream(file));
-					} catch (IOException e) {
-						e.printStackTrace();
 					}
+	
+					public String getDescription() {
+						return "XML Only";
+					}
+					
+				});
+				if(chooser.showSaveDialog(null)==JFileChooser.APPROVE_OPTION){
+					File file = chooser.getSelectedFile();
+					if(getExtension(file)==null||!getExtension(file).equals("xml"))
+						file = new File(file.getAbsolutePath()+".xml");
+						try {
+							Document doc = arborescence(m_mcdNom);
+							XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
+						    sortie.output(doc, new FileOutputStream(file));
+						    mcd.setFile(file);
+						    mcd.setSaved(true);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+				}
 			}
 		}
-		
-	}
-	
-	public String getFileNom(){
-		return m_mcdNom;
+		else{
+			try {
+				File file = mcd.getFile();
+				Document doc = arborescence(m_mcdNom);
+				XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
+			    sortie.output(doc, new FileOutputStream(file));
+			    mcd.setSaved(true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private Document arborescence(String nom){
@@ -122,32 +130,22 @@ public class Sauvegarde {
 			
 			Attribute posy = new Attribute("y", String.valueOf(eg.getPosition().y));
 			entite.setAttribute(posy);
-			
-			if (!e.getName().equals(null)){
-				Attribute nomE = new Attribute("nom", e.getName());
-				entite.setAttribute(nomE);
-			}
-			
-			if (!e.getCommentaire().equals(null)){
-				Attribute commentaireE = new Attribute("commentaire", e.getCommentaire());
-				entite.setAttribute(commentaireE);
-			}
-			
-			Attribute mere = new Attribute("mère", String.valueOf(e.isMere()));
-			entite.setAttribute(mere);
+
+			Attribute nomE = new Attribute("nom", e.getName());
+			entite.setAttribute(nomE);
+
+			Attribute commentaireE = new Attribute("commentaire", e.getCommentaire());
+			entite.setAttribute(commentaireE);
 			
 			for (Propriete p : e.getProprietes()){
 				Element propriete = new Element("Propriete");
 				
-				if (!p.getName().equals(null)){
-					Attribute nomP = new Attribute("nom", p.getName());
-					propriete.setAttribute(nomP);
-				}
+				Attribute nomP = new Attribute("nom", p.getName());
+				propriete.setAttribute(nomP);
+
+				Attribute commentaireP = new Attribute("commentaire", p.getCommentaire());
+				propriete.setAttribute(commentaireP);
 				
-				if (!p.getCommentaire().equals(null)){
-					Attribute commentaireP = new Attribute("commentaire", p.getCommentaire());
-					propriete.setAttribute(commentaireP);
-				}
 				
 				Attribute typeP = new Attribute("type", p.getType().toString());
 				propriete.setAttribute(typeP);
@@ -184,16 +182,12 @@ public class Sauvegarde {
 			
 			Attribute posy = new Attribute("y", String.valueOf(rg.getPosition().y));
 			relation.setAttribute(posy);
-			
-			if (!e.getNom().equals(null)){
-				Attribute nomR = new Attribute("nom", e.getNom());
-				relation.setAttribute(nomR);
-			}
-			
-			if (!e.getCommentaire().equals(null)){
-				Attribute commentaireR = new Attribute("commentaire", e.getCommentaire());
-				relation.setAttribute(commentaireR);
-			}
+
+			Attribute nomR = new Attribute("nom", e.getNom());
+			relation.setAttribute(nomR);
+
+			Attribute commentaireR = new Attribute("commentaire", e.getCommentaire());
+			relation.setAttribute(commentaireR);
 			
 			for (Propriete p : e.getProprietes()){
 				Element propriete = new Element("Propriete");

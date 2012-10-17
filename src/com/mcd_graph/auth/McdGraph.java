@@ -761,9 +761,13 @@ public class McdGraph extends JPanel{
 			}
 		}
 	}
-	public String saveMcdComposent(){
-		Sauvegarde save = new Sauvegarde(m_components);
-		return save.getFileNom();
+	
+	public ArrayList<McdComposentGraphique> getMcdComponents(){
+		return m_components;
+	}
+	
+	public void saveMcdComposent(){
+		Sauvegarde save = new Sauvegarde(this);
 	}
 	private void setMcdComposentGraphiquetFocus(McdComposentGraphique comp){
 		if(m_focus!=null){

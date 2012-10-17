@@ -46,6 +46,7 @@ public class Entite implements Cloneable{
 	public void delPropriete(Propriete p){
 		m_proprietes.remove(p);
 	}
+
 	public String toString(){
 		return m_name;
 	}

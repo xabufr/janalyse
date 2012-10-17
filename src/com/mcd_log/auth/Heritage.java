@@ -29,13 +29,13 @@ public class Heritage implements Cloneable{
 		Heritage h = (Heritage) super.clone();
 		return h;
 	}
-	public Entite getMere(){
-		return m_entiteMere;
+	public Entite getMere() {
+		return m_mere;
 	}
-	public void setMere(Entite e){
-		m_entiteMere=e;
+	public void setMere(Entite mere) {
+		m_mere = mere;
 	}
 	private HeritageType m_type;
 	private ArrayList<Entite> m_enfants;
-	Entite m_entiteMere;
+	private Entite m_mere;
 }
