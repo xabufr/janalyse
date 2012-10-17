@@ -10,13 +10,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 //import java.nio.file.Files;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -42,7 +37,6 @@ import com.mcd_log.auth.Contrainte;
 import com.mcd_log.auth.ContrainteType;
 import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.HeritageType;
-import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
 import com.mcd_log.auth.Entite;
 
@@ -64,7 +58,6 @@ public class McdGraph extends JPanel{
 		m_fenetrePrincipale = fenPrinc;
 		
 		m_states = new Hashtable<McdGraphStateE,McdGraphState>();
-		m_states.put(McdGraphStateE.MOVE, new McdGraphStateMove());
 		m_states.put(McdGraphStateE.INSERT_ENTITE, new McdGraphStateInsertEntite());
 		m_states.put(McdGraphStateE.INSERT_RELATION, new McdGraphStateInsertRelation());
 		m_states.put(McdGraphStateE.INSERT_LIEN, new McdGraphStateInsertLien());
@@ -87,7 +80,7 @@ public class McdGraph extends JPanel{
 		setFile(null);
 		
 		this.setSize(new Dimension(80, 80));
-		this.setState(McdGraphStateE.MOVE);
+		this.setState(McdGraphStateE.INSERT_ENTITE);
 		this.setFocusable(true);
 	}
 	
@@ -251,7 +244,7 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
-			saveModification();
+			saveAnnulerModification();
 			EntiteGraph eg = new EntiteGraph();
 			eg.setEntite(new Entite("Entite"+(m_last++)));
 			eg.setPosition(e.getPoint());
@@ -297,7 +290,7 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
-			saveModification();
+			saveAnnulerModification();
 			RelationGraph eg = new RelationGraph();
 			eg.setRelation(new Relation("Relation"+(m_last++)));
 			eg.setPosition(e.getPoint());
@@ -332,71 +325,6 @@ public class McdGraph extends JPanel{
 		}
 		
 	}
-	private class McdGraphStateMove extends McdGraphState{
-		public void enterState(){
-			setMcdComposentGraphiquetFocus(null);
-		}
-		public void leftState(){
-			m_isMoving=false;
-		}
-		public void mouseClicked(MouseEvent e) {
-			
-		}
-
-		public void mouseEntered(MouseEvent e) {
-			
-		}
-
-		public void mouseExited(MouseEvent e) {
-			
-		}
-
-		public void mousePressed(MouseEvent e) {
-			for (McdComposentGraphique composant : m_components){
-				if(!composant.isMovable())
-					continue;
-				FormeGeometrique forme = (FormeGeometrique)composant;
-				if (forme.contient(
-						e.getPoint())){
-					setMcdComposentGraphiquetFocus(composant);
-					m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
-					m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
-					m_isMoving=true;
-					saveModification();
-				}
-			}
-		}
-
-		public void mouseReleased(MouseEvent e) {
-			setMcdComposentGraphiquetFocus(null); //Pour gérer la suppression, il faut garder le dernier click
-			m_isMoving=false;
-		}
-
-		public void mouseDragged(MouseEvent e) {
-			if (m_focus != null){
-				FormeGeometrique forme = (FormeGeometrique)m_focus;
-				Point tmp = new Point();
-				tmp.x = e.getPoint().x - m_deltaSelect.x;
-				tmp.y = e.getPoint().y - m_deltaSelect.y;
-				forme.setPosition(tmp);
-				repaint(); //Intéressant n'est-ce pas ? Note que le McdGraph.this. est facultatif ici...
-			}
-		}
-
-		public void mouseMoved(MouseEvent e) {
-			
-		}
-		public void keyPressed(KeyEvent e) {
-			
-		}
-		public void keyReleased(KeyEvent e) {
-			
-		}
-		public void keyTyped(KeyEvent e) {
-			
-		}
-	}
-
 	class McdGraphStateInsertLien extends McdGraphState{
 		private McdComposentGraphique m_objects[];
 		private int m_current;
@@ -440,7 +368,7 @@ public class McdGraph extends JPanel{
 					clear();
 					return;
 				}
-				saveModification();
+				saveAnnulerModification();
 				//Cas relation entite/relation
 				if((m_objects[0] instanceof EntiteGraph &&
 						m_objects[1] instanceof RelationGraph)||
@@ -527,7 +455,7 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
-			saveModification();
+			saveAnnulerModification();
 			ContrainteGraph contG = new ContrainteGraph();
 			Contrainte cont = new Contrainte(ContrainteType.X);
 			
@@ -580,7 +508,7 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
-			saveModification();
+			saveAnnulerModification();
 			HeritageGraph herG = new HeritageGraph();
 			Heritage her = new Heritage(HeritageType.XT);
 			
@@ -625,6 +553,10 @@ public class McdGraph extends JPanel{
 		}
 		public void enterState(){
 			setMcdComposentGraphiquetFocus(null);
+			m_isMoving=false;
+		}
+		public void leftState(){
+			m_isMoving=false;
 		}
 		public void mouseClicked(MouseEvent arg0) {
 			
@@ -645,7 +577,6 @@ public class McdGraph extends JPanel{
 				if(((FormeGeometrique)component).contient(e.getPoint())){
 					found=true;
 					if(component!=m_focus){
-						m_focus=component;
 						m_time=System.currentTimeMillis();
 						setMcdComposentGraphiquetFocus(component);
 						break;
@@ -657,7 +588,6 @@ public class McdGraph extends JPanel{
 					if(((FormeGeometrique)component).contient(e.getPoint())){
 						found=true;
 						if(component!=m_focus){
-							m_focus=component;
 							m_time=System.currentTimeMillis();
 							setMcdComposentGraphiquetFocus(component);
 							break;
@@ -665,19 +595,33 @@ public class McdGraph extends JPanel{
 					}
 				}
 			}
-			if(found&&(System.currentTimeMillis()-m_time>=m_interval)||
+			if(m_focus!=null&&e.getClickCount()==1&&found){ // 1 click -> mode move
+					if(!m_focus.isMovable())
+						return;
+					FormeGeometrique forme = (FormeGeometrique)m_focus;
+					if (forme.contient(
+							e.getPoint())){
+						setMcdComposentGraphiquetFocus(m_focus);
+						m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
+						m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
+						m_isMoving=true;
+						saveAnnulerModification();
+					}
+				
+			}
+			else if(found&&(System.currentTimeMillis()-m_time>=m_interval)|| // doubleclick
 					e.getClickCount()==2)
 			{
-				saveModification();
+				saveAnnulerModification();
 				if(m_focus instanceof RelationGraph)
 				{
 					new FenetreEditionRelation(McdGraph.this, (RelationGraph)m_focus).setVisible(true);
 					((RelationGraph)m_focus).actualiser();
 				}
 				else if (m_focus instanceof ContrainteGraph){
-					String nom;
-					nom = JOptionPane.showInputDialog(null, "Type de contrainte:", "Edition Contrainte", JOptionPane.PLAIN_MESSAGE, null, ContrainteType.values(), ContrainteType.PLUS).toString();
-					((ContrainteGraph) m_focus).getContrainte().setNom(ContrainteType.valueOf(nom));
+					ContrainteType type=null;
+					type = (ContrainteType) JOptionPane.showInputDialog(null, "Type de contrainte:", "Edition Contrainte", JOptionPane.PLAIN_MESSAGE, null, ContrainteType.values(), ((ContrainteGraph) m_focus).getContrainte().getType());
+					((ContrainteGraph) m_focus).getContrainte().setNom(type);
 					((ContrainteGraph) m_focus).update();
 				}
 				else if (m_focus instanceof HeritageGraph){
@@ -692,18 +636,25 @@ public class McdGraph extends JPanel{
 				}
 				setMcdComposentGraphiquetFocus(null);
 			}
-			else if(!found){
+			else if(!found){//Click en dehors
 				setMcdComposentGraphiquetFocus(null);
 			}
 			
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
-			
+			m_isMoving=false;
 		}
 
-		public void mouseDragged(MouseEvent arg0) {
-			
+		public void mouseDragged(MouseEvent e) {
+			if (m_focus != null&&m_isMoving){
+				FormeGeometrique forme = (FormeGeometrique)m_focus;
+				Point tmp = new Point();
+				tmp.x = e.getPoint().x - m_deltaSelect.x;
+				tmp.y = e.getPoint().y - m_deltaSelect.y;
+				forme.setPosition(tmp);
+				repaint(); //Intéressant n'est-ce pas ? Note que le McdGraph.this. est facultatif ici...
+			}
 		}
 
 		public void mouseMoved(MouseEvent arg0) {
@@ -722,7 +673,7 @@ public class McdGraph extends JPanel{
 		}
 	}
 	private void deleteMcdComposent(McdComposentGraphique comp){
-		saveModification();
+		saveAnnulerModification();
 		if(comp==m_focus)
 			setMcdComposentGraphiquetFocus(null);
 		comp.prepareDelete();
@@ -737,7 +688,7 @@ public class McdGraph extends JPanel{
 	}
 	public void pastMcdComposent() throws CloneNotSupportedException{
 		if (m_copie != null){
-			saveModification();
+			saveAnnulerModification();
 			if (m_copie instanceof EntiteGraph){
 				EntiteGraph eg = new EntiteGraph();
 				Entite e = ((EntiteGraph) m_copie).getEntite().clone();
@@ -806,10 +757,11 @@ public class McdGraph extends JPanel{
 		}
 		repaint();
 	}
-	public void saveModification(){
+	public void saveAnnulerModification(){
 		m_listeAnnuler.push(copyLogicGraph(m_logicObjects));
 		m_listeRefaire.clear();
 		m_isSaved=false;
+		m_fenetrePrincipale.updateMcdUi(this);
 	}
 	
 	private Hashtable<Object, McdComposentGraphique> copyLogicGraph(Hashtable<Object, McdComposentGraphique> from){
@@ -851,7 +803,6 @@ public class McdGraph extends JPanel{
 				try {
 					c = ((Cardinalite)key).clone();
 				} catch (CloneNotSupportedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				c.setEntite((Entite) correspondances.get(((Cardinalite)key).getEntite()));
@@ -867,7 +818,6 @@ public class McdGraph extends JPanel{
 				try {
 					h = ((Heritage)key).clone();
 				} catch (CloneNotSupportedException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				Heritage anc = (Heritage)key;
@@ -915,7 +865,7 @@ public class McdGraph extends JPanel{
 		if(m_listeAnnuler.isEmpty())
 			return;
 		if(m_listeRefaire.isEmpty())
-			saveModification();
+			saveAnnulerModification();
 		setMcdComposentGraphiquetFocus(null);
 		Hashtable<Object, McdComposentGraphique> nouvelleLogique = m_listeAnnuler.pop();
 		m_listeRefaire.push(nouvelleLogique);
@@ -969,5 +919,11 @@ public class McdGraph extends JPanel{
 	}
 	public void setFile(File file) {
 		m_file = file;
+	}
+	public Boolean peutAnnuler(){
+		return !m_listeAnnuler.isEmpty();
+	}
+	public Boolean peutRefaire(){
+		return !m_listeRefaire.isEmpty();
 	}
 }

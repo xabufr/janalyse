@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JList;
 import javax.swing.DefaultListModel;
@@ -33,6 +34,8 @@ import java.awt.Dimension;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 @SuppressWarnings("serial")
 public class FenetreEditionRelation extends JDialog {
@@ -40,7 +43,7 @@ public class FenetreEditionRelation extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField m_nom;
 	private JTextField m_nomPropriete;
-	private JTextPane m_commentaire;
+	private JTextField m_commentaire;
 	private JComboBox m_typePropriete;
 	private JList m_listeProprietes;
 	private McdGraph m_mcd;
@@ -51,6 +54,7 @@ public class FenetreEditionRelation extends JDialog {
 	private JSpinner m_taille;
 	private JTextPane m_txtpnCommentaire;
 	private JCheckBox m_autoIncrement;
+	private JButton m_btnCreer;
 	/**
 	 * Create the dialog.
 	 */
@@ -73,7 +77,7 @@ public class FenetreEditionRelation extends JDialog {
 			JPanel panel = new JPanel();
 			panel.setBorder(new LineBorder(Color.GRAY));
 			contentPanel.add(panel, "cell 0 0 2 1,grow");
-			panel.setLayout(new MigLayout("", "[][grow]", "[][grow][36.00][]"));
+			panel.setLayout(new MigLayout("", "[][grow]", "[][grow][36.00][18.00]"));
 			{
 				JLabel lblNom = new JLabel("Nom");
 				panel.add(lblNom, "cell 0 0,alignx trailing");
@@ -89,32 +93,40 @@ public class FenetreEditionRelation extends JDialog {
 				panel.add(lblCommentaire, "cell 0 1");
 			}
 			{
-				m_commentaire = new JTextPane();
+				m_commentaire = new JTextField();
+				m_commentaire.setColumns(10);
 				m_commentaire.setText(m_relationCopie.getCommentaire());
-				panel.add(m_commentaire, "cell 1 1 1 3,grow");
+				panel.add(m_commentaire, "cell 1 1 1 3,growx");
 			}
 		}
 		{
 			JPanel panel = new JPanel();
 			panel.setBorder(new LineBorder(Color.GRAY));
 			contentPanel.add(panel, "cell 0 2,grow");
-			panel.setLayout(new MigLayout("", "[][grow]", "[][][][][grow][][][]"));
+			panel.setLayout(new MigLayout("", "[][grow,center]", "[][][][][grow][][][]"));
 			{
 				JLabel lblProprietes = new JLabel("Propriete");
-				panel.add(lblProprietes, "cell 0 0");
+				panel.add(lblProprietes, "cell 0 0 2 1,alignx center");
 			}
 			{
 				JLabel lblNom_1 = new JLabel("Nom");
-				panel.add(lblNom_1, "cell 0 1,alignx trailing");
+				panel.add(lblNom_1, "cell 0 1");
 			}
 			{
 				m_nomPropriete = new JTextField();
+				m_nomPropriete.addKeyListener(new KeyAdapter() {
+					public void keyPressed(KeyEvent e) {
+						if(e.getKeyCode() == KeyEvent.VK_ENTER){
+							m_btnCreer.doClick();
+						}
+					}
+				});
 				panel.add(m_nomPropriete, "cell 1 1,growx");
 				m_nomPropriete.setColumns(10);
 			}
 			{
 				JLabel lblType = new JLabel("Type");
-				panel.add(lblType, "cell 0 2,alignx trailing");
+				panel.add(lblType, "cell 0 2");
 			}
 			{
 				m_typePropriete = new JComboBox();
@@ -133,7 +145,7 @@ public class FenetreEditionRelation extends JDialog {
 				{
 					m_taille = new JSpinner();
 					m_taille.setModel(new SpinnerNumberModel(0, 0, 255, 1));
-					panel.add(m_taille, "cell 1 3");
+					panel.add(m_taille, "cell 1 3,growx");
 				}
 				{
 					JLabel lblCommentaire_1 = new JLabel("Commentaire");
@@ -159,12 +171,12 @@ public class FenetreEditionRelation extends JDialog {
 					m_autoIncrement = new JCheckBox("");
 					panel.add(m_autoIncrement, "cell 1 6");
 				}
-				panel.add(btnModifier, "cell 0 7");
+				panel.add(btnModifier, "cell 0 7,growx");
 			}
 			{
-				JButton btnCrer = new JButton("Créer");
-				panel.add(btnCrer, "cell 1 7");
-				btnCrer.addActionListener(new createurPropriete());
+				m_btnCreer = new JButton("Créer");
+				panel.add(m_btnCreer, "cell 1 7,growx");
+				m_btnCreer.addActionListener(new createurPropriete());
 			}
 		}
 		{
@@ -174,12 +186,13 @@ public class FenetreEditionRelation extends JDialog {
 			panel.setLayout(new MigLayout("", "[181px][]", "[100px][][][][]"));
 			{
 				m_listeProprietes = new JList();
-				m_listeProprietes.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+				JScrollPane scrollPane = new JScrollPane(m_listeProprietes);
+				scrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 				m_model = new DefaultListModel();
 				for(Propriete prop : m_relationCopie.getProprietes()){
 					m_model.addElement(prop);
 				}
-				panel.add(m_listeProprietes, "cell 0 0 1 5,grow");
+				panel.add(scrollPane, "cell 0 0 1 5,grow");
 				m_listeProprietes.setModel(m_model);
 				m_listeProprietes.addListSelectionListener(new SelectionProprieteListener());
 			}
@@ -243,7 +256,6 @@ public class FenetreEditionRelation extends JDialog {
 				okButton.setActionCommand("OK");
 				okButton.addActionListener(new validerModifications());
 				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
 			}
 			{
 				JButton cancelButton = new JButton("Annuler");
@@ -296,6 +308,7 @@ public class FenetreEditionRelation extends JDialog {
 
 			m_model.addElement(prop);
 			m_relationCopie.addPropriete(prop);
+			m_nomPropriete.setText("");
 		}
 	}
 	private class modifierPropriete implements ActionListener{

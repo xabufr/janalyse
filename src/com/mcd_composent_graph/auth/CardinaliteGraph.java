@@ -7,7 +7,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 import com.mcd_composent_graph.auth.EntiteGraph.Face;

@@ -7,10 +7,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Entite;

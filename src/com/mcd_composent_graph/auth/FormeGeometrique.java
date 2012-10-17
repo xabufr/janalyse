@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
-import java.awt.geom.Line2D.Double;
 
 public interface FormeGeometrique {
 	public abstract Boolean contient(Point p);
