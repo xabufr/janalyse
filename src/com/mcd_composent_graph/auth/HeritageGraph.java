@@ -184,4 +184,20 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		super.setFocus(f);
 		update();
 	}
+	public void removeEntiteGraph(EntiteGraph e){
+		if(m_entitesGraph.contains(e)){
+			m_entitesGraph.remove(e);
+			e.removeLien(this);
+		}
+		if(m_entiteGraphMere==e){
+			m_entiteGraphMere=null;
+			e.removeLien(this);
+		}
+	}
+	public void clearEnfants(){
+		for(EntiteGraph e : m_entitesGraph)
+			e.removeLien(this);
+		m_entitesGraph.clear();
+		m_heritage.getEnfants().clear();
+	}
 }

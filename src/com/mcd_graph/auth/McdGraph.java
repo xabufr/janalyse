@@ -689,14 +689,28 @@ public class McdGraph extends JPanel{
 				else if(composant instanceof HeritageGraph){
 					Heritage h = ((HeritageGraph) composant).getHeritage();
 					if(h.getEnfants().contains(e)){
+						((HeritageGraph) composant).removeEntiteGraph((EntiteGraph)comp);
 						h.getEnfants().remove(e);
-						((HeritageGraph) composant).update();
 					}
+					if(h.getMere()==e){
+						((HeritageGraph) composant).removeEntiteGraph((EntiteGraph)comp);
+						h.setMere(null);
+					}
+					((HeritageGraph) composant).update();
 				}
 			}
 		}
 		else if(comp instanceof RelationGraph){
 			Relation r = ((RelationGraph) comp).getRelation();
+			for(McdComposentGraphique composant : m_components){
+				if(composant instanceof ContrainteGraph){
+					Contrainte c = ((ContrainteGraph) composant).getContrainte();
+					if(c.getRelations().contains(r)){
+						c.getRelations().remove(r);
+						((ContrainteGraph) composant).update();
+					}
+				}
+			}
 		}
 		comp.prepareDelete();
 		m_components.remove(comp);
