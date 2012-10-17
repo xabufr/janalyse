@@ -103,12 +103,11 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 			g.drawLine(m_centre.x, m_centre.y, e.x, e.y);
 		}
 		
-		if (m_entitesGraph != null && m_entiteGraphMere != null){
-			for (EntiteGraph eg : m_entitesGraph){
-				Point e = eg.getValidLinkPosition(this);
-				g.drawLine(m_centre.x, m_centre.y, e.x, e.y);
-			}
+		for (EntiteGraph eg : m_entitesGraph){
+			Point e = eg.getValidLinkPosition(this);
+			g.drawLine(m_centre.x, m_centre.y, e.x, e.y);
 		}
+		
 		if(!m_focus)
 			g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR));
 		else
