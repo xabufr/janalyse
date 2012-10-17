@@ -160,6 +160,7 @@ public class FenetrePrincipale {
 		mnFichier.add(separator);
 		
 		JMenuItem mntmSauvegarder = new JMenuItem("Sauvegarder");
+		mntmSauvegarder.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
 		mntmSauvegarder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String nom = m_mcd.saveMcdComposent();
