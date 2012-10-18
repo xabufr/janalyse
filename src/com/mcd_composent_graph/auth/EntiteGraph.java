@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
+import java.awt.image.SampleModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -27,6 +28,7 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 	private Hashtable<Face, ArrayList<McdComposentGraphique>> m_liens;
 	private Hashtable<McdComposentGraphique, Point> m_liensB;
 	private Hashtable<Face, Integer> m_nombreParFace;
+	private Hashtable<Face, Point[]> m_pointsSorted;
 	public Rectangle getRectangle(){
 		return m_geometrie.getRectangle();
 	}
@@ -53,6 +55,7 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 		m_geometrie = new FormeGeometriqueRectangle(new Rectangle());
 		m_liens = new Hashtable<EntiteGraph.Face, ArrayList<McdComposentGraphique>>();
 		m_liensB = new Hashtable<McdComposentGraphique, Point>();
+		m_pointsSorted = new Hashtable<EntiteGraph.Face, Point[]>();
 		for(Face f : Face.values()){
 			m_liens.put(f, new ArrayList<McdComposentGraphique>());
 		}
@@ -173,13 +176,40 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 		updateLienFaces();
 	}
 	private void updateLienFaces(){
-		for(Face f : Face.values())
+		for(Face f : Face.values()){
 			m_nombreParFace.put(f, 0);
+		}
 		Enumeration<McdComposentGraphique> keys = m_liensB.keys();
 		while (keys.hasMoreElements()){
 			McdComposentGraphique comp = keys.nextElement();
 			Face f = getFace(comp);
 			m_nombreParFace.put(f, m_nombreParFace.get(f)+1);
+		}
+		for(Face f : Face.values()){
+			m_pointsSorted.put(f, new Point[m_nombreParFace.get(f)]);
+		}
+		keys = m_liensB.keys();
+		int h=0,b=0,g=0,d=0;
+		while (keys.hasMoreElements()){
+			McdComposentGraphique comp = keys.nextElement();
+			Face f = getFace(comp);
+			switch(f){
+			case BAS:
+				m_pointsSorted.get(f)[h++]=m_liensB.get(comp);
+				break;
+			case DROITE:
+				m_pointsSorted.get(f)[d++]=m_liensB.get(comp);
+				break;
+			case GAUCHE:
+				m_pointsSorted.get(f)[g++]=m_liensB.get(comp);
+				break;
+			case HAUT:
+				m_pointsSorted.get(f)[h++]=m_liensB.get(comp);
+				break;
+			}
+		}
+		for(Face f : Face.values()){
+			sort(f, m_pointsSorted.get(f));
 		}
 	}
 	public Face getFace(McdComposentGraphique comp){
@@ -201,25 +231,9 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 
 		return Face.DROITE;
 	}
-	
-	public Point getValidLinkPosition(McdComposentGraphique comp){
-		updateLienFaces();
-		Face curFace = getFace(comp);
-		int nombre = m_nombreParFace.get(curFace);
-		Enumeration<McdComposentGraphique> key = m_liensB.keys();
-		Point points[] = new Point[nombre];
-		points[0]=m_liensB.get(comp);
-		Point curPoint = points[0];
-
-		int i=1;
-		while(key.hasMoreElements()){
-			McdComposentGraphique c = key.nextElement();
-			if(c!=comp&&getFace(c)==curFace){
-				points[i++] = m_liensB.get(c);
-			}
-		}
-		if(curFace == Face.HAUT||curFace == Face.BAS){
-			Arrays.sort(points, new Comparator<Point>(){
+	private void sort(Face f, Point pts[]){
+		if(f == Face.HAUT||f == Face.BAS){
+			Arrays.sort(pts, new Comparator<Point>(){
 				public int compare(Point a, Point b) {
 					if(a.x<b.x)
 						return-1;
@@ -230,7 +244,7 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 			});
 		}
 		else{
-			Arrays.sort(points, new Comparator<Point>(){
+			Arrays.sort(pts, new Comparator<Point>(){
 				public int compare(Point a, Point b) {
 					if(a.y<b.y)
 						return-1;
@@ -240,6 +254,14 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 				}
 			});
 		}
+	}
+	public Point getValidLinkPosition(McdComposentGraphique comp){
+		updateLienFaces();
+		Face curFace = getFace(comp);
+		int nombre = m_nombreParFace.get(curFace);
+		Enumeration<McdComposentGraphique> key = m_liensB.keys();
+		Point curPoint = m_liensB.get(comp);
+		Point points[] = m_pointsSorted.get(curFace);
 		int index;
 		for(index=0;index<points.length;++index){
 			if(points[index]==curPoint)
