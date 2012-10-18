@@ -3,7 +3,6 @@ package com.mld.auth;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import com.mcd_log.auth.Cardinalite;
 import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
@@ -52,15 +51,18 @@ public class RelationMld extends Relation {
 		}
 	}
 	public Entite createEntity(){
+		String nom = getNom();
 		Entite ent = new Entite(getNom());
 		for(Propriete p : getProprietes()){
 			ent.addPropriete(p);
 		}
 		Enumeration<Entite> entites = m_entites.keys();
 		while(entites.hasMoreElements()){
-			ent.addPropriete(new ProprieteCleEtrangere(entites.nextElement(), false));
+			Entite entite = entites.nextElement();
+			nom+="_"+entite.getName();
+			ent.addPropriete(new ProprieteCleEtrangere(entite, false));
 		}
-		
+		ent.setName(nom);
 		return ent;
 	}
 	private class CardinalitePropriete{
