@@ -1,31 +1,47 @@
 package com.mld.auth;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
+import java.io.IOException;
+import java.io.StringReader;
 
-import javax.swing.JPanel;
+import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTMLEditorKit;
 
 import com.mcd_graph.auth.McdGraph;
-import com.mcd_log.auth.Cardinalite;
-import com.mcd_log.auth.Entite;
-import com.mcd_log.auth.Propriete;
-import com.mcd_log.auth.Relation;
+import org.lobobrowser.html.UserAgentContext;
+import org.lobobrowser.html.gui.HtmlPanel;
+import org.lobobrowser.html.parser.DocumentBuilderImpl;
+import org.lobobrowser.html.parser.InputSourceImpl;
+import org.lobobrowser.html.test.SimpleHtmlRendererContext;
+import org.lobobrowser.html.test.SimpleUserAgentContext;
 
-import javax.swing.JTextPane;
-import net.miginfocom.swing.MigLayout;
+import org.w3c.dom.Document;
 
-public class MLDPanel extends JPanel {
+import org.xml.sax.SAXException;
+
+
+@SuppressWarnings("serial")
+public class MLDPanel extends JScrollPane {
 	private MldLog m_mld;
+	private HtmlPanel m_panel;
 	public MLDPanel(McdGraph mcd) {
+		super();
 		m_mld=new MldLog(mcd);
-		setLayout(new MigLayout("", "[grow]", "[grow]"));
-		
-		JTextPane textPane = new JTextPane();
-		textPane.setContentType("text/html");
-		textPane.setEditable(false);
-		JScrollPane sp = new JScrollPane(textPane);
-		add(sp, "cell 0 0,grow");
-		textPane.setText(m_mld.getString());
+		m_panel = new HtmlPanel();
+		getViewport().setView(m_panel);
+		UserAgentContext ucontext = new SimpleUserAgentContext();
+		SimpleHtmlRendererContext rcontext = new SimpleHtmlRendererContext(m_panel, ucontext);
+		DocumentBuilderImpl dbi = new DocumentBuilderImpl(ucontext, rcontext);
+		Document document = null;
+		try {
+			document = dbi.parse(new InputSourceImpl(new StringReader(m_mld.getString()), "http://null.com/"));
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		m_panel.setDocument(document, rcontext);
+		System.setErr(null);
 	}
 }

@@ -22,7 +22,6 @@ public class RelationMld extends Relation {
 		m_entites.put(e, new CardinalitePropriete(min, max, rel));
 	}
 	public Boolean needToCreateNewEntity(){
-		System.out.println(m_minMax);
 		if(m_nb==2){
 			return m_min>1 || m_minMax>1||m_minMax==-1||(m_min==1&&m_max==1);
 		}
