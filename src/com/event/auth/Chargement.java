@@ -107,8 +107,8 @@ public class Chargement{
 				
 				prop.setName(p.getAttributeValue("nom"));
 				prop.setCommentaire(p.getAttributeValue("commentaire"));
-				/*ProprieteType type = new ProprieteType(ProprieteTypeE.valueOf(p.getAttributeValue("type").toString()));
-				prop.setType(type);*/
+				ProprieteType type = new ProprieteType(ProprieteTypeE.valueOf(p.getAttributeValue("type")));
+				prop.setType(type);
 				prop.setTaille(Integer.parseInt(p.getAttributeValue("taille")));
 				prop.setClePrimaire(Boolean.getBoolean(p.getAttributeValue("clé_primaire")));
 				prop.setNull(Boolean.getBoolean(p.getAttributeValue("null")));
