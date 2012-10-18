@@ -82,6 +82,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 				e.removeLien(this);
 			}
 			m_entiteGraph.clear();
+			m_relationGraph.clear();
 			for (Relation r : m_contrainte.getRelations())
 				m_relationGraph.add((RelationGraph) m_mcd.getGraphicComponent(r));
 			

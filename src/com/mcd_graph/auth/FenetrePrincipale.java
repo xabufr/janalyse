@@ -487,6 +487,7 @@ public class FenetrePrincipale {
 			}
 		}
 		frame.dispose();
+		System.exit(0);
 	}
 	private void createNewMcd(){
 		McdGraph mcd = new McdGraph(this);

@@ -68,6 +68,7 @@ public class FenetreEditionHeritage extends JDialog{
 			m_model.addElement(e);
 		
 		m_entiteMere = new JComboBox();
+
 		if (m_heritage.getMere() != null){
 			m_entiteMere.addItem(m_heritage.getMere());
 			m_entiteMere.setSelectedItem(m_heritage.getMere());
@@ -145,7 +146,7 @@ public class FenetreEditionHeritage extends JDialog{
 		public void actionPerformed(ActionEvent e) {
 			m_heritage.setType((HeritageType) m_type.getSelectedItem());
 			m_heritage.setMere((Entite) m_entiteMere.getSelectedItem());
-			
+			m_heritageGraph.clearEnfants();
 			for (int i=0; i<m_model.getSize(); ++i)
 				m_heritage.addEnfant((Entite) m_model.get(i));
 			
