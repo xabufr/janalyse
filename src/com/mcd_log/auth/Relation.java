@@ -55,5 +55,4 @@ public class Relation implements Cloneable{
 	private String m_nom;
 	private String m_commentaire;
 	private ArrayList<Propriete> m_proprietes;
-	
 }

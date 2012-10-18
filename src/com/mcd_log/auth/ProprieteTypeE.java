@@ -1,13 +1,16 @@
 package com.mcd_log.auth;
 
 public enum ProprieteTypeE {
-	NONE(""),VARCHAR("VARCHAR"),INT("INT"),FLOAT("FLOAT");
+	NONE,VARCHAR,INT,FLOAT;
 	
-	String m_sql;
-	private ProprieteTypeE(String sql) {
-		m_sql=sql;
+	public String getName(){
+		if(toString()=="NONE")
+			return "";
+		return toString();
 	}
-	public String toSql(){
-		return m_sql;
+	static public ProprieteTypeE getValue(String s) {
+		if(s.equals(""))
+			return NONE;
+		return valueOf(s);
 	}
 }

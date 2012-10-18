@@ -132,7 +132,7 @@ public class FenetreEditionRelation extends JDialog {
 				m_typePropriete = new JComboBox();
 				panel.add(m_typePropriete, "cell 1 2,growx");
 				for(ProprieteTypeE type : ProprieteTypeE.values()){
-					m_typePropriete.addItem(type);
+					m_typePropriete.addItem(type.getName());
 				}
 			}
 			{
@@ -273,14 +273,8 @@ public class FenetreEditionRelation extends JDialog {
 		m_txtpnCommentaire.setText(p.getCommentaire());
 		m_nullable.setSelected(p.isNull());
 		m_taille.setValue((Integer)p.getTaille());
-		
-		int nbItems = this.m_typePropriete.getItemCount();
-		for(int i=0;i<nbItems;++i){
-			if(((ProprieteTypeE)m_typePropriete.getItemAt(i))==p.getType().getType()){
-				m_typePropriete.setSelectedIndex(i);
-				break;
-			}
-		}
+		m_typePropriete.setSelectedItem(p.getType().getType().getName());
+
 		
 		m_currentPropriete = p;
 	}
@@ -299,7 +293,7 @@ public class FenetreEditionRelation extends JDialog {
 		public void actionPerformed(ActionEvent e) {
 			if(m_nomPropriete.getText().trim().isEmpty())
 				return;
-			ProprieteTypeE type = (ProprieteTypeE) m_typePropriete.getSelectedItem();
+			ProprieteTypeE type = ProprieteTypeE.getValue(m_typePropriete.getSelectedItem().toString());
 			Propriete prop = new Propriete(m_nomPropriete.getText(), new ProprieteType(type));
 			prop.setAutoIncrement(m_autoIncrement.isSelected());
 			prop.setNull(m_nullable.isSelected());
@@ -316,7 +310,8 @@ public class FenetreEditionRelation extends JDialog {
 			if(m_currentPropriete==null)
 				return;
 			m_currentPropriete.setName(m_nomPropriete.getText());
-			m_currentPropriete.getType().setType((ProprieteTypeE)m_typePropriete.getSelectedItem());
+			ProprieteTypeE t = ProprieteTypeE.getValue(m_typePropriete.getSelectedItem().toString());
+			m_currentPropriete.getType().setType(t);
 			m_currentPropriete.setAutoIncrement(m_autoIncrement.isSelected());
 			m_currentPropriete.setNull(m_nullable.isSelected());
 			m_currentPropriete.setCommentaire(m_txtpnCommentaire.getText());
