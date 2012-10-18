@@ -102,7 +102,7 @@ public class FenetreEditionEntite extends JDialog{
 				JLabel lblNom_1 = new JLabel("Nom");
 				panel_1.add(lblNom_1, "cell 0 1");
 				for (ProprieteTypeE p : ProprieteTypeE.values())
-					m_type.addItem(p);
+					m_type.addItem(p.getName());
 				
 				m_nomPropriete = new JTextField();
 				m_nomPropriete.addKeyListener(new KeyAdapter() {
@@ -242,7 +242,7 @@ public class FenetreEditionEntite extends JDialog{
 						if (m_lstPropriete.getSelectedValue() != null){
 							Propriete p = (Propriete) m_lstPropriete.getSelectedValue();
 							m_nomPropriete.setText(p.getName());
-							m_type.setSelectedIndex(0);
+							m_type.setSelectedItem(p.getType().getType().getName());
 							m_taille.setValue(p.getTaille());
 							m_commentairePropriete.setText(p.getCommentaire());
 							m_isCle.setSelected(p.isClePrimaire());
@@ -291,7 +291,8 @@ public class FenetreEditionEntite extends JDialog{
 		public void actionPerformed(ActionEvent arg0) {
 			Propriete p;
 			if (!m_nomPropriete.getText().equals(null) && !m_nomPropriete.getText().equals("")){
-				p = new Propriete(m_nomPropriete.getText(), new ProprieteType((ProprieteTypeE)m_type.getSelectedItem()));
+				ProprieteTypeE t = ProprieteTypeE.getValue(m_type.getSelectedItem().toString());
+				p = new Propriete(m_nomPropriete.getText(), new ProprieteType(t));
 				
 				if (!m_commentairePropriete.getText().equals(null) && m_commentairePropriete.getText().equals(""))
 					p.setCommentaire(m_commentairePropriete.getText());
