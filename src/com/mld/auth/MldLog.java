@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Cardinalite;
 import com.mcd_log.auth.Entite;
+import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
 
@@ -40,6 +41,9 @@ public class MldLog {
 		}
 		return analyse;
 	}
+	public Boolean isValid(){
+		return m_isValid;
+	}
 	private void analyserCreerMldLogique(){
 		m_entites = new ArrayList<Entite>();
 		ArrayList<RelationMld> relationsMld = new ArrayList<RelationMld>();
@@ -55,6 +59,12 @@ public class MldLog {
 				} catch (CloneNotSupportedException e) {
 					e.printStackTrace();
 				}
+			}
+		}
+		for(Object o : logicObject){
+			if(o instanceof Heritage){
+				HeritageMld heritage = new HeritageMld((Heritage) o, m_correspondances);
+				heritage.migrer();
 			}
 		}
 		for(Object o : logicObject){
