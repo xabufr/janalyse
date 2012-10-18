@@ -10,31 +10,58 @@ import com.mcd_log.auth.Relation;
 
 public class RelationMld extends Relation {
 	Hashtable<Entite, CardinalitePropriete> m_entites;
+	int m_min,m_max, m_minMax, m_nb;
 	public RelationMld(Relation r) {
 		super(r);
 		m_entites = new Hashtable<Entite, CardinalitePropriete>();
+		m_nb=0;
+		m_min=1;
+		m_max=1;
+		m_minMax = -1;
 	}
 	public void addCardinalite(Entite e, int min, int max, Boolean rel){
 		m_entites.put(e, new CardinalitePropriete(min, max, rel));
 	}
 	public Boolean needToCreateNewEntity(){
-		for(CardinalitePropriete c : m_entites.values()){
-			if(c.max==1)
-				return false;
+		System.out.println(m_minMax);
+		if(m_nb==2){
+			return m_min>1 || m_minMax>1||m_minMax==-1||(m_min==1&&m_max==1);
 		}
 		return true;
 	}
 	public void migrer(){
 		Enumeration<Entite> keys = m_entites.keys();
+		Entite ent = null;
 		while(keys.hasMoreElements()){
-			Entite e = keys.nextElement();
-			CardinalitePropriete c = m_entites.get(e);
-			if(c.max!=1){
-				for(Propriete p : getProprietes()){
-					e.addPropriete(p);
+			ent = keys.nextElement();
+			CardinalitePropriete c = m_entites.get(ent);
+			if(c.max==1){
+				for(Propriete p : super.getProprietes()){
+					ent.addPropriete(p);
 				}
+				Enumeration<Entite> entites = m_entites.keys();
+				while(entites.hasMoreElements()){
+					Entite curEnt = entites.nextElement();
+					if(ent!=curEnt){
+						ent.addPropriete(new ProprieteCleEtrangere(curEnt, false));
+						break;
+					}
+				}
+				break;
 			}
 		}
+	}
+	public Entite createEntity(){
+		Entite ent = new Entite(getNom());
+		for(Propriete p : getProprietes()){
+			ent.addPropriete(p);
+		}
+		Enumeration<Entite> entites = m_entites.keys();
+		while(entites.hasMoreElements()){
+			ent.addPropriete(new ProprieteCleEtrangere(entites.nextElement(), false));
+		}
+		
+		return ent;
 	}
 	private class CardinalitePropriete{
 		@SuppressWarnings("unused")
@@ -45,6 +72,15 @@ public class RelationMld extends Relation {
 			min=m;
 			max=a;
 			relatif=r;
+			if(m_min>min)
+				m_min=min;
+			if((m_max<max&&m_max!=-1)||max==-1)
+				m_max=max;
+			if(m_minMax>max&&max!=-1)
+				m_minMax=max;
+			if(m_minMax==-1&&max!=-1)
+				m_minMax=max;
+			++m_nb;
 		}
 	}
 }
