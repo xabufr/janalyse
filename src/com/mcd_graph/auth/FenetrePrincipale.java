@@ -7,6 +7,7 @@ import java.awt.Point;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
@@ -33,9 +34,8 @@ import java.awt.event.WindowListener;
 
 import com.event.auth.Chargement;
 import com.event.auth.QuitListener;
-
-import com.preferences_mcd_logique.auth.McdPreferencesManager;
-
+import com.mld.auth.MLDPanel;
+import com.ui_help.auth.APropos;
 
 import java.awt.Insets;
 import java.util.ArrayList;
@@ -47,6 +47,9 @@ import java.io.IOException;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.JSplitPane;
+import javax.swing.JPanel;
+import net.miginfocom.swing.MigLayout;
 
 public class FenetrePrincipale {
 	private McdGraph m_mcd;
@@ -61,9 +64,10 @@ public class FenetrePrincipale {
 	private final JTabbedPane m_mcdContener = new JTabbedPane();
 	private JMenuItem m_mntmAnnuler;
 	private JMenuItem m_mntmRefaire;
-	/**
-	 * Launch the application.
-	 */
+	private JSplitPane m_splitPane;
+	private JButton m_btnMcd;
+	private JButton m_btnMld;
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -77,12 +81,38 @@ public class FenetrePrincipale {
 			}
 		});
 	}
-	/**
-	 * Create the application.
-	 */
 	public FenetrePrincipale() {
 		m_stateButtons = new ArrayList<JButton>();
 		initialize();
+		m_splitPane.setRightComponent(m_mcdContener);
+		
+		JPanel panel = new JPanel();
+		m_splitPane.setLeftComponent(panel);
+		panel.setLayout(new MigLayout("", "[]", "[][]"));
+		
+		m_btnMcd = new JButton("MCD");
+		m_btnMcd.setEnabled(false);
+		m_btnMcd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				m_btnMcd.setEnabled(false);
+				m_btnMld.setEnabled(true);
+				m_splitPane.setRightComponent(m_mcdContener);
+			}
+		});
+		panel.add(m_btnMcd, "cell 0 0");
+		
+		m_btnMld = new JButton("MLD");
+		m_btnMld.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				m_btnMcd.setEnabled(true);
+				m_btnMld.setEnabled(false);
+				if(m_mcd != null)
+					m_splitPane.setRightComponent(new MLDPanel(m_mcd));
+				else
+					m_splitPane.setRightComponent(new JLabel("Aucun MCD selectionné"));
+			}
+		});
+		panel.add(m_btnMld, "cell 0 1");
 		m_mcdContener.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent event) {
 				if(m_mcdContener.getSelectedComponent()==null)
@@ -290,6 +320,11 @@ public class FenetrePrincipale {
 		menuBar.add(mnAide);
 		
 		JMenuItem mntmAPropos = new JMenuItem("A propos...");
+		mntmAPropos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new APropos().setVisible(true);
+			}
+		});
 		mnAide.add(mntmAPropos);
 		
 		JToolBar toolBar = new JToolBar();
@@ -403,7 +438,8 @@ public class FenetrePrincipale {
 		});
 		setEnabledButton(m_boutonInsertionEntite);
 		
-		frame.getContentPane().add(m_mcdContener);
+		m_splitPane = new JSplitPane();
+		frame.getContentPane().add(m_splitPane, BorderLayout.CENTER);
 		
 		m_mcdContener.addMouseListener(new MouseListener() {
 			private final menuMcdOptions menu = new menuMcdOptions();

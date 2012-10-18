@@ -971,4 +971,12 @@ public class McdGraph extends JPanel{
 	public Boolean peutRefaire(){
 		return !m_listeRefaire.isEmpty();
 	}
+	public ArrayList<Object> getLogic(){
+		ArrayList<Object> ret = new ArrayList<Object>();
+		Enumeration<Object> keys = m_logicObjects.keys();
+		while(keys.hasMoreElements()){
+			ret.add(keys.nextElement());
+		}
+		return ret;
+	}
 }
