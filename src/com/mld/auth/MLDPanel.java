@@ -5,6 +5,7 @@ import java.io.StringReader;
 
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLEditorKit;
 
@@ -42,6 +43,12 @@ public class MLDPanel extends JScrollPane {
 			e.printStackTrace();
 		}
 		m_panel.setDocument(document, rcontext);
+		/*JTextPane p = new JTextPane();
+		
+		p.setContentType("text/html");
+		p.setText(m_mld.getString());
+		getViewport().setView(p);*/
+
 		System.setErr(null);
 	}
 }
