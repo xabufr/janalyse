@@ -53,7 +53,6 @@ public class FenetrePrincipale {
 	private JFrame frame;
 	private JButton m_boutonInsertionEntite;
 	private JButton m_boutonInsertionRelation;
-	private JButton m_boutonDeplacer;
 	private JButton m_boutonInsertionLien;
 	private JButton m_boutonInsertionContrainte;
 	private JButton m_boutonInsertionHeritage;
@@ -112,9 +111,6 @@ public class FenetrePrincipale {
 					break;
 				case INSERT_RELATION:
 					setEnabledButton(m_boutonInsertionRelation);
-					break;
-				case MOVE:
-					setEnabledButton(m_boutonDeplacer);
 					break;
 				}
 			}
@@ -265,7 +261,7 @@ public class FenetrePrincipale {
 			}
 		});
 		
-		JMenuItem m_mntmAnnuler = new JMenuItem("Annuler");
+		m_mntmAnnuler = new JMenuItem("Annuler");
 		m_mntmAnnuler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
 		m_mntmAnnuler.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -275,7 +271,7 @@ public class FenetrePrincipale {
 		});
 		mnEdition.add(m_mntmAnnuler);
 		
-		JMenuItem m_mntmRefaire = new JMenuItem("Refaire");
+		m_mntmRefaire = new JMenuItem("Refaire");
 		m_mntmRefaire.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(m_mcd != null)
@@ -318,15 +314,6 @@ public class FenetrePrincipale {
 		m_boutonInsertionRelation.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/relation.png")));
 		m_stateButtons.add(m_boutonInsertionRelation);
 		toolBar.add(m_boutonInsertionRelation);
-		
-		m_boutonDeplacer = new JButton("");
-		m_boutonDeplacer.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/edition.png")));
-		m_boutonDeplacer.setPreferredSize(new Dimension(32, 32));
-		m_boutonDeplacer.setMinimumSize(new Dimension(32, 32));
-		m_boutonDeplacer.setMaximumSize(new Dimension(32, 32));
-		m_boutonDeplacer.setMargin(new Insets(0, 0, 0, 0));
-		m_stateButtons.add(m_boutonDeplacer);
-		toolBar.add(m_boutonDeplacer);
 		
 		m_boutonInsertionLien = new JButton("");
 		m_boutonInsertionLien.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/lien.png")));
@@ -406,14 +393,6 @@ public class FenetrePrincipale {
 			setEnabledButton(m_boutonInsertionLien);
 		}
 		});
-		m_boutonDeplacer.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0) {
-				if(m_mcd==null)
-					return;
-				m_mcd.setState(McdGraphStateE.MOVE);
-				setEnabledButton(m_boutonDeplacer);
-			}
-		});
 		m_boutonEdition.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				if(m_mcd==null)
@@ -422,7 +401,7 @@ public class FenetrePrincipale {
 				setEnabledButton(m_boutonEdition);
 			}
 		});
-		setEnabledButton(m_boutonDeplacer);
+		setEnabledButton(m_boutonInsertionEntite);
 		
 		frame.getContentPane().add(m_mcdContener);
 		
@@ -591,7 +570,7 @@ public class FenetrePrincipale {
 		return true;
 	}
 	public void updateMcdUi(McdGraph mcd){
-		if(m_mcd==mcd){
+		if(m_mcd==mcd&&m_mcd!=null){
 			m_mntmAnnuler.setEnabled(m_mcd.peutAnnuler());
 			m_mntmRefaire.setEnabled(m_mcd.peutRefaire());
 		}
