@@ -28,6 +28,7 @@ import com.mcd_composent_graph.auth.HeritageGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.RelationGraph;
 import com.mcd_composent_graph.auth.FormeGeometrique;
+import com.mcd_edition_fenetre.auth.FenetreEditionContrainte;
 import com.mcd_edition_fenetre.auth.FenetreEditionEntite;
 import com.mcd_edition_fenetre.auth.FenetreEditionHeritage;
 import com.mcd_edition_fenetre.auth.FenetreEditionCardinalite;
@@ -619,9 +620,7 @@ public class McdGraph extends JPanel{
 					((RelationGraph)m_focus).actualiser();
 				}
 				else if (m_focus instanceof ContrainteGraph){
-					ContrainteType type=null;
-					type = (ContrainteType) JOptionPane.showInputDialog(null, "Type de contrainte:", "Edition Contrainte", JOptionPane.PLAIN_MESSAGE, null, ContrainteType.values(), ((ContrainteGraph) m_focus).getContrainte().getType());
-					((ContrainteGraph) m_focus).getContrainte().setNom(type);
+					new FenetreEditionContrainte(McdGraph.this, (ContrainteGraph)m_focus).setVisible(true);
 					((ContrainteGraph) m_focus).update();
 				}
 				else if (m_focus instanceof HeritageGraph){

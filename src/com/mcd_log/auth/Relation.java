@@ -30,6 +30,9 @@ public class Relation implements Cloneable{
 	public void setNom(String nom) {
 		this.m_nom = nom;
 	}
+	public String toString(){
+		return m_nom;
+	}
 	public String getCommentaire() {
 		return m_commentaire;
 	}
