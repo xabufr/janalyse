@@ -169,6 +169,7 @@ public class FenetrePrincipale {
 		menuBar.add(mnFichier);
 		
 		JMenuItem menuItem = new JMenuItem("Nouveau");
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				createNewMcd();
@@ -177,6 +178,7 @@ public class FenetrePrincipale {
 		mnFichier.add(menuItem);
 		
 		JMenuItem mntmOuvrir = new JMenuItem("Ouvrir");
+		mntmOuvrir.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
 		mntmOuvrir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				createNewMcd();
@@ -203,6 +205,7 @@ public class FenetrePrincipale {
 		mnFichier.add(mntmSauvegarder);
 		
 		JMenuItem mntmExporterEnPng = new JMenuItem("Exporter en PNG");
+		mntmExporterEnPng.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_MASK));
 		mntmExporterEnPng.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(m_mcd==null)
@@ -320,6 +323,7 @@ public class FenetrePrincipale {
 		menuBar.add(mnAide);
 		
 		JMenuItem mntmAPropos = new JMenuItem("A propos...");
+		mntmAPropos.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		mntmAPropos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				new APropos().setVisible(true);
