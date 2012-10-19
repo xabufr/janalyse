@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.swing.JFileChooser;
@@ -23,6 +24,7 @@ import com.mcd_composent_graph.auth.CardinaliteGraphType;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
+import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.RelationGraph;
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Cardinalite;
@@ -86,6 +88,8 @@ public class Chargement{
 		List<Element> cardinalites = racine.getChild("All-cardinalite").getChildren("Cardinalite");
 		List<Element> heritages = racine.getChild("All-héritage").getChildren("Héritage");
 		List<Element> contraintes = racine.getChild("All-contrainte").getChildren("Contrainte");
+		Hashtable <Integer, McdComposentGraphique> ids = new Hashtable<>();
+		int i=0;
 
 		mcd.setName(racine.getAttributeValue("nom"));
 		
@@ -107,8 +111,8 @@ public class Chargement{
 				
 				prop.setName(p.getAttributeValue("nom"));
 				prop.setCommentaire(p.getAttributeValue("commentaire"));
-				/*ProprieteType type = new ProprieteType(ProprieteTypeE.valueOf(p.getAttributeValue("type").toString()));
-				prop.setType(type);*/
+				ProprieteType type = new ProprieteType(ProprieteTypeE.valueOf(p.getAttributeValue("type")));
+				prop.setType(type);
 				prop.setTaille(Integer.parseInt(p.getAttributeValue("taille")));
 				prop.setClePrimaire(Boolean.getBoolean(p.getAttributeValue("clé_primaire")));
 				prop.setNull(Boolean.getBoolean(p.getAttributeValue("null")));
@@ -118,7 +122,10 @@ public class Chargement{
 			}
 			e.setProprietes(props);
 			eg.setEntite(e);
+			eg.setMcd(mcd);
 			mcd.addMcdComponents(eg);
+			ids.put(i, eg);
+			++i;
 		}
 		
 		for (Element courant : relations){
@@ -140,14 +147,18 @@ public class Chargement{
 				prop.setCommentaire(p.getAttributeValue("commentaire"));
 				prop.setType(new ProprieteType(ProprieteTypeE.valueOf(p.getAttributeValue("type"))));
 				prop.setTaille(Integer.parseInt(p.getAttributeValue("taille")));
-				prop.setClePrimaire(Boolean.getBoolean(p.getAttributeValue("clé_primaire")));
-				prop.setNull(Boolean.getBoolean(p.getAttributeValue("null")));
-				prop.setAutoIncrement(Boolean.getBoolean(p.getAttributeValue("auto-incrémenté")));
+				prop.setClePrimaire(Boolean.parseBoolean(p.getAttributeValue("clé_primaire")));
+				prop.setNull(Boolean.parseBoolean(p.getAttributeValue("null")));
+				prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incrémenté")));
 				
 				e.addPropriete(prop);
 			}
 			eg.setRelation(e);
+			eg.setMcd(mcd);
 			mcd.addMcdComponents(eg);
+			mcd.addMcdComponents(eg);
+			ids.put(i, eg);
+			++i;
 		}
 		
 		for (Element courant : cardinalites){
@@ -158,17 +169,18 @@ public class Chargement{
 			e.setMax(Integer.valueOf(courant.getAttributeValue("max")));
 			e.setRelatif(Boolean.valueOf(courant.getAttributeValue("relatif")));
 			
-			EntiteGraph ent  = (EntiteGraph)mcd.getMcdComponents().get(Integer.valueOf(courant.getChild("Entite").getAttributeValue("id")));
+			EntiteGraph ent  = (EntiteGraph) ids.get(Integer.valueOf(courant.getChild("Entite").getAttributeValue("id")));
 			e.setEntite(ent.getEntite());
 			
-			RelationGraph rel  = (RelationGraph)mcd.getMcdComponents().get(Integer.valueOf(courant.getChild("Relation").getAttributeValue("id")));
+			RelationGraph rel  = (RelationGraph) ids.get(Integer.valueOf(courant.getChild("Relation").getAttributeValue("id")));;
 			e.setRelation(rel.getRelation());
 			
 			for (CardinaliteGraphType t : CardinaliteGraphType.values())
 				if (t.toString().equals(courant.getAttributeValue("style")))
 					eg.setTypeDessin(t);
-			
+
 			eg.setCardinalite(e);
+			eg.setMcd(mcd);
 			mcd.addMcdComponents(eg);
 		}
 		
@@ -184,11 +196,12 @@ public class Chargement{
 			e.setType(HeritageType.valueOf(courant.getAttributeValue("type")));
 			
 			for (Element entite : courant.getChildren("Entite")){
-				EntiteGraph ent  = (EntiteGraph)mcd.getMcdComponents().get(Integer.valueOf(entite.getAttributeValue("id")));
+				EntiteGraph ent  = (EntiteGraph)ids.get(Integer.valueOf(entite.getAttributeValue("id")));;
 				e.addEnfant(ent.getEntite());
 			}
 			
 			eg.setHeritage(e);
+			eg.setMcd(mcd);
 			mcd.addMcdComponents(eg);
 		}
 		
@@ -204,16 +217,17 @@ public class Chargement{
 			e.setNom(ContrainteType.valueOf(courant.getAttributeValue("type")));
 			
 			for (Element entite : courant.getChildren("Entite")){
-				EntiteGraph ent  = (EntiteGraph)mcd.getMcdComponents().get(Integer.valueOf(entite.getAttributeValue("id")));
+				EntiteGraph ent  = (EntiteGraph) ids.get(Integer.valueOf(entite.getAttributeValue("id")));;
 				e.addEntite(ent.getEntite());
 			}
 				
 			for (Element relation : courant.getChildren("Relation")){
-				RelationGraph rel  = (RelationGraph)mcd.getMcdComponents().get(Integer.valueOf(relation.getAttributeValue("id")));
+				RelationGraph rel  = (RelationGraph) ids.get(Integer.valueOf(relation.getAttributeValue("id")));;
 				e.addRelation(rel.getRelation());
 			}
 			
 			eg.setContrainte(e);
+			eg.setMcd(mcd);
 			mcd.addMcdComponents(eg);
 		}
 	}

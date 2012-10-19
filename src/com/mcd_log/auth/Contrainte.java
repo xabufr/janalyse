@@ -36,10 +36,18 @@ public class Contrainte implements Cloneable{
 		return m_relations;
 	}
 	public void addRelation(Relation r){
-		m_relations.add(r);
+		if (!m_type.toString().equals("1") && !m_type.toString().equals("I") && m_relations.size()<1)
+			m_relations.add(r);
+		else
+			m_relations.add(r);
 	}
 	public void addEntite(Entite e){
-		m_entites.add(e);
+		if (m_type.toString().equals("X") && m_entites.size()<2)
+			m_entites.add(e);
+		else if (m_type.toString().equals("1") && m_type.toString().equals("I"))
+			m_entites.add(e);
+		else if (m_entites.size()<1)
+			m_entites.add(e);
 	}
 
 	public void setRelations(List<Relation> relations) {

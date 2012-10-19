@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -100,7 +101,33 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 
 		if (m_entiteGraphMere != null){	
 			Point e = m_entiteGraphMere.getValidLinkPosition(this);
+			Point e1 = new Point();
+			Point p[] = new Point[2];
+			Graphics2D g2 = (Graphics2D)g;
+			p[0] = new Point();
+			p[1] = new Point();
+			double a;
+			
+			
+			e1.x = e.x+20;
+			e1.y = e.y;
+			a = angle(m_centre, e1, e)*-1;
+			
+			p[0].x = 10;
+			p[0].y = -8;
+			
+			p[1].x = 10;
+			p[1].y = 8;
+			
+			int px[] = {0, p[0].x, p[1].x};
+			int py[] = {0, p[0].y, p[1].y};
+			
 			g.drawLine(m_centre.x, m_centre.y, e.x, e.y);
+			g2.translate(e.x, e.y);
+			g2.rotate(a);
+			g.fillPolygon(px, py, 3);
+			g2.rotate(-a);
+			g2.translate(-e.x, -e.y);
 		}
 		
 		for (EntiteGraph eg : m_entitesGraph){
@@ -134,6 +161,16 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		int widthType = metric.stringWidth(m_heritage.getType().toString());
 
 		g.drawString(m_heritage.getType().toString(), pos.x+dim.width/2-widthType/2, pos.y+dim.height-2);
+	}
+	
+	private double angle(Point p1, Point p2, Point p3){
+		double a, a1, a2;
+		
+		a1 = Math.atan2(p1.y-p3.y, p1.x-p3.x);
+		a2 = Math.atan2(p2.y-p3.y, p2.x-p3.x);
+		a = a2 - a1;
+		
+		return a;
 	}
 
 	private void reloadGraph(){

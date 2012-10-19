@@ -103,7 +103,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 		m_centre.x += dim.width / 2;
 		m_centre.y += dim.height / 2;
 		
-		if (m_contrainte.getNom().equals("T") || m_contrainte.getNom().equals("+") || m_contrainte.getNom().equals("1") || m_contrainte.getNom().equals("X")){
+		if (m_contrainte.getNom().equals("T") || m_contrainte.getNom().equals("+") || m_contrainte.getNom().equals("x") || m_contrainte.getNom().equals("X")){
 			g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR_LINE));
 			for (RelationGraph r : m_relationGraph){
 				centreObjet = r.getPosition();

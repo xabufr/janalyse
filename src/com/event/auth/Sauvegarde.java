@@ -147,7 +147,7 @@ public class Sauvegarde {
 				propriete.setAttribute(commentaireP);
 				
 				
-				Attribute typeP = new Attribute("type", p.getType().toString());
+				Attribute typeP = new Attribute("type", p.getType().getType().toString());
 				propriete.setAttribute(typeP);
 				
 				Attribute tailleP = new Attribute("taille", String.valueOf(p.getTaille()));
@@ -202,7 +202,7 @@ public class Sauvegarde {
 					propriete.setAttribute(commentaireP);
 				}
 				
-				Attribute typeP = new Attribute("type", p.getType().toString());
+				Attribute typeP = new Attribute("type", p.getType().getType().toString());
 				propriete.setAttribute(typeP);
 				
 				Attribute tailleP = new Attribute("taille", String.valueOf(p.getTaille()));
