@@ -29,10 +29,10 @@ public class MldLog {
 					if(hasPrec)
 						analyse+=", ";
 					if(p.isClePrimaire()||p instanceof ProprieteCleEtrangere)
-						analyse+="<div style='border-bottom:1px dotted black;padding:3px;position:fixed;float:center;'>";
+						analyse+="<u>";
 					analyse+=p.getName();
 					if(p.isClePrimaire()||p instanceof ProprieteCleEtrangere)
-						analyse+="</div>";
+						analyse+="</u>";
 					hasPrec=true;
 				}
 				analyse+=")";
