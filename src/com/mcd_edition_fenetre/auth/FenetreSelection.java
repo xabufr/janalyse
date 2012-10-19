@@ -69,14 +69,14 @@ public class FenetreSelection extends JDialog{
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (m_objet.equals("Entite")){
-					for (Object o : m_list.getSelectedValuesList())
+					for (Object o : m_list.getSelectedValues())
 						if (o instanceof Entite){
 							Entite en = (Entite)o;
 							m_model.addElement(en);
 						}
 				}
 				else{
-					for (Object o : m_list.getSelectedValuesList())
+					for (Object o : m_list.getSelectedValues())
 						if (o instanceof Relation){
 							Relation en = (Relation)o;
 							m_model.addElement(en);

@@ -19,7 +19,7 @@ public class MldLog {
 		analyserCreerMldLogique();
 	}
 	public String getString(){
-		String analyse="<html><head></head><body style='position: absolute;'>";
+		String analyse="<html><head></head><body style='font-family:Monospaced;'>";
 		for(Entite e : m_entites){
 			analyse+="<p>"+e.getName();
 			if(!e.getProprietes().isEmpty()){
@@ -28,11 +28,23 @@ public class MldLog {
 				for(Propriete p : e.getProprietes()){
 					if(hasPrec)
 						analyse+=", ";
-					if(p.isClePrimaire()||p instanceof ProprieteCleEtrangere)
-						analyse+="<u>";
-					analyse+=p.getName();
-					if(p.isClePrimaire()||p instanceof ProprieteCleEtrangere)
-						analyse+="</u>";
+					/*if(p.isClePrimaire()||p instanceof ProprieteCleEtrangere)
+						analyse+="<u>";*/
+					if(p instanceof ProprieteCleEtrangere){
+						Boolean underline=true;
+						for(int i=0;i<p.getName().length();++i, underline=!underline){
+							if(underline)
+								analyse+="<u>"+p.getName().charAt(i)+"</u>";
+							else
+								analyse+=p.getName().charAt(i);
+						}
+					}
+					else if(p.isClePrimaire())
+						analyse+="<u>"+p.getName()+"</u>";
+					else
+						analyse+=p.getName();
+					/*if(p.isClePrimaire()||p instanceof ProprieteCleEtrangere)
+						analyse+="</u>";*/
 					hasPrec=true;
 				}
 				analyse+=")";

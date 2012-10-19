@@ -88,7 +88,7 @@ public class Chargement{
 		List<Element> cardinalites = racine.getChild("All-cardinalite").getChildren("Cardinalite");
 		List<Element> heritages = racine.getChild("All-héritage").getChildren("Héritage");
 		List<Element> contraintes = racine.getChild("All-contrainte").getChildren("Contrainte");
-		Hashtable <Integer, McdComposentGraphique> ids = new Hashtable<>();
+		Hashtable <Integer, McdComposentGraphique> ids = new Hashtable();
 		int i=0;
 
 		mcd.setName(racine.getAttributeValue("nom"));
