@@ -112,9 +112,9 @@ public class ExportSql {
 		sql += "CREATE TABLE "+e.getName()+"(\n";
 		for (Propriete p : e.getProprietes()){
 			if (p.getType().getType().getName().equals("INT"))
-				sql += "\t"+p.getName()+" "+p.getType().getType().getName();
+				sql += "\t"+p.getVirtualName(e.getName())+" "+p.getType().getType().getName();
 			else
-				sql += "\t"+p.getName()+" "+p.getType().getType().getName()+"("+p.getTaille()+")";
+				sql += "\t"+p.getVirtualName(e.getName())+" "+p.getType().getType().getName()+"("+p.getTaille()+")";
 			
 			if (p.isNull())
 				sql += " NULL";

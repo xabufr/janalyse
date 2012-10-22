@@ -214,7 +214,6 @@ class ProprieteProcessorCommand{
 			imax=ch.length();
 		else
 			imax=max+1;
-		System.out.println("Min:"+min+" max: "+imax);
 		return ch.substring(min, imax);
 	}
 }
