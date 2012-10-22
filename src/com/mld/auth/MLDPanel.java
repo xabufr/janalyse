@@ -1,5 +1,6 @@
 package com.mld.auth;
 
+import java.awt.Font;
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -29,7 +30,7 @@ public class MLDPanel extends JScrollPane {
 	public MLDPanel(McdGraph mcd) {
 		super();
 		m_mld=new MldLog(mcd);
-		m_panel = new HtmlPanel();
+		/*m_panel = new HtmlPanel();
 		getViewport().setView(m_panel);
 		UserAgentContext ucontext = new SimpleUserAgentContext();
 		SimpleHtmlRendererContext rcontext = new SimpleHtmlRendererContext(m_panel, ucontext);
@@ -42,12 +43,12 @@ public class MLDPanel extends JScrollPane {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		m_panel.setDocument(document, rcontext);
-		/*JTextPane p = new JTextPane();
+		m_panel.setDocument(document, rcontext);*/
+		JTextPane p = new JTextPane();
 		
 		p.setContentType("text/html");
 		p.setText(m_mld.getString());
-		getViewport().setView(p);*/
+		getViewport().setView(p);
 
 		System.setErr(null);
 	}
