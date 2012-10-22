@@ -10,6 +10,9 @@ import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
+import com.preferences_mcd_logique.auth.McdPreferencesManager;
+import com.preferences_mcd_logique.auth.PCle;
+import com.preferences_mcd_logique.auth.PGroupe;
 
 public class MldLog {
 	private McdGraph m_mcd;
@@ -161,5 +164,45 @@ public class MldLog {
 				m_entites.add(r.createEntity());
 			}
 		}
+		
+		for(Entite e : m_entites){
+			for(Propriete p : e.getProprietes()){
+				p.setName(ProprieteProcessor.process(
+						(String) McdPreferencesManager.getInstance()
+						.get(PGroupe.PROPRIETE, PCle.SCHEMA), e.getName(), p));
+			}
+		}
+	}
+}
+
+class ProprieteProcessor{
+	static String process(String schema, String proprietaireName, Propriete p){
+		String name="";
+		Boolean startCommand=false;
+		for(int i=0;i<schema.length();++i){
+			if(schema.charAt(i) == '%'){
+				startCommand=true;
+			}
+			else if(startCommand){
+				startCommand=false;
+				switch(schema.charAt(i)){
+				case 'e':
+					name+=proprietaireName;
+					break;
+				case 'p':
+					name+=p.getName();
+					break;
+				case 'P':
+					name+=p.getName().toUpperCase();
+					break;
+				case 'E':
+					name+=proprietaireName.toUpperCase();
+					break;
+				}
+			}
+			else
+				name+=schema.charAt(i);
+		}
+		return name;
 	}
 }
