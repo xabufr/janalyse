@@ -1,14 +1,11 @@
 package com.export.auth;
 
-import java.awt.EventQueue;
-
 import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 
 import com.Dico.auth.DicoLog;
 import com.mcd_graph.auth.McdGraph;
 import com.mld.auth.MldLog;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JCheckBox;
@@ -17,7 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.filechooser.FileFilter;
 
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
@@ -96,23 +92,25 @@ public class ExporterHTML extends JDialog {
 						fileWriter = new FileWriter(file);
 						MldLog mld = new MldLog(m_mcd);
 						
-						fileWriter.write("<html><head></head><body>");
+						fileWriter.write("<html><head><meta http-equiv='content-type' content='text/html; charset=utf-8'/><style type='text/css'>"+
+								m_css+
+								"</style></head><body>");
 						if(chckbxMcd.isSelected()){
 							ByteArrayOutputStream os = new ByteArrayOutputStream();
 							OutputStream b64 = new com.export.auth.Base64.OutputStream(os);
 							ImageIO.write(ExportPng.getImage(m_mcd), "png", b64);
-							fileWriter.write("<p class='mcd'><h1>MCD</h1>\n<img src='data:image/png;base64,"+
+							fileWriter.write("<div class='mcd'><h1>MCD</h1>\n<img src='data:image/png;base64,"+
 							os.toString("UTF-8")+
-							"'/>\n</p>\n\n");
+							"'/>\n</div>\n\n");
 						}
 						if(chckbxDictionnaireDesProprits.isSelected()){
-							fileWriter.write("<p class='dico'>\n<h1>Dictionnaire des propriétés</h1>\n"+
-									new DicoLog(m_mcd).toString()+"\n</p>");
+							fileWriter.write("<div class='dico'>\n<h1>Dictionnaire des propriétés</h1>\n"+
+									new DicoLog(m_mcd).toHTML()+"\n</div>");
 						}
 						if(chckbxMld.isSelected()){
-							fileWriter.write("<p class='mld'>\n<h1>Troisième forme normale</h1>\n"+
+							fileWriter.write("<div class='mld'>\n<h1>Troisième forme normale</h1>\n"+
 						mld.getHTML()+
-						"\n</p>");
+						"\n</div>");
 						}
 						fileWriter.write("</body></html>");
 						fileWriter.close();
@@ -126,4 +124,13 @@ public class ExporterHTML extends JDialog {
 		});
 		getContentPane().add(btnExporter, "cell 1 4");
 	}
+	
+	private final String m_css="h1, div{" +
+			"text-align: center;" +
+			"}" +
+			"div{" +
+			"border: 1px solid black;" +
+			"margin-bottom: -1px;" +
+			"padding: 1px 1px 1px 1px;" +
+			"}";
 }

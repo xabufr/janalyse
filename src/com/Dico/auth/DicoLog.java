@@ -72,7 +72,35 @@ public class DicoLog {
 		
 		return dico;
 	}
-
+	public String toHTML(){
+		String dico = "";
+		
+		Enumeration<String> key = m_lstEntitePropriete.keys();
+		while (key.hasMoreElements()){
+			String s = key.nextElement();
+			dico += "<div class='entite'><p class='nom'>"+s;
+			dico += "</p>";
+			
+			for (String p : m_lstEntitePropriete.get(s)){
+				dico += "<span class='propriete'>"+p+"</span><br />";
+			}
+			dico += "</div>";
+		}
+		
+		key = m_lstRelationPropriete.keys();
+		while (key.hasMoreElements()){
+			String s = key.nextElement();
+			dico += "<div class='entite'><p class='nom'>"+s;
+			dico += "</p>";
+			
+			for (String p : m_lstRelationPropriete.get(s)){
+				dico += "<span class='propriete'>"+p+"</span><br />";
+			}
+			dico += "</div>";
+		}
+		
+		return dico;
+	}
 	public Hashtable<String, List<String>> getLstRelationPropriete() {
 		return m_lstRelationPropriete;
 	}
