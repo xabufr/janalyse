@@ -147,10 +147,8 @@ public class FenetreEditionContrainte extends JDialog{
 		JButton btnOk = new JButton("Ok");
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				m_contrainte.setNom((ContrainteType)m_type.getSelectedItem());
 				
-				if (!m_contrainte.getNom().equals("1") && !m_contrainte.getNom().equals("I")){
+				if (!((ContrainteType)m_type.getSelectedItem()).toString().equals("1") && !((ContrainteType)m_type.getSelectedItem()).toString().equals("I")){
 					if (!m_contrainte.getNom().equals("X") && m_modelEntite.size()>1 || m_modelRelation.size()>2){
 						JOptionPane.showConfirmDialog(null, "Seul deux relations et une entité peuvent être sélectionné.", "Erreur", JOptionPane.ERROR_MESSAGE);
 						return;
@@ -185,6 +183,8 @@ public class FenetreEditionContrainte extends JDialog{
 					Relation r = (Relation)JOptionPane.showInputDialog(null, "Veuillez choisir le sens de lecture:", "Sélection sens de lecture", JOptionPane.PLAIN_MESSAGE, null, m_modelRelation.toArray(), m_modelRelation.getElementAt(0));
 					m_contrainte.setSens(r);
 				}
+				
+				m_contrainte.setNom((ContrainteType)m_type.getSelectedItem());
 				
 				m_contrainteGraph.update();
 				m_mcd.repaint();

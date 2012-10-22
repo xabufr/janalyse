@@ -32,6 +32,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import com.Dico.auth.DicoPanel;
 import com.event.auth.Chargement;
 import com.event.auth.QuitListener;
 import com.mld.auth.MLDPanel;
@@ -67,6 +68,7 @@ public class FenetrePrincipale {
 	private JSplitPane m_splitPane;
 	private JButton m_btnMcd;
 	private JButton m_btnMld;
+	private JButton m_btnDico;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -96,6 +98,7 @@ public class FenetrePrincipale {
 			public void actionPerformed(ActionEvent arg0) {
 				m_btnMcd.setEnabled(false);
 				m_btnMld.setEnabled(true);
+				m_btnDico.setEnabled(true);
 				m_splitPane.setRightComponent(m_mcdContener);
 			}
 		});
@@ -106,6 +109,7 @@ public class FenetrePrincipale {
 			public void actionPerformed(ActionEvent arg0) {
 				m_btnMcd.setEnabled(true);
 				m_btnMld.setEnabled(false);
+				m_btnDico.setEnabled(true);
 				if(m_mcd != null)
 					m_splitPane.setRightComponent(new MLDPanel(m_mcd));
 				else
@@ -113,6 +117,21 @@ public class FenetrePrincipale {
 			}
 		});
 		panel.add(m_btnMld, "cell 0 1");
+		
+		m_btnDico = new JButton("Dictionnaire des propriete");
+		m_btnDico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				m_btnMcd.setEnabled(true);
+				m_btnMld.setEnabled(true);
+				m_btnDico.setEnabled(false);
+				if(m_mcd != null)
+					m_splitPane.setRightComponent(new DicoPanel(m_mcd));
+				else
+					m_splitPane.setRightComponent(new JLabel("Aucun MCD selectionné"));
+			}
+		});
+		panel.add(m_btnDico, "cell 0 2");
+		
 		m_mcdContener.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent event) {
 				if(m_mcdContener.getSelectedComponent()==null)
