@@ -33,6 +33,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import com.Dico.auth.DicoPanel;
+import com.Export.auth.ExportSql;
 import com.event.auth.Chargement;
 import com.event.auth.QuitListener;
 import com.mld.auth.MLDPanel;
@@ -265,6 +266,14 @@ public class FenetrePrincipale {
 			}
 		});
 		mnFichier.add(mntmExporterEnPng);
+		
+		JMenuItem mntmExporterEnSql = new JMenuItem("Exporter en SQL");
+		mntmExporterEnSql.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new ExportSql(m_mcd.getName(), m_mcd);
+			}
+		});
+		mnFichier.add(mntmExporterEnSql);
 		
 		JSeparator separator_1 = new JSeparator();
 		mnFichier.add(separator_1);
