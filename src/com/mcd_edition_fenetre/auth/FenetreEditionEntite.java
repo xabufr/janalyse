@@ -265,6 +265,10 @@ public class FenetreEditionEntite extends JDialog{
 			if (!m_commentaireEntite.getText().equals(null) && !m_commentaireEntite.getText().equals(""));
 				m_entite.setCommentaire(m_commentaireEntite.getText());
 				
+			m_entite.getProprietes().clear();
+			for (int i=0; i<m_model.size(); ++i)
+				m_entite.addPropriete((Propriete) m_model.get(i));
+				
 			FenetreEditionEntite.this.setVisible(false);
 			m_mcd.repaint();
 		}
@@ -303,7 +307,6 @@ public class FenetreEditionEntite extends JDialog{
 				p.setNull(m_isCle.isSelected());
 				p.setAutoIncrement(m_isAutoIncremente.isSelected());
 				
-				m_entite.addPropriete(p);
 				m_model.addElement(p);
 				
 				m_nomPropriete.setText("");

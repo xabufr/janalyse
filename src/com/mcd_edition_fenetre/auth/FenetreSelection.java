@@ -42,7 +42,7 @@ public class FenetreSelection extends JDialog{
 			setTitle("Selecteur d'Entite");
 			lblNewLabel.setText("Entités:");
 			for (McdComposentGraphique c : lstComp)
-				if (c instanceof EntiteGraph){
+				if (c instanceof EntiteGraph && !m_model.contains(((EntiteGraph) c).getEntite())){
 					EntiteGraph eg = (EntiteGraph)c;
 					model.addElement(eg.getEntite());
 				}
@@ -51,7 +51,7 @@ public class FenetreSelection extends JDialog{
 			setTitle("Selecteur de Relation");
 			lblNewLabel.setText("Relation:");
 			for (McdComposentGraphique c : lstComp)
-				if (c instanceof RelationGraph){
+				if (c instanceof RelationGraph && !m_model.contains(((RelationGraph) c).getRelation())){
 					RelationGraph eg = (RelationGraph)c;
 					model.addElement(eg.getRelation());
 				}

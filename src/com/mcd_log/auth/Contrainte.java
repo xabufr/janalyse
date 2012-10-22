@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Contrainte implements Cloneable{
 	private ContrainteType m_type;
+	private Object m_sens;
 	private List<Entite> m_entites;
 	private List<Relation> m_relations;
 	
@@ -44,7 +45,7 @@ public class Contrainte implements Cloneable{
 	public void addEntite(Entite e){
 		if (m_type.toString().equals("X") && m_entites.size()<2)
 			m_entites.add(e);
-		else if (m_type.toString().equals("1") && m_type.toString().equals("I"))
+		else if (m_type.toString().equals("1") || m_type.toString().equals("I"))
 			m_entites.add(e);
 		else if (m_entites.size()<1)
 			m_entites.add(e);
@@ -57,5 +58,13 @@ public class Contrainte implements Cloneable{
 	public Contrainte clone() throws CloneNotSupportedException{
 		Contrainte c = (Contrainte) super.clone();
 		return c;
+	}
+
+	public Object getSens() {
+		return m_sens;
+	}
+
+	public void setSens(Object sens) {
+		m_sens = sens;
 	}
 }

@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -87,6 +88,8 @@ public class FenetreEditionContrainte extends JDialog{
 		panel_1.add(lblEntits, "cell 0 0");
 		
 		m_modelEntite = new DefaultListModel();
+		for (Entite e : m_contrainte.getEntites())
+			m_modelEntite.addElement(e);
 		m_lstEntite = new JList();
 		m_lstEntite.setModel(m_modelEntite);
 		m_lstEntite.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -118,6 +121,8 @@ public class FenetreEditionContrainte extends JDialog{
 		
 		
 		m_modelRelation = new DefaultListModel();
+		for (Relation r : m_contrainte.getRelations())
+			m_modelRelation.addElement(r);
 		m_lstRelation = new JList();
 		m_lstRelation.setModel(m_modelRelation);
 		m_lstRelation.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -142,16 +147,43 @@ public class FenetreEditionContrainte extends JDialog{
 		JButton btnOk = new JButton("Ok");
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+
 				m_contrainte.setNom((ContrainteType)m_type.getSelectedItem());
 				
+				if (!m_contrainte.getNom().equals("1") && !m_contrainte.getNom().equals("I")){
+					if (!m_contrainte.getNom().equals("X") && m_modelEntite.size()>1 || m_modelRelation.size()>2){
+						JOptionPane.showConfirmDialog(null, "Seul deux relations et une entité peuvent être sélectionné.", "Erreur", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					else if (m_contrainte.getNom().equals("X") && m_modelEntite.size()>2 || m_modelRelation.size()>2){
+						JOptionPane.showConfirmDialog(null, "Seul deux relations et deux entités peuvent être sélectionné.", "Erreur", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					else if (m_modelEntite.size()<1 || m_modelRelation.size()<2){
+						JOptionPane.showConfirmDialog(null, "Veuillez sélectionner deux relations et une entité.", "Erreur", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				}
+				
+				m_contrainte.getEntites().clear();
 				for (int i=0; i<m_modelEntite.getSize(); ++i){
 					Entite e = (Entite)m_modelEntite.get(i);
 					m_contrainte.addEntite(e);
 				}
 				
+				m_contrainte.getRelations().clear();
 				for (int i=0; i<m_modelRelation.getSize(); ++i){
 					Relation e = (Relation)m_modelRelation.get(i);
 					m_contrainte.addRelation(e);
+				}
+				
+				if (m_contrainte.getNom().equals("1")){
+					Entite e = (Entite)JOptionPane.showInputDialog(null, "Veuillez choisir le sens de lecture:", "Sélection sens de lecture", JOptionPane.PLAIN_MESSAGE, null, m_modelEntite.toArray(), m_modelEntite.getElementAt(0));
+					m_contrainte.setSens(e);
+				}
+				else if (m_contrainte.getNom().equals("I")){
+					Relation r = (Relation)JOptionPane.showInputDialog(null, "Veuillez choisir le sens de lecture:", "Sélection sens de lecture", JOptionPane.PLAIN_MESSAGE, null, m_modelRelation.toArray(), m_modelRelation.getElementAt(0));
+					m_contrainte.setSens(r);
 				}
 				
 				m_contrainteGraph.update();

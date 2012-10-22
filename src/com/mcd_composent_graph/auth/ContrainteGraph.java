@@ -103,33 +103,96 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 		m_centre.x += dim.width / 2;
 		m_centre.y += dim.height / 2;
 		
-		if (m_contrainte.getNom().equals("T") || m_contrainte.getNom().equals("+") || m_contrainte.getNom().equals("x") || m_contrainte.getNom().equals("X")){
-			g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR_LINE));
-			for (RelationGraph r : m_relationGraph){
-				centreObjet = r.getPosition();
-				centreObjet.x += r.getDimension().width / 2;
-				centreObjet.y += r.getDimension().height / 2;
+		g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR_LINE));
+		for (RelationGraph r : m_relationGraph){
+			centreObjet = r.getPosition();
+			centreObjet.x += r.getDimension().width / 2;
+			centreObjet.y += r.getDimension().height / 2;
+			
+			g.drawLine(m_centre.x, m_centre.y, centreObjet.x, centreObjet.y);
+			if (m_contrainte.getSens() instanceof Relation && r.getRelation().equals((Relation)m_contrainte.getSens())){
+				Point e1 = new Point();
+				Point p1[] = new Point[2];
+				p1[0] = new Point();
+				p1[1] = new Point();
+				double a;
+				int t, b, c;
+				b = r.getDimension().width/2;
+				c = r.getDimension().height/2;
+				t = b*c;				
 				
-				g.drawLine(m_centre.x, m_centre.y, centreObjet.x, centreObjet.y);
+				e1.x = centreObjet.x+20;
+				e1.y = centreObjet.y;
+				a = angle(m_centre, e1, centreObjet)*-1;
+				t /= (int)Math.sqrt((Math.pow(c, 2)*Math.pow(Math.cos(a), 2))+(Math.pow(b, 2)*Math.pow(Math.sin(a), 2)));
+				
+				p1[0].x = 10;
+				p1[0].y = -8;
+				
+				p1[1].x = 10;
+				p1[1].y = 8;
+				
+				int px[] = {0, p1[0].x, p1[1].x};
+				int py[] = {0, p1[0].y, p1[1].y};
+				
+				g2.setStroke(new BasicStroke(1.0f));
+				g2.translate((t*Math.cos(a))+centreObjet.x, (t*Math.sin(a))+centreObjet.y);
+				g2.rotate(a);
+				g.fillPolygon(px, py, 3);
+				g2.rotate(-a);
+				g2.translate(-((t*Math.cos(a))+centreObjet.x), -((t*Math.sin(a))+centreObjet.y));
 			}
-			
-			g2.setStroke(dashed);
-			
-			for (EntiteGraph e : m_entiteGraph){
-				Point p = e.getValidLinkPosition(this);
-				g2.draw(new Line2D.Double(m_centre.x, m_centre.y, p.x, p.y));
-			}
-			g2.setStroke(new BasicStroke(1.0f));
 		}
+		
+		for (EntiteGraph e : m_entiteGraph){
+			Point p = e.getValidLinkPosition(this);
+			if (!m_contrainte.getType().toString().equals("1"))
+				g2.setStroke(dashed);
+			
+			g2.draw(new Line2D.Double(m_centre.x, m_centre.y, p.x, p.y));
+			if (m_contrainte.getSens() instanceof Entite && e.getEntite().equals((Entite)m_contrainte.getSens())){
+				Point e1 = new Point();
+				Point p1[] = new Point[2];
+				p1[0] = new Point();
+				p1[1] = new Point();
+				double a;
+				
+				
+				e1.x = p.x+20;
+				e1.y = p.y;
+				a = angle(m_centre, e1, p)*-1;
+				
+				p1[0].x = 10;
+				p1[0].y = -8;
+				
+				p1[1].x = 10;
+				p1[1].y = 8;
+				
+				int px[] = {0, p1[0].x, p1[1].x};
+				int py[] = {0, p1[0].y, p1[1].y};
+				
+				g2.setStroke(new BasicStroke(1.0f));
+				g2.translate(p.x, p.y);
+				g2.rotate(a);
+				g.fillPolygon(px, py, 3);
+				g2.rotate(-a);
+				g2.translate(-p.x, -p.y);
+			}
+		}
+		g2.setStroke(new BasicStroke(1.0f));
+		
 		if(!m_focus)
 			g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR));
 		else
 			g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR_FOCUS));
+		
 		g.fillOval(pos.x, pos.y, dim.width, dim.height);
+		
 		if(!m_focus)
 			g.setColor((Color) prefs.get(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR));
 		else
 			g.setColor((Color) prefs.get(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR_FOCUS));
+		
 		g.drawOval(pos.x, pos.y, dim.width, dim.height);
 		FontMetrics font = g.getFontMetrics();
 		this.setDimension(dim);
@@ -146,6 +209,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 			pos.x += (dim.width/2)-(font.getStringBounds(m_contrainte.getNom(), g).getWidth()/3)-1;
 			pos.y += (dim.height/2)+(font.getStringBounds(m_contrainte.getNom(), g).getHeight()/2)-1;
 		}
+		
 		if(!m_focus){
 			g.setFont((Font)prefs.getFont(PGroupe.CONTRAINTE, PCle.FONT));
 			g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.FONT_COLOR));
@@ -154,7 +218,18 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 			g.setFont((Font)prefs.getFont(PGroupe.CONTRAINTE, PCle.FONT_FOCUS));
 			g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.FONT_COLOR_FOCUS));
 		}
+		
 		g.drawString(m_contrainte.getNom(), pos.x, pos.y);
+	}
+	
+	private double angle(Point p1, Point p2, Point p3){
+		double a, a1, a2;
+		
+		a1 = Math.atan2(p1.y-p3.y, p1.x-p3.x);
+		a2 = Math.atan2(p2.y-p3.y, p2.x-p3.x);
+		a = a2 - a1;
+		
+		return a;
 	}
 
 	public void setMcd(McdGraph mcd) {
