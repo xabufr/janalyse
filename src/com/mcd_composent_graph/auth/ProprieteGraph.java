@@ -22,20 +22,20 @@ public class ProprieteGraph {
 	public void setPropriete(Propriete propriete) {
 		m_propriete = propriete;
 	}
-	public Dimension getDimension(Graphics g, Font f){
+	public Dimension getDimension(Graphics g, Font f, String proprietaire){
 		FontMetrics metric = g.getFontMetrics(f);
-		int width = metric.stringWidth(m_propriete.getName());
+		int width = metric.stringWidth(m_propriete.getVirtualName(proprietaire));
 		int height = metric.getHeight();
 		return new Dimension(width, height);
 	}
 	
-	public void dessiner(Graphics g, Font f, Color c, Point p)
+	public void dessiner(Graphics g, Font f, Color c, Point p, String proprietaire)
 	{
 		g.setColor(c);
 		g.setFont(f);
-		g.drawString(m_propriete.getName(), p.x, p.y);
+		g.drawString(m_propriete.getVirtualName(proprietaire), p.x, p.y);
 		if(m_propriete.isClePrimaire()){
-			g.drawLine(p.x, p.y + 2, p.x + getDimension(g,f).width, p.y + 2);
+			g.drawLine(p.x, p.y + 2, p.x + getDimension(g,f, proprietaire).width, p.y + 2);
 		}
 	}
 

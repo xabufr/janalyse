@@ -27,7 +27,7 @@ public class DicoLog {
 				
 				List<String> props = new ArrayList<String>();
 				for (Propriete p : e.getProprietes()){
-					props.add(p.getName());
+					props.add(p.getVirtualName(e.getName()));
 				}
 				m_lstEntitePropriete.put(e.getName(), props);
 			}
@@ -36,7 +36,7 @@ public class DicoLog {
 				
 				List<String> props = new ArrayList<String>();
 				for (Propriete p : r.getProprietes()){
-					props.add(p.getName());
+					props.add(p.getVirtualName(r.getNom()));
 				}
 				m_lstRelationPropriete.put(r.getNom(), props);
 			}

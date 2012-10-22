@@ -40,17 +40,17 @@ public class MldLog {
 						analyse+=", ";
 					if(p instanceof ProprieteCleEtrangere){
 						Boolean underline=true;
-						for(int i=0;i<p.getName().length();++i, underline=!underline){
+						for(int i=0;i<p.getVirtualName(e.getName()).length();++i, underline=!underline){
 							if(underline)
-								analyse+="<u>"+p.getName().charAt(i)+"</u>";
+								analyse+="<u>"+p.getVirtualName(e.getName()).charAt(i)+"</u>";
 							else
-								analyse+=p.getName().charAt(i);
+								analyse+=p.getVirtualName(e.getName()).charAt(i);
 						}
 					}
 					else if(p.isClePrimaire())
-						analyse+="<u>"+p.getName()+"</u>";
+						analyse+="<u>"+p.getVirtualName(e.getName())+"</u>";
 					else
-						analyse+=p.getName();
+						analyse+=p.getVirtualName(e.getName());
 					hasPrec=true;
 				}
 				analyse+=")";
@@ -69,12 +69,12 @@ public class MldLog {
 					if(hasPrec)
 						analyse+=", ";
 					if(p instanceof ProprieteCleEtrangere){
-						analyse+="<span class='cleEtrangere'>"+p.getName()+"</span>\n";
+						analyse+="<span class='cleEtrangere'>"+p.getVirtualName(e.getName())+"</span>\n";
 					}
 					else if(p.isClePrimaire())
-						analyse+="<span class='clePrimaire'>"+p.getName()+"</span>\n";
+						analyse+="<span class='clePrimaire'>"+p.getVirtualName(e.getName())+"</span>\n";
 					else
-						analyse+="<span class='propriete'>"+p.getName()+"</span>\n";
+						analyse+="<span class='propriete'>"+p.getVirtualName(e.getName())+"</span>\n";
 					hasPrec=true;
 				}
 			}
@@ -187,45 +187,5 @@ public class MldLog {
 				m_entites.add(r.createEntity());
 			}
 		}
-		
-		for(Entite e : m_entites){
-			for(Propriete p : e.getProprietes()){
-				p.setName(ProprieteProcessor.process(
-						(String) McdPreferencesManager.getInstance()
-						.get(PGroupe.PROPRIETE, PCle.SCHEMA), e.getName(), p));
-			}
-		}
-	}
-}
-
-class ProprieteProcessor{
-	static String process(String schema, String proprietaireName, Propriete p){
-		String name="";
-		Boolean startCommand=false;
-		for(int i=0;i<schema.length();++i){
-			if(schema.charAt(i) == '%'){
-				startCommand=true;
-			}
-			else if(startCommand){
-				startCommand=false;
-				switch(schema.charAt(i)){
-				case 'e':
-					name+=proprietaireName;
-					break;
-				case 'p':
-					name+=p.getName();
-					break;
-				case 'P':
-					name+=p.getName().toUpperCase();
-					break;
-				case 'E':
-					name+=proprietaireName.toUpperCase();
-					break;
-				}
-			}
-			else
-				name+=schema.charAt(i);
-		}
-		return name;
 	}
 }
