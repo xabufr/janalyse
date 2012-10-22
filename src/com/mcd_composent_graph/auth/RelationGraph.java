@@ -7,6 +7,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 	}
 	public void dessiner(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
-		if(this.m_lastPropsNumber!=this.m_relation.getProprietes().size()||m_calculerTaille)
+		if(m_calculerTaille)
 		{
 			this.actualiser();
 	
@@ -89,7 +90,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 			
 			FontMetrics metric = g.getFontMetrics(font);
 			m_widthNom = dim.width = metric.stringWidth(m_relation.getNom());
-			m_heightNom = metric.getHeight();
+			m_heightNom = dim.height = metric.getHeight();
 			
 			if(!m_focus)
 				font = prefs.getFont(PGroupe.RELATION, PCle.FONT);
@@ -101,10 +102,9 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 				if(dimEC.width>dim.width)
 					dim.width=dimEC.width;
 				
-				dim.height+=dimEC.height+4;
+				dim.height+=dimEC.height;
 			}
-			
-			dim.height *= 2;
+			dim.height+=10;
 			dim.width += 60;
 			setDimension(dim);
 			m_calculerTaille=false;
@@ -116,7 +116,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 			dim.height = dim.width/2;
 		
 		if (dim.height > dim.width)
-			dim.width = dim.height*2;
+			dim.width = (int) (dim.height*1.2);
 		
 		setDimension(dim);
 		if(!m_focus)
@@ -133,7 +133,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 		
 		Point cursor = new Point(pos);
 		cursor.x += (dim.width/2)-(m_widthNom/2);
-		cursor.y += (dim.height/4)+(m_heightNom/2);
+		cursor.y += m_heightNom;
 		if(!m_focus){
 			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.FONT_NOM_COLOR));
 			g.setFont(prefs.getFont(PGroupe.RELATION, PCle.FONT_NOM));
@@ -143,14 +143,21 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 			g.setFont(prefs.getFont(PGroupe.RELATION, PCle.FONT_NOM_FOCUS));
 		}
 		g.drawString(m_relation.getNom(), cursor.x, cursor.y);
-		cursor.y = pos.y+(dim.height/2);
+		cursor.y+=5;
 		
 		if(!m_focus)
 			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR));
 		else
 			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS));
-		g.drawLine(pos.x, cursor.y, pos.x+dim.width, cursor.y);
-		
+		{ //Dessin corde ellispe
+			float a,b;
+			a=dim.width/2;
+			b=dim.height/2;
+			Point2D p = new Point2D.Float(getPosition().x+a, getPosition().y+b);
+			float Y = (float) (p.getY()-((float)cursor.y));
+			float X = (float) Math.sqrt((1- ((Y*Y)/(b*b)) ) *a*a);
+			g.drawLine((int)p.getX()-(int)X, cursor.y, (int)p.getX()+(int)X, cursor.y);
+		}
 		Font font;
 		Color couleur;
 		if(!m_focus){
@@ -165,7 +172,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 		cursor.y-=3;
 		for(int i=0;i<this.m_lastPropsNumber;++i){
 			dimEC = this.m_proprietes.get(i).getDimension(g, font);
-			cursor.y+= 2 + dimEC.height;
+			cursor.y+= dimEC.height;
 			cursor.x = pos.x+(dim.width/2)-(dimEC.width/2);
 			this.m_proprietes.get(i).dessiner(g, font, couleur, cursor);
 		}
