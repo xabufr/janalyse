@@ -49,6 +49,8 @@ public class DicoLog {
 		Enumeration<String> key = m_lstEntitePropriete.keys();
 		while (key.hasMoreElements()){
 			String s = key.nextElement();
+			if(m_lstEntitePropriete.get(s).isEmpty())
+				continue;
 			dico += "<p class='entite'><span class='nom'>"+s;
 			dico += "</span><hr/>";
 			
@@ -61,6 +63,8 @@ public class DicoLog {
 		key = m_lstRelationPropriete.keys();
 		while (key.hasMoreElements()){
 			String s = key.nextElement();
+			if(m_lstRelationPropriete.get(s).isEmpty())
+				continue;
 			dico += "<p class='entite'><span class='nom'>"+s;
 			dico += "</span><hr/>";
 			
@@ -78,6 +82,8 @@ public class DicoLog {
 		Enumeration<String> key = m_lstEntitePropriete.keys();
 		while (key.hasMoreElements()){
 			String s = key.nextElement();
+			if(m_lstEntitePropriete.get(s).isEmpty())
+				continue;
 			dico += "<div class='entite'><p class='nom'>"+s;
 			dico += "</p>";
 			
@@ -90,6 +96,8 @@ public class DicoLog {
 		key = m_lstRelationPropriete.keys();
 		while (key.hasMoreElements()){
 			String s = key.nextElement();
+			if(m_lstRelationPropriete.get(s).isEmpty())
+				continue;
 			dico += "<div class='entite'><p class='nom'>"+s;
 			dico += "</p>";
 			
