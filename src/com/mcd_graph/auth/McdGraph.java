@@ -90,6 +90,18 @@ public class McdGraph extends JPanel{
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
 		Point min = new Point(0,0), max = new Point(0,0);
+		for(McdComposentGraphique component : m_componentsSecond){
+			if (component instanceof EntiteGraph){
+				EntiteGraph e = (EntiteGraph)component;
+				g.setColor(Color.GRAY);
+				g.fillRect(e.getPosition().x+5, e.getPosition().y+5, e.getDimension().width, e.getDimension().height);
+			}
+			if (component instanceof RelationGraph){
+				RelationGraph r = (RelationGraph)component;
+				g.setColor(Color.GRAY);
+				g.fillOval(r.getPosition().x+1, r.getPosition().y+3, r.getDimension().width, r.getDimension().height);
+			}
+		}
 		for(McdComposentGraphique component : m_componentsFirst){
 			component.dessiner(g);
 			if(component instanceof CardinaliteGraph)

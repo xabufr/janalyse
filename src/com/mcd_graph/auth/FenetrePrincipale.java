@@ -123,7 +123,7 @@ public class FenetrePrincipale {
 		});
 		panel.add(m_btnMld, "cell 0 1");
 		
-		m_btnDico = new JButton("Dictionnaire des propriete");
+		m_btnDico = new JButton("Dictionnaire des propriétés");
 		m_btnDico.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				m_btnMcd.setEnabled(true);

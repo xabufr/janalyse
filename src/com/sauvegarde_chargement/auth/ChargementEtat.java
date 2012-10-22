@@ -21,16 +21,18 @@ public class ChargementEtat {
 		m_parent = parent;
 		
 		File file = new File("src/save/prog.xml");
-		SAXBuilder sax = new SAXBuilder();
-		try {
-			Document doc = sax.build(file);
-			if (doc != null){
-				charger(doc);
+		if (file.exists()){
+			SAXBuilder sax = new SAXBuilder();
+			try {
+				Document doc = sax.build(file);
+				if (doc != null){
+					charger(doc);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JDOMException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JDOMException e) {
-			e.printStackTrace();
 		}
 	}
 	
