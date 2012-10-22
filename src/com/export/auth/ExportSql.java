@@ -91,9 +91,9 @@ public class ExportSql {
 		String cle = "";
 		for (Propriete id : p.getEntite().getProprietes())
 			if (id.isClePrimaire())
-				cle = id.getName();
+				cle = id.getVirtualName(p.getEntite().getName());
 		sql += "ALTER TABLE "+e.getName()+"\n";
-		sql += "\tADD CONSTRAINT FK_"+e.getName().toUpperCase()+"_"+p.getEntite().getName().toUpperCase()+" FOREIGN KEY("+p.getName()+") REFERENCES "+p.getEntite().getName()+"("+cle+");";
+		sql += "\tADD CONSTRAINT FK_"+e.getName().toUpperCase()+"_"+p.getEntite().getName().toUpperCase()+" FOREIGN KEY("+p.getVirtualName(e.getName())+") REFERENCES "+p.getEntite().getName()+"("+cle+");";
 		
 		return sql;
 	}
@@ -132,7 +132,7 @@ public class ExportSql {
 		}
 		
 		if (clePrimaire != null)
-			sql += ",\n\tCONSTRAINT PK_"+e.getName().toUpperCase()+" PRIMARY KEY("+clePrimaire.getName()+")";
+			sql += ",\n\tCONSTRAINT PK_"+e.getName().toUpperCase()+" PRIMARY KEY("+clePrimaire.getVirtualName(e.getName())+")";
 		
 		sql += "\n);\n";
 		
