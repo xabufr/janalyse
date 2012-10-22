@@ -44,30 +44,30 @@ public class DicoLog {
 	}
 	
 	public String toString(){
-		String dico = "<html><head></head><body>";
+		String dico = "";
 		
 		Enumeration<String> key = m_lstEntitePropriete.keys();
 		while (key.hasMoreElements()){
 			String s = key.nextElement();
-			dico += "<p>"+s+"</p>";
-			dico += "<hr/>";
+			dico += "<p class='entite'><span class='nom'>"+s;
+			dico += "</span><hr/>";
 			
 			for (String p : m_lstEntitePropriete.get(s)){
-				dico += "<p>"+p+"</p>";
+				dico += "<span class='propriete'>"+p+"</span><br />";
 			}
-			dico += "<br/>";
+			dico += "</p>";
 		}
 		
 		key = m_lstRelationPropriete.keys();
 		while (key.hasMoreElements()){
 			String s = key.nextElement();
-			dico += "<p>"+s+"</p>";
-			dico += "<hr/>";
+			dico += "<p class='entite'><span class='nom'>"+s;
+			dico += "</span><hr/>";
 			
 			for (String p : m_lstRelationPropriete.get(s)){
-				dico += "<p>"+p+"</p>";
+				dico += "<span class='propriete'>"+p+"</span><br />";
 			}
-			dico += "<br/>";
+			dico += "</p>";
 		}
 		
 		return dico;

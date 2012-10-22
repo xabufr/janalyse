@@ -35,6 +35,8 @@ import java.awt.event.WindowListener;
 import com.Dico.auth.DicoPanel;
 import com.event.auth.Chargement;
 import com.event.auth.QuitListener;
+import com.export.auth.ExportPng;
+import com.export.auth.ExporterHTML;
 import com.mld.auth.MLDPanel;
 import com.ui_help.auth.APropos;
 
@@ -229,42 +231,20 @@ public class FenetrePrincipale {
 			public void actionPerformed(ActionEvent e) {
 				if(m_mcd==null)
 					return;
-				JFileChooser chooser = new JFileChooser();
-				chooser.setFileFilter(new FileFilter(){
-					public boolean accept(File arg0) {
-						if(arg0.isDirectory())
-							return true;
-						String ext = getExtension(arg0);
-						if(ext==null)
-							return false;
-						if(ext.equals("png"))
-							return true;
-						return false;
-					}
-
-					public String getDescription() {
-						return "PNG Only";
-					}
-					
-				});
-				if(chooser.showSaveDialog(frame)==JFileChooser.APPROVE_OPTION){
-					BufferedImage outImage = new BufferedImage(
-							m_mcd.getPreferredSize().width+1, m_mcd.getPreferredSize().height+1, BufferedImage.TYPE_INT_RGB);
-					
-					Graphics2D graphic = outImage.createGraphics();
-					m_mcd.paint(graphic);
-					File outFile = chooser.getSelectedFile();
-					if(getExtension(outFile)==null||!getExtension(outFile).equals("png"))
-						outFile = new File(outFile.getAbsolutePath()+".png");
-					try {
-						ImageIO.write(outImage, "png", outFile);
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-				}
+				ExportPng.ExporterMcd(m_mcd);
 			}
 		});
 		mnFichier.add(mntmExporterEnPng);
+		
+		JMenuItem mntmExporterEnHtml = new JMenuItem("Exporter en HTML");
+		mntmExporterEnHtml.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd != null)
+					new ExporterHTML(m_mcd).setVisible(true);
+			}
+		});
+		mntmExporterEnHtml.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_MASK));
+		mnFichier.add(mntmExporterEnHtml);
 		
 		JSeparator separator_1 = new JSeparator();
 		mnFichier.add(separator_1);

@@ -59,6 +59,29 @@ public class MldLog {
 		}
 		return analyse+"</body></html>";
 	}
+	public String getHTML(){
+		String analyse="";
+		for(Entite e : m_entites){
+			analyse+="<p><span class='entite'>"+e.getName()+"</span>( ";
+			if(!e.getProprietes().isEmpty()){
+				Boolean hasPrec=false;
+				for(Propriete p : e.getProprietes()){
+					if(hasPrec)
+						analyse+=", ";
+					if(p instanceof ProprieteCleEtrangere){
+						analyse+="<span class='cleEtrangere'>"+p.getName()+"</span>\n";
+					}
+					else if(p.isClePrimaire())
+						analyse+="<span class='clePrimaire'>"+p.getName()+"</span>\n";
+					else
+						analyse+="<span class='propriete'>"+p.getName()+"</span>\n";
+					hasPrec=true;
+				}
+			}
+			analyse+=")</p>";
+		}
+		return analyse+"";
+	}
 	public Boolean isValid(){
 		return m_isValid;
 	}
