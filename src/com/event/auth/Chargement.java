@@ -114,9 +114,9 @@ public class Chargement{
 				ProprieteType type = new ProprieteType(ProprieteTypeE.valueOf(p.getAttributeValue("type")));
 				prop.setType(type);
 				prop.setTaille(Integer.parseInt(p.getAttributeValue("taille")));
-				prop.setClePrimaire(Boolean.getBoolean(p.getAttributeValue("clé_primaire")));
-				prop.setNull(Boolean.getBoolean(p.getAttributeValue("null")));
-				prop.setAutoIncrement(Boolean.getBoolean(p.getAttributeValue("auto-incrémenté")));
+				prop.setClePrimaire(Boolean.parseBoolean(p.getAttributeValue("clé_primaire")));
+				prop.setNull(Boolean.parseBoolean(p.getAttributeValue("null")));
+				prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incrémenté")));
 				
 				props.add(prop);
 			}

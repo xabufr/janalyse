@@ -125,12 +125,5 @@ public class ExporterHTML extends JDialog {
 		getContentPane().add(btnExporter, "cell 1 4");
 	}
 	
-	private final String m_css="h1, div{" +
-			"text-align: center;" +
-			"}" +
-			"div{" +
-			"border: 1px solid black;" +
-			"margin-bottom: -1px;" +
-			"padding: 1px 1px 1px 1px;" +
-			"}";
+	private final String m_css="h1, div {text-align: center;}div {    border: 1px solid black;    margin-bottom: -1px;    padding: 1px;}div.entite p {    background-color: black;    margin: 0;    color: white;}.mld. cleEtrangere {    border-bottom: 1px black dashed;}div.entite {    margin-bottom: 5px;    background-color: silver;} .mld. clePrimaire{ text-decoration: underline; }";
 }
