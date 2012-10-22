@@ -20,7 +20,6 @@ import java.util.Stack;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.event.auth.Sauvegarde;
 import com.mcd_composent_graph.auth.CardinaliteGraph;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
@@ -40,6 +39,7 @@ import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.HeritageType;
 import com.mcd_log.auth.Relation;
 import com.mcd_log.auth.Entite;
+import com.sauvegarde_chargement.auth.Sauvegarde;
 
 @SuppressWarnings("serial")
 public class McdGraph extends JPanel{

@@ -283,6 +283,9 @@ public class FenetreEditionEntite extends JDialog{
 			if (!m_commentairePropriete.getText().equals(null) && m_commentairePropriete.getText().equals(""))
 				p.setCommentaire(m_commentairePropriete.getText());
 			
+			ProprieteTypeE t = ProprieteTypeE.getValue(m_type.getSelectedItem().toString());
+			p.setType(new ProprieteType(t));
+			
 			p.setTaille(Integer.parseInt(m_taille.getValue().toString()));
 			
 			p.setClePrimaire(m_isCle.isSelected());
