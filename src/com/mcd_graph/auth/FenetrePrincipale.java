@@ -251,7 +251,8 @@ public class FenetrePrincipale {
 		JMenuItem mntmExporterEnSql = new JMenuItem("Exporter en SQL");
 		mntmExporterEnSql.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new ExportSql(m_mcd.getName(), m_mcd);
+				if(m_mcd!=null)
+					new ExportSql(m_mcd.getName(), m_mcd).save();
 			}
 		});
 		mnFichier.add(mntmExporterEnSql);

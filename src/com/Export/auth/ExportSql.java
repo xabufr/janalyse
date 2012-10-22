@@ -30,6 +30,10 @@ public class ExportSql {
 		m_mld = new MldLog(mcd);
 		m_sql = "";
 		
+		createSQL();
+	}
+	
+	public void save(){
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new FileFilter(){
 			public boolean accept(File arg0) {
@@ -53,7 +57,6 @@ public class ExportSql {
 			if(getExtension(file)==null||!getExtension(file).equals("sql"))
 				file = new File(file.getAbsolutePath()+".sql");
 				try {
-					createSQL();
 					FileWriter writer = new FileWriter(file);
 					BufferedWriter output = new BufferedWriter(writer);
 					output.write(m_sql);
@@ -64,7 +67,9 @@ public class ExportSql {
 				}
 		}
 	}
-	
+	public String getSql(){
+		return m_sql;
+	}
 	private void createSQL(){
 		m_sql += createDataBase(m_dataBase);
 		
