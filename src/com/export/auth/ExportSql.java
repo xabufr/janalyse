@@ -91,9 +91,9 @@ public class ExportSql {
 		String cle = "";
 		for (Propriete id : p.getEntite().getProprietes())
 			if (id.isClePrimaire())
-				cle = id.getName();
+				cle = id.getVirtualName(p.getEntite().getName());
 		sql += "ALTER TABLE "+e.getName()+"\n";
-		sql += "\tADD CONSTRAINT FK_"+e.getName().toUpperCase()+"_"+p.getEntite().getName().toUpperCase()+" FOREIGN KEY("+p.getName()+") REFERENCES "+p.getEntite().getName()+"("+cle+");";
+		sql += "\tADD CONSTRAINT FK_"+e.getName().toUpperCase()+"_"+p.getEntite().getName().toUpperCase()+" FOREIGN KEY("+p.getVirtualName(e.getName())+") REFERENCES "+p.getEntite().getName()+"("+cle+");";
 		
 		return sql;
 	}
@@ -112,9 +112,9 @@ public class ExportSql {
 		sql += "CREATE TABLE "+e.getName()+"(\n";
 		for (Propriete p : e.getProprietes()){
 			if (p.getType().getType().getName().equals("INT"))
-				sql += "\t"+p.getName()+" "+p.getType().getType().getName();
+				sql += "\t"+p.getVirtualName(e.getName())+" "+p.getType().getType().getName();
 			else
-				sql += "\t"+p.getName()+" "+p.getType().getType().getName()+"("+p.getTaille()+")";
+				sql += "\t"+p.getVirtualName(e.getName())+" "+p.getType().getType().getName()+"("+p.getTaille()+")";
 			
 			if (p.isNull())
 				sql += " NULL";
@@ -132,7 +132,7 @@ public class ExportSql {
 		}
 		
 		if (clePrimaire != null)
-			sql += ",\n\tCONSTRAINT PK_"+e.getName().toUpperCase()+" PRIMARY KEY("+clePrimaire.getName()+")";
+			sql += ",\n\tCONSTRAINT PK_"+e.getName().toUpperCase()+" PRIMARY KEY("+clePrimaire.getVirtualName(e.getName())+")";
 		
 		sql += "\n);\n";
 		
