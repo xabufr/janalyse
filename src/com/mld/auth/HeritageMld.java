@@ -12,12 +12,14 @@ public class HeritageMld extends Heritage {
 		for(Entite e :h.getEnfants()){
 			addEnfant((Entite) correspondances.get(e));
 		}
-		setMere((Entite) correspondances.get(h.getMere()));
+		if(h.getMere()!=null)
+			setMere((Entite) correspondances.get(h.getMere()));
 	}
 	public void migrer(){
 		Entite mere = getMere();
+		if(mere==null)
+			return;
 		for(Entite e : getEnfants()){
-			mere.addPropriete(new ProprieteCleEtrangere(e, true));
 			e.addPropriete(new ProprieteCleEtrangere(mere, false));
 		}
 	}

@@ -64,8 +64,15 @@ public class RelationMld extends Relation {
 		ent.setName(nom);
 		return ent;
 	}
+	
+	public Boolean isValid(){
+		if(m_nb>2){
+			if(m_minMax == 1)
+				return false;
+		}
+		return true;
+	}
 	private class CardinalitePropriete{
-		@SuppressWarnings("unused")
 		public int min, max;
 		@SuppressWarnings("unused")
 		public Boolean relatif;

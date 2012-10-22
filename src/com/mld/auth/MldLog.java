@@ -1,6 +1,7 @@
 package com.mld.auth;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 import com.mcd_graph.auth.McdGraph;
@@ -14,9 +15,15 @@ public class MldLog {
 	private McdGraph m_mcd;
 	ArrayList<Entite> m_entites;
 	private Boolean m_isValid;
+	private String m_erreurs;
 	public MldLog(McdGraph mcd) {
+		m_erreurs = "";
 		m_mcd = mcd;
+		m_isValid=true;
 		analyserCreerMldLogique();
+	}
+	public String getErreurs(){
+		return m_erreurs;
 	}
 	public String getString(){
 		String analyse="<html><head></head><body style='font-family:Monospaced;'>";
@@ -28,8 +35,6 @@ public class MldLog {
 				for(Propriete p : e.getProprietes()){
 					if(hasPrec)
 						analyse+=", ";
-					/*if(p.isClePrimaire()||p instanceof ProprieteCleEtrangere)
-						analyse+="<u>";*/
 					if(p instanceof ProprieteCleEtrangere){
 						Boolean underline=true;
 						for(int i=0;i<p.getName().length();++i, underline=!underline){
@@ -43,8 +48,6 @@ public class MldLog {
 						analyse+="<u>"+p.getName()+"</u>";
 					else
 						analyse+=p.getName();
-					/*if(p.isClePrimaire()||p instanceof ProprieteCleEtrangere)
-						analyse+="</u>";*/
 					hasPrec=true;
 				}
 				analyse+=")";
@@ -64,22 +67,62 @@ public class MldLog {
 		ArrayList<RelationMld> relationsMld = new ArrayList<RelationMld>();
 		Hashtable<Object, Object> m_correspondances = new Hashtable<Object, Object>(); //<ancien,nouveau>
 		ArrayList<Object> logicObject = m_mcd.getLogic();
-				
-		for(Object o : logicObject){
-			if(o instanceof Entite){
-				try {
-					Entite e = ((Entite) o).clone();
-					m_entites.add(e);
-					m_correspondances.put(o, e);
-				} catch (CloneNotSupportedException e) {
-					e.printStackTrace();
+		{
+			ArrayList<String> names = new ArrayList<String>();
+			for(Object o : logicObject){
+				if(o instanceof Entite){
+					try {
+						Entite e = ((Entite) o).clone();
+						m_entites.add(e);
+						m_correspondances.put(o, e);
+						if(names.contains(e.getName())){
+							m_erreurs+="<p>Doublon dans le nom des entités: "+e.getName()+"</p>";
+							m_isValid=false;
+						}
+						names.add(e.getName());
+					} catch (CloneNotSupportedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
 		for(Object o : logicObject){
 			if(o instanceof Heritage){
 				HeritageMld heritage = new HeritageMld((Heritage) o, m_correspondances);
+				if(heritage.getMere()==null)
+				{
+					m_isValid=false;
+					if(heritage.getEnfants().size()>0){
+						m_erreurs+="<p>Les entités ";
+						Boolean premier=true;
+						for(Entite e:heritage.getEnfants()){
+							if(!premier)
+								m_erreurs+=", ";
+							m_erreurs+=e.getName();
+							premier=false;
+						}
+						m_erreurs+=" n'ont pas d'entité mère</p>";
+					}
+				}
 				heritage.migrer();
+			}
+		}
+		{//Test des clés
+			Enumeration<Object> keys = m_correspondances.keys();
+			while(keys.hasMoreElements()){
+				Entite e = (Entite) keys.nextElement();
+				Entite eMld = (Entite) m_correspondances.get(e);
+				Boolean hasPK=false;
+				for(Propriete p : eMld.getProprietes()){
+					if(p instanceof ProprieteCleEtrangere||p.isClePrimaire()){
+						hasPK=true;
+						break;
+					}
+				}
+				if(!hasPK){
+					m_erreurs+="<p>L'entité " + e.getName()+" n'a pas de clé primaire</p>";
+					m_isValid=false;
+				}
 			}
 		}
 		for(Object o : logicObject){
@@ -101,6 +144,16 @@ public class MldLog {
 			}
 		}
 		for(RelationMld r : relationsMld){
+			if(!r.isValid()){
+				m_isValid=false;
+				Enumeration<Object> keys = m_correspondances.keys();
+				while(keys.hasMoreElements()){
+					Object k = keys.nextElement();
+					if(m_correspondances.get(k)==r){
+						m_erreurs += "<p>La relation " + ((Relation) k).getNom() + " n'est pas valide</p>";
+					}
+				}
+			}
 			if(!r.needToCreateNewEntity()){
 				r.migrer();
 			}
