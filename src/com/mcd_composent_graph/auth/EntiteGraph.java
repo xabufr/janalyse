@@ -78,7 +78,7 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 		
 		for (Propriete propriete : m_entite.getProprietes()){
 			if (font.stringWidth(propriete.getName()) > widthMax)
-				widthMax = font.stringWidth(propriete.getName());
+				widthMax = font.stringWidth(propriete.getVirtualName(m_entite.getName()));
 			
 			heightMax+=font.getHeight();
 		}
@@ -138,7 +138,8 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 			dessinPropriete.dessiner(g,
 					ffont,
 					col,
-					new Point(x, y));
+					new Point(x, y),
+					m_entite.getName());
 			
 			
 			y += font.getHeight() + 4;

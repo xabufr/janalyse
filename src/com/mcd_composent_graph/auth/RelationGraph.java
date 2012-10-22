@@ -98,7 +98,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 				font = prefs.getFont(PGroupe.RELATION, PCle.FONT_FOCUS);
 			
 			for(int i=0;i<m_lastPropsNumber;++i){
-				dimEC=m_proprietes.get(i).getDimension(g, font);
+				dimEC=m_proprietes.get(i).getDimension(g, font, m_relation.getNom());
 				if(dimEC.width>dim.width)
 					dim.width=dimEC.width;
 				
@@ -171,10 +171,10 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 		Dimension dimEC;
 		cursor.y-=3;
 		for(int i=0;i<this.m_lastPropsNumber;++i){
-			dimEC = this.m_proprietes.get(i).getDimension(g, font);
+			dimEC = this.m_proprietes.get(i).getDimension(g, font, m_relation.getNom());
 			cursor.y+= dimEC.height;
 			cursor.x = pos.x+(dim.width/2)-(dimEC.width/2);
-			this.m_proprietes.get(i).dessiner(g, font, couleur, cursor);
+			this.m_proprietes.get(i).dessiner(g, font, couleur, cursor, m_relation.getNom());
 		}
 
 	}

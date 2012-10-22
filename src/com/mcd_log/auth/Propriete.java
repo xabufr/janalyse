@@ -1,5 +1,9 @@
 package com.mcd_log.auth;
 
+import com.preferences_mcd_logique.auth.McdPreferencesManager;
+import com.preferences_mcd_logique.auth.PCle;
+import com.preferences_mcd_logique.auth.PGroupe;
+
 public class Propriete implements Cloneable{
 	private String m_name;
 	private String m_commentaire;
@@ -39,7 +43,9 @@ public class Propriete implements Cloneable{
 	public String getName() {
 		return m_name;
 	}
-
+	public String getVirtualName(String proprietaire){
+		return ProprieteProcessor.process(proprietaire, m_name);
+	}
 	public void setName(String m_name) {
 		this.m_name = m_name;
 	}
@@ -99,5 +105,37 @@ public class Propriete implements Cloneable{
 		Propriete p = (Propriete) super.clone();
 		p.m_proprieteType = new ProprieteType(m_proprieteType);
 		return p;
+	}
+}
+class ProprieteProcessor{
+	public static String schema = (String) McdPreferencesManager.getInstance().get(PGroupe.PROPRIETE, PCle.SCHEMA);
+	static String process(String proprietaireName, String p){
+		String name="";
+		Boolean startCommand=false;
+		for(int i=0;i<schema.length();++i){
+			if(schema.charAt(i) == '%'){
+				startCommand=true;
+			}
+			else if(startCommand){
+				startCommand=false;
+				switch(schema.charAt(i)){
+				case 'e':
+					name+=proprietaireName;
+					break;
+				case 'p':
+					name+=p;
+					break;
+				case 'P':
+					name+=p.toUpperCase();
+					break;
+				case 'E':
+					name+=proprietaireName.toUpperCase();
+					break;
+				}
+			}
+			else
+				name+=schema.charAt(i);
+		}
+		return name;
 	}
 }

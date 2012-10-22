@@ -27,7 +27,7 @@ public class DicoLog {
 				
 				List<String> props = new ArrayList<String>();
 				for (Propriete p : e.getProprietes()){
-					props.add(p.getName());
+					props.add(p.getVirtualName(e.getName()));
 				}
 				m_lstEntitePropriete.put(e.getName(), props);
 			}
@@ -36,7 +36,7 @@ public class DicoLog {
 				
 				List<String> props = new ArrayList<String>();
 				for (Propriete p : r.getProprietes()){
-					props.add(p.getName());
+					props.add(p.getVirtualName(r.getNom()));
 				}
 				m_lstRelationPropriete.put(r.getNom(), props);
 			}
@@ -44,35 +44,71 @@ public class DicoLog {
 	}
 	
 	public String toString(){
-		String dico = "<html><head></head><body>";
+		String dico = "";
 		
 		Enumeration<String> key = m_lstEntitePropriete.keys();
 		while (key.hasMoreElements()){
 			String s = key.nextElement();
-			dico += "<p>"+s+"</p>";
-			dico += "<hr/>";
+			if(m_lstEntitePropriete.get(s).isEmpty())
+				continue;
+			dico += "<p class='entite'><span class='nom'>"+s;
+			dico += "</span><hr/>";
 			
 			for (String p : m_lstEntitePropriete.get(s)){
-				dico += "<p>"+p+"</p>";
+				dico += "<span class='propriete'>"+p+"</span><br />";
 			}
-			dico += "<br/>";
+			dico += "</p>";
 		}
 		
 		key = m_lstRelationPropriete.keys();
 		while (key.hasMoreElements()){
 			String s = key.nextElement();
-			dico += "<p>"+s+"</p>";
-			dico += "<hr/>";
+			if(m_lstRelationPropriete.get(s).isEmpty())
+				continue;
+			dico += "<p class='entite'><span class='nom'>"+s;
+			dico += "</span><hr/>";
 			
 			for (String p : m_lstRelationPropriete.get(s)){
-				dico += "<p>"+p+"</p>";
+				dico += "<span class='propriete'>"+p+"</span><br />";
 			}
-			dico += "<br/>";
+			dico += "</p>";
 		}
 		
 		return dico;
 	}
-
+	public String toHTML(){
+		String dico = "";
+		
+		Enumeration<String> key = m_lstEntitePropriete.keys();
+		while (key.hasMoreElements()){
+			String s = key.nextElement();
+			if(m_lstEntitePropriete.get(s).isEmpty())
+				continue;
+			dico += "<div class='entite'><p class='nom'>"+s;
+			dico += "</p>";
+			
+			for (String p : m_lstEntitePropriete.get(s)){
+				dico += "<span class='propriete'>"+p+"</span><br />";
+			}
+			dico += "</div>";
+		}
+		
+		key = m_lstRelationPropriete.keys();
+		while (key.hasMoreElements()){
+			String s = key.nextElement();
+			if(m_lstRelationPropriete.get(s).isEmpty())
+				continue;
+			dico += "<div class='entite'><p class='nom'>"+s;
+			dico += "</p>";
+			
+			for (String p : m_lstRelationPropriete.get(s)){
+				dico += "<span class='propriete'>"+p+"</span><br />";
+			}
+			dico += "</div>";
+		}
+		
+		return dico;
+	}
 	public Hashtable<String, List<String>> getLstRelationPropriete() {
 		return m_lstRelationPropriete;
 	}
