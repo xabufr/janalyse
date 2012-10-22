@@ -241,7 +241,7 @@ public class McdPreferencesManager {
 		set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR, Color.BLACK);
 		set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR_FOCUS, Color.RED);
 		
-		set(PGroupe.PROPRIETE, PCle.SCHEMA, "%e_%p");
+		set(PGroupe.PROPRIETE, PCle.SCHEMA, "%[0e1]%[1E]_%p");
 	}
 }
 

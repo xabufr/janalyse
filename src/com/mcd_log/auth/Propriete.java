@@ -1,5 +1,7 @@
 package com.mcd_log.auth;
 
+import java.util.LinkedList;
+
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
@@ -110,32 +112,109 @@ public class Propriete implements Cloneable{
 class ProprieteProcessor{
 	public static String schema = (String) McdPreferencesManager.getInstance().get(PGroupe.PROPRIETE, PCle.SCHEMA);
 	static String process(String proprietaireName, String p){
+		LinkedList<ProprieteProcessorCommand> commands = new LinkedList<ProprieteProcessorCommand>();
 		String name="";
 		Boolean startCommand=false;
+		Boolean startLongCommand=false;
+		int stateLong=0; //0->min, 1-> command, 2->max
+		ProprieteProcessorCommand currentCommand=null;
+		
 		for(int i=0;i<schema.length();++i){
 			if(schema.charAt(i) == '%'){
 				startCommand=true;
+				currentCommand = new ProprieteProcessorCommand();
 			}
-			else if(startCommand){
-				startCommand=false;
-				switch(schema.charAt(i)){
-				case 'e':
-					name+=proprietaireName;
-					break;
-				case 'p':
-					name+=p;
-					break;
-				case 'P':
-					name+=p.toUpperCase();
-					break;
-				case 'E':
-					name+=proprietaireName.toUpperCase();
-					break;
+			else if(schema.charAt(i)== '['&&startCommand){
+				startLongCommand=true;
+				stateLong=0;
+			}
+			else if(startCommand||startLongCommand){
+				if(!startLongCommand){
+					startCommand=false;
+					currentCommand.command=schema.charAt(i);
+					commands.add(currentCommand);
+				}
+				else{
+					char carac = schema.charAt(i);
+					if(Character.isLetter(carac)){
+						stateLong=1;
+						currentCommand.command=carac;
+					}
+					else{
+						if(carac==']'){
+							startLongCommand=false;
+							startCommand=false;
+							commands.add(currentCommand);
+						}
+						else{
+							if(stateLong==0){
+								currentCommand.minC+=carac;
+							}
+							else{
+								currentCommand.maxC+=carac;
+								System.out.println(carac);
+							}
+						}
+					}
 				}
 			}
-			else
-				name+=schema.charAt(i);
+			else{
+				currentCommand = new ProprieteProcessorCommand();
+				currentCommand.command='i';
+				currentCommand.carac=schema.charAt(i);
+				commands.add(currentCommand);
+			}
+		}
+		
+		for(ProprieteProcessorCommand c : commands){
+			switch(c.command){
+			case 'i':
+				name+=c.carac;
+				break;
+			case 'p':
+				name+=c.getPortion(p);
+				break;
+			case 'q':
+				name+=c.getPortion(p.toLowerCase());
+				break;
+			case 'P':
+				name+=c.getPortion(p.toUpperCase());
+				break;
+			case 'e':
+				name+=c.getPortion(proprietaireName);
+				break;
+			case 'r':
+				name+=c.getPortion(proprietaireName.toLowerCase());
+				break;
+			case 'E':
+				name+=c.getPortion(proprietaireName.toUpperCase());
+				break;
+			default:
+				name+=c.command;
+			}
 		}
 		return name;
+	}
+}
+class ProprieteProcessorCommand{
+	public int min=0, max=0;
+	public String minC="", maxC="";
+	public char command, carac;
+	public String getPortion(String ch){
+		if(minC.equals(""))
+			minC="0";
+		if(maxC.equals(""))
+			maxC="0";
+		min=Integer.parseInt(minC);
+		max=Integer.parseInt(maxC);
+		int imax;
+		if(min!=0&&min>=ch.length())
+			return "";
+		if(max==0||max+1>ch.length())
+			imax=ch.length();
+		else
+			imax=max+1;
+		System.out.println("Min:"+min+" max: "+imax);
+		return ch.substring(min, imax);
 	}
 }
