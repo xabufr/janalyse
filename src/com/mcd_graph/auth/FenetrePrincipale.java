@@ -33,12 +33,14 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import com.Dico.auth.DicoPanel;
-import com.Export.auth.ExportSql;
-import com.event.auth.Chargement;
 import com.event.auth.QuitListener;
+import com.export.auth.ExportSql;
 import com.export.auth.ExportPng;
 import com.export.auth.ExporterHTML;
 import com.mld.auth.MLDPanel;
+import com.sauvegarde_chargement.auth.Chargement;
+import com.sauvegarde_chargement.auth.ChargementEtat;
+import com.sauvegarde_chargement.auth.SauvegardeEtat;
 import com.ui_help.auth.APropos;
 
 import java.awt.Insets;
@@ -204,7 +206,8 @@ public class FenetrePrincipale {
 		mntmOuvrir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				createNewMcd();
-				Chargement charge = new Chargement(m_mcd);
+				m_mcdContener.setSelectedIndex(m_mcdContener.getComponents().length-1);
+				new Chargement(m_mcd);
 				updateMcdNames();
 				m_mcd.repaint();
 			}
@@ -472,8 +475,7 @@ public class FenetrePrincipale {
 		});
 		frame.addWindowListener(new WindowListener() {
 			public void windowOpened(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
+				new ChargementEtat(FenetrePrincipale.this);
 			}
 			public void windowIconified(WindowEvent arg0) {
 				// TODO Auto-generated method stub
@@ -503,6 +505,14 @@ public class FenetrePrincipale {
 		});
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
+	
+	public McdGraph getMcd(){
+		return m_mcd;
+	}
+	
+	public JTabbedPane getTabs(){
+		return m_mcdContener;
+	}
 
 	public void quitter() {
 		ArrayList<McdGraph> mcds = new ArrayList<McdGraph>();
@@ -510,15 +520,19 @@ public class FenetrePrincipale {
 		for(int i=0;i<nb;++i){
 			mcds.add((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView());
 		}
+		
+		new SauvegardeEtat(mcds, m_mcdContener.getSelectedIndex());
+		
 		for(McdGraph mcd : mcds){
 			if(!fermerMcd(mcd)){
 				return;
 			}
 		}
+		
 		frame.dispose();
 		System.exit(0);
 	}
-	private void createNewMcd(){
+	public void createNewMcd(){
 		McdGraph mcd = new McdGraph(this);
 		mcd.setState(McdGraphStateE.INSERT_ENTITE);
 		mcd.setName("Nouveau MCD");
@@ -534,7 +548,7 @@ public class FenetrePrincipale {
 			}
 		}
 	}
-	private void updateMcdNames(){
+	public void updateMcdNames(){
 		int nb = m_mcdContener.getTabCount();
 		for(int i=0;i<nb;++i){
 			m_mcdContener.setTitleAt(i, 

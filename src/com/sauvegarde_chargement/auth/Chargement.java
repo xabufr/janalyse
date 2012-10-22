@@ -1,4 +1,4 @@
-package com.event.auth;
+package com.sauvegarde_chargement.auth;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -79,6 +79,24 @@ public class Chargement{
 			}
 			
 		}
+	}
+	
+	public Chargement(McdGraph mcd, String f) {	
+			File file = new File("src/save/"+f);
+			
+			SAXBuilder sax = new SAXBuilder();
+			try {
+				Document doc = sax.build(file);
+				if (mcd != null && doc != null){
+					charger(mcd, doc);
+					mcd.setFile(file);
+				    mcd.setSaved(true);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JDOMException e) {
+				e.printStackTrace();
+			}
 	}
 	
 	private void charger(McdGraph mcd, Document doc){

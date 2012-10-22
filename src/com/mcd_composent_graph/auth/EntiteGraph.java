@@ -77,7 +77,7 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 		ProprieteGraph dessinPropriete = new ProprieteGraph();
 		
 		for (Propriete propriete : m_entite.getProprietes()){
-			if (font.stringWidth(propriete.getName()) > widthMax)
+			if (font.stringWidth(propriete.getVirtualName(m_entite.getName())) > widthMax)
 				widthMax = font.stringWidth(propriete.getVirtualName(m_entite.getName()));
 			
 			heightMax+=font.getHeight();
