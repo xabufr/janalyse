@@ -8,9 +8,15 @@ import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTabbedPane;
 
+import com.mcd_log.auth.Propriete;
+import com.mcd_log.auth.ProprieteType;
+import com.mcd_log.auth.ProprieteTypeE;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
@@ -23,11 +29,19 @@ import javax.swing.JLabel;
 import javax.swing.JSplitPane;
 
 import java.awt.Color;
+import javax.swing.JTextField;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.JTextPane;
 
 @SuppressWarnings("serial")
 public class FenetrePreferences extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private JTextField m_textField;
+	private JTextField m_previsualisationProp;
 
 	public FenetrePreferences(FenetrePrincipale princ) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -75,6 +89,39 @@ public class FenetrePreferences extends JDialog {
 					initializeWithoutProperties(panelHeritage, PGroupe.HERITAGE);
 				}
 			}
+			{
+				JPanel panel = new JPanel();
+				tabbedPaneGeneral.addTab("Général", null, panel, null);
+				panel.setLayout(new MigLayout("", "[149px,grow][grow]", "[19px][][grow]"));
+				{
+					JLabel lblNommageProprits = new JLabel("Nommage propriétés");
+					panel.add(lblNommageProprits, "cell 0 0,alignx left,aligny center");
+				}
+				{
+					m_textField = new JTextField();
+					panel.add(m_textField, "cell 1 0,growx,aligny top");
+					m_textField.addCaretListener(new CaretListener() {
+						public void caretUpdate(CaretEvent arg0) {
+							McdPreferencesManager.getInstance().set(PGroupe.PROPRIETE, PCle.SCHEMA, m_textField.getText());
+							Propriete p = new Propriete("Propriete", new ProprieteType(ProprieteTypeE.NONE));
+							m_previsualisationProp.setText(p.getVirtualName("Entite"));
+						}
+					});
+					m_textField.setColumns(10);
+				}
+				{
+					m_previsualisationProp = new JTextField();
+					panel.add(m_previsualisationProp, "cell 1 1,growx");
+					m_previsualisationProp.setColumns(10);
+					m_textField.setText((String) McdPreferencesManager.getInstance().get(PGroupe.PROPRIETE, PCle.SCHEMA));
+				}
+				{
+					JTextPane txtpnpProprit = new JTextPane();
+					txtpnpProprit.setEditable(false);
+					txtpnpProprit.setText("%p : propriété\n%P: PROPRIÉTÉ\n%q : Propriété\n%e: Entité\n%E: ENTITÉ\n%r: entité\n%[0E3] : Ent");
+					panel.add(txtpnpProprit, "cell 0 2 2 1,grow");
+				}
+			}
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -87,6 +134,7 @@ public class FenetrePreferences extends JDialog {
 					
 					public void actionPerformed(ActionEvent e) {
 						setVisible(false);
+						McdPreferencesManager.getInstance().set(PGroupe.PROPRIETE, PCle.SCHEMA, m_textField.getText());
 						McdPreferencesManager.getInstance().save();
 					}
 				});
@@ -526,5 +574,4 @@ public class FenetrePreferences extends JDialog {
 			}
 		}
 	}
-
 }

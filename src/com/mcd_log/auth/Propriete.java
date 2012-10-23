@@ -110,8 +110,9 @@ public class Propriete implements Cloneable{
 	}
 }
 class ProprieteProcessor{
-	public static String schema = (String) McdPreferencesManager.getInstance().get(PGroupe.PROPRIETE, PCle.SCHEMA);
+	public static String schema;
 	static String process(String proprietaireName, String p){
+		schema = (String) McdPreferencesManager.getInstance().get(PGroupe.PROPRIETE, PCle.SCHEMA);
 		LinkedList<ProprieteProcessorCommand> commands = new LinkedList<ProprieteProcessorCommand>();
 		String name="";
 		Boolean startCommand=false;
@@ -152,7 +153,6 @@ class ProprieteProcessor{
 							}
 							else{
 								currentCommand.maxC+=carac;
-								System.out.println(carac);
 							}
 						}
 					}
@@ -210,10 +210,10 @@ class ProprieteProcessorCommand{
 		int imax;
 		if(min!=0&&min>=ch.length())
 			return "";
-		if(max==0||max+1>ch.length())
+		if(max==0||max>ch.length())
 			imax=ch.length();
 		else
-			imax=max+1;
+			imax=max;
 		return ch.substring(min, imax);
 	}
 }
