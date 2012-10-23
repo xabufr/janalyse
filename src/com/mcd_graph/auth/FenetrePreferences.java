@@ -35,6 +35,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.JTextPane;
+import javax.swing.JCheckBox;
 
 @SuppressWarnings("serial")
 public class FenetrePreferences extends JDialog {
@@ -42,8 +43,12 @@ public class FenetrePreferences extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField m_textField;
 	private JTextField m_previsualisationProp;
+	private JPanel m_panelEntites;
+	private FenetrePrincipale m_parent;
 
 	public FenetrePreferences(FenetrePrincipale princ) {
+		m_parent = princ;
+		
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setModal(true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
@@ -63,10 +68,11 @@ public class FenetrePreferences extends JDialog {
 				tabbedPaneMcd.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 				tabbedPaneGeneral.addTab("MCD", null, tabbedPaneMcd, null);
 				{
-					JPanel panelEntites = new JPanel();
-					tabbedPaneMcd.addTab("Entités", null, panelEntites, null);
-					panelEntites.setLayout(new MigLayout("", "[398.00px,grow]", "[grow]"));
-					initializeWithProperties(panelEntites, PGroupe.ENTITE);
+					m_panelEntites = new JPanel();
+					tabbedPaneMcd.addTab("Entités", null, m_panelEntites, null);
+					m_panelEntites.setLayout(new MigLayout("", "[398.00px,grow]", "[][grow]"));
+					initializeWithProperties(m_panelEntites, PGroupe.ENTITE);
+					
 				}
 				{
 					JPanel panelRelations = new JPanel();
@@ -136,6 +142,7 @@ public class FenetrePreferences extends JDialog {
 						setVisible(false);
 						McdPreferencesManager.getInstance().set(PGroupe.PROPRIETE, PCle.SCHEMA, m_textField.getText());
 						McdPreferencesManager.getInstance().save();
+						m_parent.getMcd().repaint();
 					}
 				});
 				buttonPane.add(okButton);
@@ -174,10 +181,37 @@ public class FenetrePreferences extends JDialog {
 		}
 	}
 	private void initializeWithoutProperties(JPanel parentPanel, final PGroupe g){
-		parentPanel.setLayout(new MigLayout("", "[398.00px,grow]", "[grow]"));
+		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+		parentPanel.setLayout(new MigLayout("", "[398.00px,grow]", "[][grow]"));
 		{
+			JLabel lblOmbre = new JLabel("Ombre");
+			parentPanel.add(lblOmbre, "flowx,cell 0 0");
+			
+			final JCheckBox ombre = new JCheckBox("");
+			ombre.setSelected((boolean)prefs.get(g, PCle.OMBRE));
+			parentPanel.add(ombre, "cell 0 0");
+			
+			final JButton couleurOmbre = new JButton("Couleur");
+			couleurOmbre.setEnabled((boolean)prefs.get(g, PCle.OMBRE));
+			couleurOmbre.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					changeColor(g, PCle.OMBRE_COLOR, "Couleur de l'ombre");
+				}
+			});
+			parentPanel.add(couleurOmbre, "cell 0 0");
+			ombre.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+					prefs.set(g, PCle.OMBRE, ombre.isSelected());
+					if (ombre.isSelected())
+						couleurOmbre.setEnabled(true);
+					else
+						couleurOmbre.setEnabled(false);
+				}
+			});
+			
 			JSplitPane splitPane = new JSplitPane();
-			parentPanel.add(splitPane, "cell 0 0,grow");
+			parentPanel.add(splitPane, "cell 0 1,grow");
 			{
 				JPanel panel = new JPanel();
 				splitPane.setLeftComponent(panel);
@@ -408,10 +442,38 @@ public class FenetrePreferences extends JDialog {
 		}
 	}
 	private void initializeWithProperties(JPanel parentPanel, final PGroupe g){
+		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		parentPanel.setLayout(new MigLayout("", "[276px,grow]", "[grow]"));
 		{
+			JLabel lblOmbre = new JLabel("Ombre");
+			parentPanel.add(lblOmbre, "flowx");
+
+			final JCheckBox ombre = new JCheckBox("");
+			ombre.setSelected((boolean)prefs.get(g, PCle.OMBRE));
+			parentPanel.add(ombre, "cell 0 0");
+
+			final JButton couleurOmbre = new JButton("Couleur");
+			couleurOmbre.setEnabled((boolean)prefs.get(g, PCle.OMBRE));
+			couleurOmbre.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					changeColor(g, PCle.OMBRE_COLOR, "Couleur de l'ombre");
+				}
+			});
+			parentPanel.add(couleurOmbre, "cell 0 0");
+			ombre.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+					prefs.set(g, PCle.OMBRE, ombre.isSelected());
+					if (ombre.isSelected())
+						couleurOmbre.setEnabled(true);
+					else
+						couleurOmbre.setEnabled(false);
+				}
+			});
+		}
+		{
 			JSplitPane splitPane = new JSplitPane();
-			parentPanel.add(splitPane, "cell 0 0,grow");
+			parentPanel.add(splitPane, "cell 0 1");
 			{
 				JPanel panel = new JPanel();
 				splitPane.setLeftComponent(panel);

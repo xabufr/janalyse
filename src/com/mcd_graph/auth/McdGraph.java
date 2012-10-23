@@ -39,6 +39,9 @@ import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.HeritageType;
 import com.mcd_log.auth.Relation;
 import com.mcd_log.auth.Entite;
+import com.preferences_mcd_logique.auth.McdPreferencesManager;
+import com.preferences_mcd_logique.auth.PCle;
+import com.preferences_mcd_logique.auth.PGroupe;
 import com.sauvegarde_chargement.auth.Sauvegarde;
 
 @SuppressWarnings("serial")
@@ -46,6 +49,7 @@ public class McdGraph extends JPanel{
 	private McdComposentGraphique m_focus;
 	private McdComposentGraphique m_copie;
 	private Point m_deltaSelect;
+	private Point m_beginSelect;
 	private Hashtable<McdGraphStateE, McdGraphState> m_states;
 	private McdGraphStateE m_currentState;
 	private Hashtable<Object, McdComposentGraphique> m_logicObjects;
@@ -78,6 +82,7 @@ public class McdGraph extends JPanel{
 		m_isMoving = false;
 		m_isSaved=false;
 		m_deltaSelect = new Point();
+		m_beginSelect = new Point();
 		setFile(null);
 		
 		this.setSize(new Dimension(80, 80));
@@ -89,17 +94,47 @@ public class McdGraph extends JPanel{
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
+		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+		
 		Point min = new Point(0,0), max = new Point(0,0);
 		for(McdComposentGraphique component : m_componentsSecond){
 			if (component instanceof EntiteGraph){
-				EntiteGraph e = (EntiteGraph)component;
-				g.setColor(Color.GRAY);
-				g.fillRect(e.getPosition().x+5, e.getPosition().y+5, e.getDimension().width, e.getDimension().height);
+				if ((boolean)prefs.get(PGroupe.ENTITE, PCle.OMBRE)){
+					EntiteGraph e = (EntiteGraph)component;
+					g.setColor((Color)prefs.get(PGroupe.ENTITE, PCle.OMBRE_COLOR));
+					g.fillRect(e.getPosition().x+5, e.getPosition().y+5, e.getDimension().width, e.getDimension().height);
+				}
 			}
-			if (component instanceof RelationGraph){
-				RelationGraph r = (RelationGraph)component;
-				g.setColor(Color.GRAY);
-				g.fillOval(r.getPosition().x+1, r.getPosition().y+3, r.getDimension().width, r.getDimension().height);
+			else if (component instanceof RelationGraph){
+				if ((boolean)prefs.get(PGroupe.RELATION, PCle.OMBRE)){
+					RelationGraph r = (RelationGraph)component;
+					g.setColor((Color)prefs.get(PGroupe.RELATION, PCle.OMBRE_COLOR));
+					g.fillOval(r.getPosition().x+3, r.getPosition().y+3, r.getDimension().width, r.getDimension().height);
+				}
+			}
+			else if (component instanceof ContrainteGraph){
+				if ((boolean)prefs.get(PGroupe.CONTRAINTE, PCle.OMBRE)){
+					ContrainteGraph c = (ContrainteGraph)component;
+					g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.OMBRE_COLOR));
+					g.fillOval(c.getPosition().x+2, c.getPosition().y+2, c.getDimension().width, c.getDimension().height);
+				}
+			}
+		}
+		for(McdComposentGraphique component : m_componentsFirst){
+			if (component instanceof ContrainteGraph){
+				if ((boolean)prefs.get(PGroupe.CONTRAINTE, PCle.OMBRE)){
+					ContrainteGraph c = (ContrainteGraph)component;
+					g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.OMBRE_COLOR));
+					g.fillOval(c.getPosition().x+2, c.getPosition().y+2, c.getDimension().width, c.getDimension().height);
+				}
+			}
+			else if (component instanceof HeritageGraph){
+				if ((boolean)prefs.get(PGroupe.HERITAGE, PCle.OMBRE)){
+					HeritageGraph h = (HeritageGraph)component;
+					g.setColor((Color)prefs.get(PGroupe.HERITAGE, PCle.OMBRE_COLOR));
+					g.fillRect(h.getPosition().x+2, h.getPosition().y+h.getDimension().height/2, h.getDimension().width, h.getDimension().height/2+2);
+
+				}
 			}
 		}
 		for(McdComposentGraphique component : m_componentsFirst){
@@ -242,6 +277,33 @@ public class McdGraph extends JPanel{
 			m_last=0;
 		}
 	}
+	
+	private class SelectMultiple implements MouseListener, MouseMotionListener{
+
+		public void mouseClicked(MouseEvent e) {}
+
+		public void mouseEntered(MouseEvent e) {}
+
+		public void mouseExited(MouseEvent e) {}
+
+		public void mousePressed(MouseEvent e) {
+			if (m_beginSelect == null)
+				m_beginSelect = e.getPoint(); 
+		}
+
+		public void mouseReleased(MouseEvent e) {
+			if (m_beginSelect != null)
+				m_beginSelect = null;
+		}
+
+		public void mouseDragged(MouseEvent e) {
+			
+		}
+
+		public void mouseMoved(MouseEvent e) {}
+		
+	}
+	
 	private class McdGraphStateInsertEntite extends McdGraphStateInsert{
 
 		public void mouseClicked(MouseEvent e) {
