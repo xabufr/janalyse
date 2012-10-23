@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
+import java.awt.geom.Line2D.Float;
 
 public interface FormeGeometrique {
 	public abstract Boolean contient(Point p);
@@ -63,11 +64,9 @@ class FormeGeometriqueLigne implements FormeGeometrique{
 	}
 	public Point getPointA(){
 		return m_a;
-		//return new Point((int)m_ligne.getP1().getX(), (int)m_ligne.getP1().getY());
 	}
 	public Point getPointB(){
 		return m_b;
-		//return new Point((int)m_ligne.getP2().getX(), (int)m_ligne.getP2().getY());
 	}
 	public Boolean contient(Point p) {
 		if(m_a==p||m_b==p)
@@ -100,18 +99,16 @@ class FormeGeometriqueLigne implements FormeGeometrique{
 			return true;
 		
 		return false;
-		//return m_ligne.contains(p);
 	}
-	@Override
 	public void setPosition(Point p) {
-		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
 	public Point getPosition() {
-		// TODO Auto-generated method stub
 		return null;
 	}
-	
+	public Boolean intersect(FormeGeometriqueLigne ligne){
+		Line2D me = new Line2D.Float(m_a.x, m_a.y, m_b.x, m_b.y);
+		Line2D other = new Line2D.Float(ligne.m_a.x, ligne.m_a.y, ligne.m_b.x, ligne.m_b.y);
+		return me.intersectsLine(other);
+	}
 }
