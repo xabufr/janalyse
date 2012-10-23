@@ -292,4 +292,12 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 	enum Face{
 		HAUT, BAS, GAUCHE, DROITE
 	}
+
+	public void dessinerOmbre(Graphics g) {
+		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+		if ((Boolean)prefs.get(PGroupe.ENTITE, PCle.OMBRE)){
+			g.setColor((Color)prefs.get(PGroupe.ENTITE, PCle.OMBRE_COLOR));
+			g.fillRect(this.getPosition().x+5, this.getPosition().y+5, this.getDimension().width, this.getDimension().height);
+		}
+	}
 }

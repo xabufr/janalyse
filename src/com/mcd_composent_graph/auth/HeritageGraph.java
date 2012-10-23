@@ -236,4 +236,13 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		m_entitesGraph.clear();
 		m_heritage.getEnfants().clear();
 	}
+
+	public void dessinerOmbre(Graphics g) {
+		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+		if ((Boolean)prefs.get(PGroupe.HERITAGE, PCle.OMBRE)){
+			g.setColor((Color)prefs.get(PGroupe.HERITAGE, PCle.OMBRE_COLOR));
+			g.fillRect(this.getPosition().x+2, this.getPosition().y+this.getDimension().height/2, this.getDimension().width, this.getDimension().height/2+2);
+
+		}
+	}
 }
