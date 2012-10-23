@@ -18,6 +18,7 @@ import java.util.Stack;
 
 import javax.swing.JPanel;
 
+import com.event.auth.SelectionMultiple;
 import com.mcd_composent_graph.auth.CardinaliteGraph;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
@@ -56,9 +57,11 @@ public class McdGraph extends JPanel{
 	private Stack<Hashtable<Object, McdComposentGraphique>> m_listeAnnuler, m_listeRefaire;
 	private Boolean m_isMoving, m_isSaved;
 	private File m_file;
+	private SelectionMultiple m_selectMulti;
 	
 	public McdGraph(FenetrePrincipale fenPrinc) {
 		m_fenetrePrincipale = fenPrinc;
+		m_selectMulti = new SelectionMultiple();
 		
 		m_states = new Hashtable<McdGraphStateE,McdGraphState>();
 		m_states.put(McdGraphStateE.INSERT_ENTITE, new McdGraphStateInsertEntite());
@@ -201,6 +204,9 @@ public class McdGraph extends JPanel{
 			m_fenetrePrincipale.updateScrollBar();
 		}
 		
+		if (m_selectMulti.isDraw())
+			m_selectMulti.dessiner(g, m_components);
+		
 	}
 	
 	public void registerLogic(Object o, McdComposentGraphique g){
@@ -238,32 +244,6 @@ public class McdGraph extends JPanel{
 		public McdGraphStateInsert(){
 			m_last=0;
 		}
-	}
-	
-	private class SelectMultiple implements MouseListener, MouseMotionListener{
-
-		public void mouseClicked(MouseEvent e) {}
-
-		public void mouseEntered(MouseEvent e) {}
-
-		public void mouseExited(MouseEvent e) {}
-
-		public void mousePressed(MouseEvent e) {
-			if (m_beginSelect == null)
-				m_beginSelect = e.getPoint(); 
-		}
-
-		public void mouseReleased(MouseEvent e) {
-			if (m_beginSelect != null)
-				m_beginSelect = null;
-		}
-
-		public void mouseDragged(MouseEvent e) {
-			
-		}
-
-		public void mouseMoved(MouseEvent e) {}
-		
 	}
 	
 	private class McdGraphStateInsertEntite extends McdGraphStateInsert{
@@ -674,11 +654,14 @@ public class McdGraph extends JPanel{
 			else if(!found){//Click en dehors
 				setMcdComposentGraphiquetFocus(null);
 			}
-			
+			m_selectMulti.setDepart(e.getPoint());
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
 			m_isMoving=false;
+			m_selectMulti.reset();
+			m_selectMulti.test();
+			repaint();
 		}
 
 		public void mouseDragged(MouseEvent e) {
@@ -688,8 +671,10 @@ public class McdGraph extends JPanel{
 				tmp.x = e.getPoint().x - m_deltaSelect.x;
 				tmp.y = e.getPoint().y - m_deltaSelect.y;
 				forme.setPosition(tmp);
-				repaint(); //Intéressant n'est-ce pas ? Note que le McdGraph.this. est facultatif ici...
 			}
+			m_selectMulti.setPosCurseur(e.getPoint());
+			m_selectMulti.setDraw(true);
+			repaint();
 		}
 
 		public void mouseMoved(MouseEvent arg0) {

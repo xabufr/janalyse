@@ -250,6 +250,10 @@ public class McdPreferencesManager {
 		set(PGroupe.ENTITE, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
 		
 		set(PGroupe.PROPRIETE, PCle.SCHEMA, "%[0e1]%[1E]_%p");
+		
+		set(PGroupe.SELECTEUR, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.SELECTEUR, PCle.FORME_ARRONDIE, true);
+		set(PGroupe.SELECTEUR, PCle.LIGNE_CONTINUE, false);
 	}
 }
 
