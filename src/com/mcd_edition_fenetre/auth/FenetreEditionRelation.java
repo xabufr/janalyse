@@ -59,6 +59,7 @@ public class FenetreEditionRelation extends JDialog {
 	 * Create the dialog.
 	 */
 	public FenetreEditionRelation(McdGraph mcd, RelationGraph relation) {
+		relation.getRelation().setCif(false);
 		setMinimumSize(new Dimension(0, 380));
 		m_relation = relation.getRelation();
 		m_relationCopie = new Relation(relation.getRelation());

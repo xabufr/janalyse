@@ -76,6 +76,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 	}
 	public void dessiner(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+		updateCif();
 		if(m_calculerTaille)
 		{
 			this.actualiser();
@@ -205,5 +206,33 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 			g.setColor((Color)prefs.get(PGroupe.RELATION, PCle.OMBRE_COLOR));
 			g.fillOval(this.getPosition().x+3, this.getPosition().y+3, this.getDimension().width, this.getDimension().height);
 		}
+	}
+	private void updateCif(){
+		if(!(Boolean)McdPreferencesManager.getInstance().get(PGroupe.RELATION, PCle.CIF)){
+			m_relation.setCif(false);
+			return;
+		}
+		if(!m_relation.getProprietes().isEmpty()){
+			m_relation.setCif(false);
+			return;
+		}
+		ArrayList<CardinaliteGraph> cards = m_mcd.getCardinalitesGraph();
+		int nombre=0;
+		int max[]=new int[2];
+		for(CardinaliteGraph c : cards){
+			if(c.getCardinalite().getRelation()==m_relation){
+				if(++nombre>2){
+					m_relation.setCif(false);
+					return;
+				}
+				max[nombre-1]=c.getCardinalite().getMax();
+			}
+		}
+		if(((max[0]==0||max[0]==1)&&(max[1]==-1||max[1]==2))||
+				((max[1]==0||max[1]==1)&&(max[0]==-1||max[0]==2))){
+			m_relation.setCif(true);
+		}
+		else
+			m_relation.setCif(false);
 	}
 }
