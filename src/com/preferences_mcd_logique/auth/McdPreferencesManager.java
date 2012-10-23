@@ -233,6 +233,7 @@ public class McdPreferencesManager {
 		set(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
 		set(PGroupe.RELATION, PCle.OMBRE, false);
 		set(PGroupe.RELATION, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
+		set(PGroupe.RELATION, PCle.CIF, true);
 		
 		setFont(PGroupe.ENTITE, PCle.FONT, "Serif", Font.PLAIN, 10);
 		setFont(PGroupe.ENTITE, PCle.FONT_NOM, "Serif", Font.PLAIN, 12);

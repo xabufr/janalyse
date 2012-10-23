@@ -142,7 +142,8 @@ public class FenetrePreferences extends JDialog {
 						setVisible(false);
 						McdPreferencesManager.getInstance().set(PGroupe.PROPRIETE, PCle.SCHEMA, m_textField.getText());
 						McdPreferencesManager.getInstance().save();
-						m_parent.getMcd().repaint();
+						if(m_parent.getMcd()!=null)
+							m_parent.getMcd().repaint();
 					}
 				});
 				buttonPane.add(okButton);
@@ -188,11 +189,11 @@ public class FenetrePreferences extends JDialog {
 			parentPanel.add(lblOmbre, "flowx,cell 0 0");
 			
 			final JCheckBox ombre = new JCheckBox("");
-			ombre.setSelected((boolean)prefs.get(g, PCle.OMBRE));
+			ombre.setSelected((Boolean)prefs.get(g, PCle.OMBRE));
 			parentPanel.add(ombre, "cell 0 0");
 			
 			final JButton couleurOmbre = new JButton("Couleur");
-			couleurOmbre.setEnabled((boolean)prefs.get(g, PCle.OMBRE));
+			couleurOmbre.setEnabled((Boolean)prefs.get(g, PCle.OMBRE));
 			couleurOmbre.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					changeColor(g, PCle.OMBRE_COLOR, "Couleur de l'ombre");
@@ -442,18 +443,18 @@ public class FenetrePreferences extends JDialog {
 		}
 	}
 	private void initializeWithProperties(JPanel parentPanel, final PGroupe g){
-		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+		final McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		parentPanel.setLayout(new MigLayout("", "[276px,grow]", "[grow]"));
 		{
 			JLabel lblOmbre = new JLabel("Ombre");
 			parentPanel.add(lblOmbre, "flowx");
 
 			final JCheckBox ombre = new JCheckBox("");
-			ombre.setSelected((boolean)prefs.get(g, PCle.OMBRE));
+			ombre.setSelected((Boolean)prefs.get(g, PCle.OMBRE));
 			parentPanel.add(ombre, "cell 0 0");
 
 			final JButton couleurOmbre = new JButton("Couleur");
-			couleurOmbre.setEnabled((boolean)prefs.get(g, PCle.OMBRE));
+			couleurOmbre.setEnabled((Boolean)prefs.get(g, PCle.OMBRE));
 			couleurOmbre.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					changeColor(g, PCle.OMBRE_COLOR, "Couleur de l'ombre");
@@ -470,6 +471,20 @@ public class FenetrePreferences extends JDialog {
 						couleurOmbre.setEnabled(false);
 				}
 			});
+			
+			if(g.equals(PGroupe.RELATION)){
+				JLabel lblCif = new JLabel("Nommage automatique des CIF");
+				parentPanel.add(lblCif, "cell 0 0");
+				
+				final JCheckBox cif = new JCheckBox("");
+				cif.setSelected((Boolean)prefs.get(g, PCle.CIF));
+				parentPanel.add(cif, "cell 0 0");
+				cif.addActionListener(new ActionListener() {					
+					public void actionPerformed(ActionEvent e) {
+						prefs.set(g, PCle.CIF, cif.isSelected());
+					}
+				});
+			}
 		}
 		{
 			JSplitPane splitPane = new JSplitPane();

@@ -98,21 +98,21 @@ public class McdGraph extends JPanel{
 		Point min = new Point(0,0), max = new Point(0,0);
 		for(McdComposentGraphique component : m_componentsSecond){
 			if (component instanceof EntiteGraph){
-				if ((boolean)prefs.get(PGroupe.ENTITE, PCle.OMBRE)){
+				if ((Boolean)prefs.get(PGroupe.ENTITE, PCle.OMBRE)){
 					EntiteGraph e = (EntiteGraph)component;
 					g.setColor((Color)prefs.get(PGroupe.ENTITE, PCle.OMBRE_COLOR));
 					g.fillRect(e.getPosition().x+5, e.getPosition().y+5, e.getDimension().width, e.getDimension().height);
 				}
 			}
 			else if (component instanceof RelationGraph){
-				if ((boolean)prefs.get(PGroupe.RELATION, PCle.OMBRE)){
+				if ((Boolean)prefs.get(PGroupe.RELATION, PCle.OMBRE)){
 					RelationGraph r = (RelationGraph)component;
 					g.setColor((Color)prefs.get(PGroupe.RELATION, PCle.OMBRE_COLOR));
 					g.fillOval(r.getPosition().x+3, r.getPosition().y+3, r.getDimension().width, r.getDimension().height);
 				}
 			}
 			else if (component instanceof ContrainteGraph){
-				if ((boolean)prefs.get(PGroupe.CONTRAINTE, PCle.OMBRE)){
+				if ((Boolean)prefs.get(PGroupe.CONTRAINTE, PCle.OMBRE)){
 					ContrainteGraph c = (ContrainteGraph)component;
 					g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.OMBRE_COLOR));
 					g.fillOval(c.getPosition().x+2, c.getPosition().y+2, c.getDimension().width, c.getDimension().height);
@@ -121,14 +121,14 @@ public class McdGraph extends JPanel{
 		}
 		for(McdComposentGraphique component : m_componentsFirst){
 			if (component instanceof ContrainteGraph){
-				if ((boolean)prefs.get(PGroupe.CONTRAINTE, PCle.OMBRE)){
+				if ((Boolean)prefs.get(PGroupe.CONTRAINTE, PCle.OMBRE)){
 					ContrainteGraph c = (ContrainteGraph)component;
 					g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.OMBRE_COLOR));
 					g.fillOval(c.getPosition().x+2, c.getPosition().y+2, c.getDimension().width, c.getDimension().height);
 				}
 			}
 			else if (component instanceof HeritageGraph){
-				if ((boolean)prefs.get(PGroupe.HERITAGE, PCle.OMBRE)){
+				if ((Boolean)prefs.get(PGroupe.HERITAGE, PCle.OMBRE)){
 					HeritageGraph h = (HeritageGraph)component;
 					g.setColor((Color)prefs.get(PGroupe.HERITAGE, PCle.OMBRE_COLOR));
 					g.fillRect(h.getPosition().x+2, h.getPosition().y+h.getDimension().height/2, h.getDimension().width, h.getDimension().height/2+2);
