@@ -1,7 +1,11 @@
 package com.mcd_log.auth;
 
 public enum ProprieteTypeE {
-	NONE,VARCHAR,INT,FLOAT;
+	NONE,INT, BIGINT, SMALLINT, TINYINT,
+	VARCHAR, CHAR,
+	FLOAT, REAL, DOUBLE, 
+	DATE, DATETIME, TIME, TIMESTAMP,
+	TEXT, BLOB;
 	
 	public String getName(){
 		if(toString()=="NONE")
