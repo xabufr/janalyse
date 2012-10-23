@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
@@ -120,10 +122,30 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 			dim.width = (int) (dim.height*1.2);
 		
 		setDimension(dim);
-		if(!m_focus)
-			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR));
-		else
-			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_FOCUS));
+		
+		if(!(Boolean) prefs.get(PGroupe.RELATION, PCle.GRADIANT_COLOR)){
+			if(!m_focus)
+				g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR));
+			else
+				g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_FOCUS));
+		}
+		else{
+			Graphics2D g2 = (Graphics2D) g;
+			GradientPaint paint=null;
+			if(!m_focus){
+				paint = new GradientPaint(getPosition().x, 0, 
+						(Color)prefs.get(PGroupe.RELATION, PCle.COLOR), 
+						getPosition().x+getDimension().width, 0, 
+						(Color)prefs.get(PGroupe.RELATION, PCle.COLOR_2));
+			}
+			else{
+				paint = new GradientPaint(getPosition().x, 0, 
+						(Color)prefs.get(PGroupe.RELATION, PCle.COLOR_FOCUS), 
+						getPosition().x+getDimension().width, 0, 
+						(Color)prefs.get(PGroupe.RELATION, PCle.COLOR_2_FOCUS));
+			}
+			g2.setPaint(paint);
+		}
 		
 		g.fillOval(pos.x, pos.y, dim.width, dim.height);
 		if(!m_focus)

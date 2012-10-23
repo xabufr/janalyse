@@ -182,7 +182,7 @@ public class FenetrePreferences extends JDialog {
 		}
 	}
 	private void initializeWithoutProperties(JPanel parentPanel, final PGroupe g){
-		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+		final McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		parentPanel.setLayout(new MigLayout("", "[398.00px,grow]", "[][grow]"));
 		{
 			JLabel lblOmbre = new JLabel("Ombre");
@@ -210,6 +210,20 @@ public class FenetrePreferences extends JDialog {
 						couleurOmbre.setEnabled(false);
 				}
 			});
+			if(!g.equals(PGroupe.CONTRAINTE))
+			{
+				JLabel lblDeg = new JLabel("Dégradé");
+				parentPanel.add(lblDeg, "cell 0 0");
+				
+				final JCheckBox deg = new JCheckBox("");
+				deg.setSelected((Boolean)prefs.get(g, PCle.GRADIANT_COLOR));
+				parentPanel.add(deg, "cell 0 0");
+				deg.addActionListener(new ActionListener() {					
+					public void actionPerformed(ActionEvent e) {
+						prefs.set(g, PCle.GRADIANT_COLOR, deg.isSelected());
+					}
+				});
+			}
 			
 			JSplitPane splitPane = new JSplitPane();
 			parentPanel.add(splitPane, "cell 0 1,grow");
@@ -256,6 +270,16 @@ public class FenetrePreferences extends JDialog {
 						}
 					});
 					panel.add(choisirCFond, "cell 1 3 3 1");
+				}
+				if(!g.equals(PGroupe.CONTRAINTE))
+				{
+					JButton choisirCFond = new JButton("Choisir");
+					choisirCFond.addActionListener(new ActionListener() {									
+						public void actionPerformed(ActionEvent e) {
+							changeColor(g, PCle.COLOR_2, "Couleur fond entité");
+						}
+					});
+					panel.add(choisirCFond, "cell 2 3 3 1");
 				}
 				{
 					JLabel lblCouleurContours = new JLabel("Couleur contours");
@@ -319,6 +343,16 @@ public class FenetrePreferences extends JDialog {
 						}
 					});
 					panel.add(focusChoisirCFond, "cell 1 3");
+				}
+				if(!g.equals(PGroupe.CONTRAINTE))
+				{
+					JButton choisirCFond = new JButton("Choisir");
+					choisirCFond.addActionListener(new ActionListener() {									
+						public void actionPerformed(ActionEvent e) {
+							changeColor(g, PCle.COLOR_2_FOCUS, "Couleur fond entités focus");
+						}
+					});
+					panel.add(choisirCFond, "cell 2 3");
 				}
 				{
 					JLabel lblCouleurContours_1 = new JLabel("Couleur contours");
@@ -471,7 +505,19 @@ public class FenetrePreferences extends JDialog {
 						couleurOmbre.setEnabled(false);
 				}
 			});
-			
+			{
+				JLabel lblDeg = new JLabel("Dégradé");
+				parentPanel.add(lblDeg, "cell 0 0");
+				
+				final JCheckBox deg = new JCheckBox("");
+				deg.setSelected((Boolean)prefs.get(g, PCle.GRADIANT_COLOR));
+				parentPanel.add(deg, "cell 0 0");
+				deg.addActionListener(new ActionListener() {					
+					public void actionPerformed(ActionEvent e) {
+						prefs.set(g, PCle.GRADIANT_COLOR, deg.isSelected());
+					}
+				});
+			}
 			if(g.equals(PGroupe.RELATION)){
 				JLabel lblCif = new JLabel("Nommage automatique des CIF");
 				parentPanel.add(lblCif, "cell 0 0");
@@ -557,6 +603,16 @@ public class FenetrePreferences extends JDialog {
 					panel.add(btnChoisirCFond, "cell 1 3,alignx center,aligny center");
 				}
 				{
+					JButton btnChoisirCFond = new JButton("Choisir");
+					btnChoisirCFond.addActionListener(new ActionListener() {
+						
+						public void actionPerformed(ActionEvent e) {
+							changeColor(g, PCle.COLOR_2, "Couleur fond relation");
+						}
+					});
+					panel.add(btnChoisirCFond, "cell 2 3,alignx center,aligny center");
+				}
+				{
 					JLabel lblCouleurContour = new JLabel("Couleur contour");
 					panel.add(lblCouleurContour, "cell 0 4,alignx left,aligny top");
 				}
@@ -634,6 +690,15 @@ public class FenetrePreferences extends JDialog {
 						}
 					});
 					panel.add(focusChoisirCFond, "cell 1 3");
+				}
+				{
+					JButton focusChoisirCFond = new JButton("Choisir");
+					focusChoisirCFond.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							changeColor(g, PCle.COLOR_2_FOCUS, "Couleur fond relation focus");
+						}
+					});
+					panel.add(focusChoisirCFond, "cell 2 3");
 				}
 				{
 					JLabel label = new JLabel("Couleur contour");

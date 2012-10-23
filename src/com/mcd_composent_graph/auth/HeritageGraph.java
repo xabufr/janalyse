@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -135,10 +136,30 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 			g.drawLine(m_centre.x, m_centre.y, e.x, e.y);
 		}
 		
-		if(!m_focus)
-			g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR));
-		else
-			g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR_FOCUS));
+		
+		if(!(Boolean) prefs.get(PGroupe.HERITAGE, PCle.GRADIANT_COLOR)){
+			if(!m_focus)
+				g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR));
+			else
+				g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR_FOCUS));
+		}
+		else{
+			Graphics2D g2 = (Graphics2D) g;
+			GradientPaint paint=null;
+			if(!m_focus){
+				paint = new GradientPaint(getPosition().x, 0, 
+						(Color)prefs.get(PGroupe.HERITAGE, PCle.COLOR), 
+						getPosition().x+getDimension().width, 0, 
+						(Color)prefs.get(PGroupe.HERITAGE, PCle.COLOR_2));
+			}
+			else{
+				paint = new GradientPaint(getPosition().x, 0, 
+						(Color)prefs.get(PGroupe.HERITAGE, PCle.COLOR_FOCUS), 
+						getPosition().x+getDimension().width, 0, 
+						(Color)prefs.get(PGroupe.HERITAGE, PCle.COLOR_2_FOCUS));
+			}
+			g2.setPaint(paint);
+		}
 		g.fillArc(pos.x, pos.y, dim.width, dim.height, 0, 180);
 		g.fillRect(pos.x, pos.y+dim.height/2, dim.width, dim.height/2);
 		

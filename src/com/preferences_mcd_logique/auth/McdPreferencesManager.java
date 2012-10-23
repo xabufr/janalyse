@@ -190,6 +190,8 @@ public class McdPreferencesManager {
 		setFont(PGroupe.HERITAGE, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
 		set(PGroupe.HERITAGE,  PCle.COLOR, Color.GREEN);
 		set(PGroupe.HERITAGE,  PCle.COLOR_FOCUS, Color.WHITE);
+		set(PGroupe.HERITAGE, PCle.COLOR_2, Color.LIGHT_GRAY);
+		set(PGroupe.HERITAGE, PCle.COLOR_2_FOCUS, Color.GREEN);
 		set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR, Color.BLACK);
 		set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
 		set(PGroupe.HERITAGE, PCle.COLOR_LINE, Color.BLACK);
@@ -197,6 +199,7 @@ public class McdPreferencesManager {
 		set(PGroupe.HERITAGE, PCle.FONT_COLOR_FOCUS, Color.BLACK);
 		set(PGroupe.HERITAGE, PCle.OMBRE, false);
 		set(PGroupe.HERITAGE, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
+		set(PGroupe.HERITAGE, PCle.GRADIANT_COLOR, true);
 		
 		
 		setFont(PGroupe.CONTRAINTE, PCle.FONT, "Serif", Font.PLAIN, 10);
@@ -228,19 +231,24 @@ public class McdPreferencesManager {
 		set(PGroupe.RELATION, PCle.FONT_NOM_COLOR, Color.BLACK);
 		set(PGroupe.RELATION, PCle.FONT_NOM_COLOR_FOCUS, Color.BLACK);
 		set(PGroupe.RELATION, PCle.COLOR, Color.GREEN);
+		set(PGroupe.RELATION, PCle.COLOR_2, Color.LIGHT_GRAY);
 		set(PGroupe.RELATION, PCle.COLOR_FOCUS, Color.WHITE);
+		set(PGroupe.RELATION, PCle.COLOR_2_FOCUS, Color.GREEN);
 		set(PGroupe.RELATION, PCle.COLOR_CONTOUR, Color.BLACK);
 		set(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
 		set(PGroupe.RELATION, PCle.OMBRE, false);
 		set(PGroupe.RELATION, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
 		set(PGroupe.RELATION, PCle.CIF, true);
+		set(PGroupe.RELATION, PCle.GRADIANT_COLOR, true);
 		
 		setFont(PGroupe.ENTITE, PCle.FONT, "Serif", Font.PLAIN, 10);
 		setFont(PGroupe.ENTITE, PCle.FONT_NOM, "Serif", Font.PLAIN, 12);
 		setFont(PGroupe.ENTITE, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
 		setFont(PGroupe.ENTITE, PCle.FONT_NOM_FOCUS, "Serif", Font.PLAIN, 12);
 		set(PGroupe.ENTITE,  PCle.COLOR, Color.GREEN);
-		set(PGroupe.ENTITE,  PCle.COLOR_FOCUS, Color.GREEN);
+		set(PGroupe.ENTITE,  PCle.COLOR_2, Color.LIGHT_GRAY);
+		set(PGroupe.ENTITE,  PCle.COLOR_FOCUS, Color.LIGHT_GRAY);
+		set(PGroupe.ENTITE,  PCle.COLOR_2_FOCUS, Color.GREEN);
 		set(PGroupe.ENTITE, PCle.COLOR_CONTOUR, Color.BLACK);
 		set(PGroupe.ENTITE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
 		set(PGroupe.ENTITE, PCle.FONT_COLOR, Color.GRAY);
@@ -249,6 +257,7 @@ public class McdPreferencesManager {
 		set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR_FOCUS, Color.RED);
 		set(PGroupe.ENTITE, PCle.OMBRE, false);
 		set(PGroupe.ENTITE, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
+		set(PGroupe.ENTITE, PCle.GRADIANT_COLOR, true);
 		
 		set(PGroupe.PROPRIETE, PCle.SCHEMA, "%[0e1]%[1E]_%p");
 	}
