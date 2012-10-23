@@ -196,7 +196,7 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 			Face f = getFace(comp);
 			switch(f){
 			case BAS:
-				m_pointsSorted.get(f)[h++]=m_liensB.get(comp);
+				m_pointsSorted.get(f)[b++]=m_liensB.get(comp);
 				break;
 			case DROITE:
 				m_pointsSorted.get(f)[d++]=m_liensB.get(comp);

@@ -11,13 +11,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
-//import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Stack;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.mcd_composent_graph.auth.CardinaliteGraph;
@@ -91,6 +89,7 @@ public class McdGraph extends JPanel{
 	}
 	
 	public void paintComponent(Graphics g){
+		CardinaliteGraph.resetCompteurLettre();
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
@@ -852,6 +851,15 @@ public class McdGraph extends JPanel{
 	public ArrayList<McdComposentGraphique> getMcdComponents(){
 		return m_components;
 	}
+	public ArrayList<CardinaliteGraph> getCardinalitesGraph(){
+		ArrayList<CardinaliteGraph> ret = new ArrayList<CardinaliteGraph>();
+		for(McdComposentGraphique c : m_components){
+			if(c instanceof CardinaliteGraph){
+				ret.add((CardinaliteGraph) c);
+			}
+		}
+		return ret;
+	}
 	
 	public void addMcdComponents(McdComposentGraphique c){
 		if (c instanceof EntiteGraph ||c instanceof RelationGraph)
@@ -863,7 +871,7 @@ public class McdGraph extends JPanel{
 	}
 	
 	public void saveMcdComposent(){
-		Sauvegarde save = new Sauvegarde(this);
+		new Sauvegarde(this);
 	}
 	private void setMcdComposentGraphiquetFocus(McdComposentGraphique comp){
 		if(m_focus!=null){
