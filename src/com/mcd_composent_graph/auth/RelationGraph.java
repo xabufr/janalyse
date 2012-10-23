@@ -198,4 +198,12 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 		super.setFocus(f);
 		m_calculerTaille=true;
 	}
+
+	public void dessinerOmbre(Graphics g) {
+		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+		if ((boolean)prefs.get(PGroupe.RELATION, PCle.OMBRE)){
+			g.setColor((Color)prefs.get(PGroupe.RELATION, PCle.OMBRE_COLOR));
+			g.fillOval(this.getPosition().x+3, this.getPosition().y+3, this.getDimension().width, this.getDimension().height);
+		}
+	}
 }

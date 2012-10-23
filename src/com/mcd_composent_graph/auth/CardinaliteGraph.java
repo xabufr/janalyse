@@ -325,4 +325,6 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		char carac= m_lastCarac.charAt(0);
 		m_lastCarac=String.valueOf(++carac);
 	}
+
+	public void dessinerOmbre(Graphics g) {}
 }

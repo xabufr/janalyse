@@ -7,6 +7,7 @@ public abstract class McdComposentGraphique {
 	protected Boolean m_focus;
 	protected McdGraph m_mcd;
 	public abstract void dessiner(Graphics g);
+	public abstract void dessinerOmbre(Graphics g);
 	public abstract void prepareDelete();
 	
 	public void setMcd(McdGraph mcd){
