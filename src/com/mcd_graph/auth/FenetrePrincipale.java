@@ -609,9 +609,11 @@ public class FenetrePrincipale {
 		if(mcd==null)
 			return false;
 		if(!mcd.isSaved()){
-			if(JOptionPane.showConfirmDialog(null,"MCD non sauvegardé, voulez-vous le fermer ?")!=
-					JOptionPane.OK_OPTION)
+			int sauv = JOptionPane.showConfirmDialog(null,"MCD non sauvegardé, voulez-vous sauver ?");
+			if(sauv==JOptionPane.CANCEL_OPTION)
 				return false;
+			if(sauv==JOptionPane.NO_OPTION)
+				return true;
 		}
 		int index = -1;
 		int nb = m_mcdContener.getTabCount();
@@ -622,8 +624,9 @@ public class FenetrePrincipale {
 			}
 		}
 		if(index==-1)
-			return false;
+			return true;
 		m_mcdContener.remove(index);
+		mcd.saveMcdComposent();
 		if(mcd==m_mcd){
 			m_mcd = null;
 			if(m_mcdContener.getTabCount()!=0){
