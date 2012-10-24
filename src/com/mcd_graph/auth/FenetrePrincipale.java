@@ -1,11 +1,8 @@
 package com.mcd_graph.auth;
 
 import java.awt.EventQueue;
-import java.awt.Graphics2D;
 import java.awt.Point;
 
-import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
@@ -46,13 +43,10 @@ import com.ui_help.auth.APropos;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.awt.event.InputEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.JSplitPane;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
@@ -612,27 +606,28 @@ public class FenetrePrincipale {
 			int sauv = JOptionPane.showConfirmDialog(null,"MCD non sauvegardé, voulez-vous sauver ?");
 			if(sauv==JOptionPane.CANCEL_OPTION)
 				return false;
-			if(sauv==JOptionPane.NO_OPTION)
+			
+			int index = -1;
+			int nb = m_mcdContener.getTabCount();
+			for(int i=0;i<nb;++i){
+				if(((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()==mcd){
+					index=i;
+					break;
+				}
+			}
+			if(index==-1)
 				return true;
-		}
-		int index = -1;
-		int nb = m_mcdContener.getTabCount();
-		for(int i=0;i<nb;++i){
-			if(((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()==mcd){
-				index=i;
-				break;
+			m_mcdContener.remove(index);
+			if(mcd==m_mcd){
+				m_mcd = null;
+				if(m_mcdContener.getTabCount()!=0){
+					m_mcdContener.setSelectedIndex(0);
+					m_mcd = (McdGraph) ((JScrollPane)m_mcdContener.getSelectedComponent()).getViewport().getView();
+				}
 			}
-		}
-		if(index==-1)
-			return true;
-		m_mcdContener.remove(index);
-		mcd.saveMcdComposent();
-		if(mcd==m_mcd){
-			m_mcd = null;
-			if(m_mcdContener.getTabCount()!=0){
-				m_mcdContener.setSelectedIndex(0);
-				m_mcd = (McdGraph) ((JScrollPane)m_mcdContener.getSelectedComponent()).getViewport().getView();
-			}
+			if(sauv!=JOptionPane.OK_OPTION)
+				return true;
+			mcd.saveMcdComposent();
 		}
 		return true;
 	}
