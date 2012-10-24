@@ -147,11 +147,13 @@ public class Sauvegarde {
 				propriete.setAttribute(commentaireP);
 				
 				
-				Attribute typeP = new Attribute("type", p.getType().getType().toString());
+				Attribute typeP = new Attribute("type", p.getType().toString());
 				propriete.setAttribute(typeP);
 				
-				Attribute tailleP = new Attribute("taille", String.valueOf(p.getTaille()));
-				propriete.setAttribute(tailleP);
+				for(int i1=0;i1<p.getType().getNombreTaille();++i1){
+					Attribute tailleP = new Attribute("taille"+i1, String.valueOf(p.getTaille(i1)));
+					propriete.setAttribute(tailleP);
+				}
 				
 				Attribute cleP = new Attribute("clé_primaire", String.valueOf(p.isClePrimaire()));
 				propriete.setAttribute(cleP);
@@ -202,11 +204,13 @@ public class Sauvegarde {
 					propriete.setAttribute(commentaireP);
 				}
 				
-				Attribute typeP = new Attribute("type", p.getType().getType().toString());
+				Attribute typeP = new Attribute("type", p.getType().toString());
 				propriete.setAttribute(typeP);
 				
-				Attribute tailleP = new Attribute("taille", String.valueOf(p.getTaille()));
-				propriete.setAttribute(tailleP);
+				for(int i1=0;i1<p.getType().getNombreTaille();++i1){
+					Attribute tailleP = new Attribute("taille"+i1, String.valueOf(p.getTaille(i1)));
+					propriete.setAttribute(tailleP);
+				}
 				
 				Attribute cleP = new Attribute("clé_primaire", String.valueOf(p.isClePrimaire()));
 				propriete.setAttribute(cleP);

@@ -15,7 +15,6 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JTabbedPane;
 
 import com.mcd_log.auth.Propriete;
-import com.mcd_log.auth.ProprieteType;
 import com.mcd_log.auth.ProprieteTypeE;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
@@ -109,7 +108,7 @@ public class FenetrePreferences extends JDialog {
 					m_textField.addCaretListener(new CaretListener() {
 						public void caretUpdate(CaretEvent arg0) {
 							McdPreferencesManager.getInstance().set(PGroupe.PROPRIETE, PCle.SCHEMA, m_textField.getText());
-							Propriete p = new Propriete("Propriete", new ProprieteType(ProprieteTypeE.NONE));
+							Propriete p = new Propriete("Propriete", ProprieteTypeE.NONE);
 							m_previsualisationProp.setText(p.getVirtualName("Entite"));
 						}
 					});

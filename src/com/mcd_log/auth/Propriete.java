@@ -9,31 +9,29 @@ import com.preferences_mcd_logique.auth.PGroupe;
 public class Propriete implements Cloneable{
 	private String m_name;
 	private String m_commentaire;
-	private ProprieteType m_proprieteType;
-	private int m_taille;
+	private ProprieteTypeE m_type;
+	private int m_taille[];
 	private boolean m_clePrimaire;
 	private boolean m_autoIncrement;
 	private boolean m_null;
 	
-	public Propriete(String name, ProprieteType proprieteType){
+	public Propriete(String name, ProprieteTypeE proprieteType){
 		setType(proprieteType);	
 		setName(name);
-		setTaille(255);
 		setClePrimaire(false);
 		setAutoIncrement(false);
 		setNull(false);
 	}
 	
-	public Propriete(String name, ProprieteType proprieteType, int taille, boolean clePrimaire, boolean autoIncrement, boolean zero){
+	public Propriete(String name, ProprieteTypeE proprieteType, int taille, boolean clePrimaire, boolean autoIncrement, boolean zero){
 		setType(proprieteType);	
 		setName(name);
-		setTaille(taille);
 		setClePrimaire(clePrimaire);
 		setAutoIncrement(autoIncrement);
 		setNull(zero);
 	}
 	public Propriete(Propriete p){
-		setType(new ProprieteType(p.m_proprieteType));
+		setType(p.m_type);
 		setCommentaire(p.m_commentaire);
 		setName(p.m_name);
 		setTaille(p.m_taille);
@@ -60,20 +58,28 @@ public class Propriete implements Cloneable{
 		m_commentaire = commentaire;
 	}
 
-	public ProprieteType getType() {
-		return m_proprieteType;
+	public ProprieteTypeE getType() {
+		return m_type;
 	}
 
-	public void setType(ProprieteType m_type) {
-		this.m_proprieteType = m_type;
+	public void setType(ProprieteTypeE type) {
+		if(type.getNombreTaille()>0)
+			m_taille = new int[type.getNombreTaille()];
+		else
+			m_taille=null;
+		this.m_type = type;
 	}
 
-	public int getTaille() {
-		return m_taille;
+	public int getTaille(int i) {
+		return m_taille[i];
 	}
 
-	public void setTaille(int m_taille) {
-		this.m_taille = m_taille;
+	public void setTaille(int i,int m_taille) {
+		this.m_taille[i] = m_taille;
+	}
+	public void setTaille(int taille[]) {
+		m_taille = new int[taille.length];
+		System.arraycopy(taille, 0, m_taille, 0, taille.length);
 	}
 
 	public boolean isClePrimaire() {
@@ -105,7 +111,7 @@ public class Propriete implements Cloneable{
 	
 	public Propriete clone() throws CloneNotSupportedException{
 		Propriete p = (Propriete) super.clone();
-		p.m_proprieteType = new ProprieteType(m_proprieteType);
+		p.m_type = m_type;
 		return p;
 	}
 }

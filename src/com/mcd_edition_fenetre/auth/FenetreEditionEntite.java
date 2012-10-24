@@ -6,7 +6,6 @@ import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Propriete;
-import com.mcd_log.auth.ProprieteType;
 import com.mcd_log.auth.ProprieteTypeE;
 
 import javax.swing.JPanel;
@@ -46,13 +45,15 @@ public class FenetreEditionEntite extends JDialog{
 	private Entite m_entite;
 	private DefaultListModel m_model;
 	private JComboBox m_type;
-	private JSpinner m_taille;
+	private JSpinner m_taille[];
 	private JCheckBox m_isCle;
 	private JCheckBox m_isNull;
 	private JCheckBox m_isAutoIncremente;
 	private JList m_lstPropriete;
 	private JButton m_boutonCreer;
 	private JButton m_boutonModifier;
+	private JPanel m_panel;
+	private JPanel m_panelTaille;
 
 	public FenetreEditionEntite(McdGraph mcd, EntiteGraph entite) {
 		
@@ -89,18 +90,18 @@ public class FenetreEditionEntite extends JDialog{
 				panel.add(m_commentaireEntite, "cell 1 1,growx");
 				m_commentaireEntite.setColumns(10);
 			}
-			JPanel panel_1 = new JPanel();
-			panel_1.setBorder(new LineBorder(Color.GRAY));
-			content.add(panel_1, "cell 0 1,grow");
-			panel_1.setLayout(new MigLayout("", "[][137.00,center]", "[][][][][][][][][][]"));
+			m_panel = new JPanel();
+			m_panel.setBorder(new LineBorder(Color.GRAY));
+			content.add(m_panel, "cell 0 1,grow");
+			m_panel.setLayout(new MigLayout("", "[][137.00,grow,center]", "[][][][grow][][][][][][]"));
 			{
 				m_type = new JComboBox();
 				
 				JLabel lblProprit = new JLabel("Propriété");
-				panel_1.add(lblProprit, "cell 0 0 2 1,alignx center");
+				m_panel.add(lblProprit, "cell 0 0 2 1,alignx center");
 				
 				JLabel lblNom_1 = new JLabel("Nom");
-				panel_1.add(lblNom_1, "cell 0 1");
+				m_panel.add(lblNom_1, "cell 0 1");
 				for (ProprieteTypeE p : ProprieteTypeE.values())
 					m_type.addItem(p.getName());
 				
@@ -112,56 +113,69 @@ public class FenetreEditionEntite extends JDialog{
 						}
 					}
 				});
-				panel_1.add(m_nomPropriete, "cell 1 1,growx");
+				m_panel.add(m_nomPropriete, "cell 1 1,growx");
 				m_nomPropriete.setColumns(10);
 				
 				JLabel lblType = new JLabel("Type");
-				panel_1.add(lblType, "cell 0 2,growx");
+				m_panel.add(lblType, "cell 0 2,growx");
 				
 				
 				
-				panel_1.add(m_type, "cell 1 2,growx");
+				m_panel.add(m_type, "cell 1 2,growx");
 				
 				JLabel lblTaille = new JLabel("Taille");
-				panel_1.add(lblTaille, "cell 0 3");
+				m_panel.add(lblTaille, "cell 0 3");
 				
-				m_taille = new JSpinner();
-				m_taille.setModel(new SpinnerNumberModel(0, 0, 255, 1));
-				panel_1.add(m_taille, "cell 1 3,growx");
+				m_taille = null;
+				
+				m_panelTaille = new JPanel();
+				m_panel.add(m_panelTaille, "cell 1 3,grow");
+				
+				JSpinner spinner = new JSpinner();
+				m_panelTaille.add(spinner);
+				
+				JSpinner spinner_1 = new JSpinner();
+				m_panelTaille.add(spinner_1);
+				
+				m_type.addActionListener(new ActionListener() {					
+					public void actionPerformed(ActionEvent arg0) {
+						changeTaille(ProprieteTypeE.getValue((String) m_type.getSelectedItem()));
+					}
+				});
 				
 				JLabel lblCommentaire_1 = new JLabel("Commentaire");
-				panel_1.add(lblCommentaire_1, "cell 0 4");
+				m_panel.add(lblCommentaire_1, "cell 0 4");
 				
 				m_commentairePropriete = new JTextField();
-				panel_1.add(m_commentairePropriete, "cell 1 4,growx");
+				m_panel.add(m_commentairePropriete, "cell 1 4,growx");
 				m_commentairePropriete.setColumns(10);
 				
 				JLabel lblClPrimaire = new JLabel("Clé primaire");
-				panel_1.add(lblClPrimaire, "cell 0 5");
+				m_panel.add(lblClPrimaire, "cell 0 5");
 				
 				m_isCle = new JCheckBox("");
-				panel_1.add(m_isCle, "cell 1 5");
+				m_panel.add(m_isCle, "cell 1 5");
 				
 				JLabel lblNull = new JLabel("Null");
-				panel_1.add(lblNull, "cell 0 6");
+				m_panel.add(lblNull, "cell 0 6");
 				
 				m_isNull = new JCheckBox("");
-				panel_1.add(m_isNull, "cell 1 6,alignx center");
+				m_panel.add(m_isNull, "cell 1 6,alignx center");
 				
 				JLabel lblAutoincrment = new JLabel("Auto-incrémenté");
-				panel_1.add(lblAutoincrment, "cell 0 7");
+				m_panel.add(lblAutoincrment, "cell 0 7");
 				
 				m_isAutoIncremente = new JCheckBox("");
-				panel_1.add(m_isAutoIncremente, "cell 1 7,alignx center");
+				m_panel.add(m_isAutoIncremente, "cell 1 7,alignx center");
 				
 				m_boutonModifier = new JButton("Modifier");
 				m_boutonModifier.addActionListener(new BoutonModifierListener());
-				panel_1.add(m_boutonModifier, "cell 0 8,growx");
+				m_panel.add(m_boutonModifier, "cell 0 8,growx");
 			}
 			
 			m_boutonCreer = new JButton("Créer");
 			m_boutonCreer.addActionListener(new BoutonCreerListener());
-			panel_1.add(m_boutonCreer, "cell 1 8,growx");
+			m_panel.add(m_boutonCreer, "cell 1 8,growx");
 				JPanel panel_2 = new JPanel();
 				content.add(panel_2, "cell 0 2 2 1,growx,aligny top");
 				{
@@ -242,8 +256,9 @@ public class FenetreEditionEntite extends JDialog{
 						if (m_lstPropriete.getSelectedValue() != null){
 							Propriete p = (Propriete) m_lstPropriete.getSelectedValue();
 							m_nomPropriete.setText(p.getName());
-							m_type.setSelectedItem(p.getType().getType().getName());
-							m_taille.setValue(p.getTaille());
+							m_type.setSelectedItem(p.getType().getName());
+							changeTaille(p.getType());
+							alimenterTaille(p);
 							m_commentairePropriete.setText(p.getCommentaire());
 							m_isCle.setSelected(p.isClePrimaire());
 							m_isNull.setSelected(p.isNull());
@@ -284,9 +299,9 @@ public class FenetreEditionEntite extends JDialog{
 				p.setCommentaire(m_commentairePropriete.getText());
 			
 			ProprieteTypeE t = ProprieteTypeE.getValue(m_type.getSelectedItem().toString());
-			p.setType(new ProprieteType(t));
+			p.setType(t);
 			
-			p.setTaille(Integer.parseInt(m_taille.getValue().toString()));
+			alimenterPropriete(p);
 			
 			p.setClePrimaire(m_isCle.isSelected());
 			p.setNull(m_isNull.isSelected());
@@ -299,12 +314,12 @@ public class FenetreEditionEntite extends JDialog{
 			Propriete p;
 			if (!m_nomPropriete.getText().equals(null) && !m_nomPropriete.getText().equals("")){
 				ProprieteTypeE t = ProprieteTypeE.getValue(m_type.getSelectedItem().toString());
-				p = new Propriete(m_nomPropriete.getText(), new ProprieteType(t));
+				p = new Propriete(m_nomPropriete.getText(), t);
 				
 				if (!m_commentairePropriete.getText().equals(null) && m_commentairePropriete.getText().equals(""))
 					p.setCommentaire(m_commentairePropriete.getText());
 				
-				p.setTaille(Integer.parseInt(m_taille.getValue().toString()));
+				alimenterPropriete(p);
 				
 				p.setClePrimaire(m_isCle.isSelected());
 				p.setNull(m_isCle.isSelected());
@@ -314,7 +329,7 @@ public class FenetreEditionEntite extends JDialog{
 				
 				m_nomPropriete.setText("");
 				m_type.setSelectedIndex(0);
-				m_taille.setValue(0);
+				changeTaille(ProprieteTypeE.NONE);
 				m_commentairePropriete.setText("");
 				m_isCle.setSelected(false);
 				m_isNull.setSelected(false);
@@ -322,5 +337,28 @@ public class FenetreEditionEntite extends JDialog{
 			}
 		}
 	}
-
+	private void changeTaille(ProprieteTypeE type){
+		m_panelTaille.removeAll();
+		if(type.getNombreTaille()==0){
+			m_taille=null;
+		}
+		else{
+			m_taille=new JSpinner[type.getNombreTaille()];
+			for(int i=0;i<type.getNombreTaille();++i){
+				m_taille[i]=new JSpinner();
+				m_panelTaille.add(m_taille[i]);
+			}
+		}
+		m_panelTaille.updateUI();
+	}
+	private void alimenterTaille(Propriete p){
+		for(int i=0;i<p.getType().getNombreTaille();++i){
+			m_taille[i].setValue(p.getTaille(i));
+		}
+	}
+	private void alimenterPropriete(Propriete p){
+		for(int i=0;i<p.getType().getNombreTaille();++i){
+			p.setTaille(i, (Integer) m_taille[i].getValue());
+		}
+	}
 }
