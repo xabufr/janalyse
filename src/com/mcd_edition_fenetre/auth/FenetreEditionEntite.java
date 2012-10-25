@@ -131,12 +131,6 @@ public class FenetreEditionEntite extends JDialog{
 				m_panelTaille = new JPanel();
 				m_panel.add(m_panelTaille, "cell 1 3,grow");
 				
-				JSpinner spinner = new JSpinner();
-				m_panelTaille.add(spinner);
-				
-				JSpinner spinner_1 = new JSpinner();
-				m_panelTaille.add(spinner_1);
-				
 				m_type.addActionListener(new ActionListener() {					
 					public void actionPerformed(ActionEvent arg0) {
 						changeTaille(ProprieteTypeE.getValue((String) m_type.getSelectedItem()));
