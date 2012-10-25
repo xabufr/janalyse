@@ -111,4 +111,7 @@ class FormeGeometriqueLigne implements FormeGeometrique{
 		Line2D other = new Line2D.Float(ligne.m_a.x, ligne.m_a.y, ligne.m_b.x, ligne.m_b.y);
 		return me.intersectsLine(other);
 	}
+	public Line2D getLine2D(){
+		return new Line2D.Float(m_a.x, m_a.y, m_b.x, m_b.y);
+	}
 }

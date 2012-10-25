@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import com.mcd_composent_graph.auth.EntiteGraph.Face;
@@ -143,7 +144,7 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 			}
 			break;
 		}
-		if(findIntersection()!=null){
+		if(findIntersection()){
 			m_estCoupe=true;
 			drawCoupe(g, face);
 		}
@@ -308,15 +309,67 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		}
 		return false;
 	}
-	private CardinaliteGraph findIntersection(){
-		ArrayList<CardinaliteGraph> cards = m_mcd.getCardinalitesGraph();
-		for(CardinaliteGraph c : cards){
-			if(c==this||c.m_estCoupe||c.m_cardinalite.getRelation()==m_cardinalite.getRelation())
-				continue;
-			if(c.intersects(this))
-				return c;
+	private boolean intersects(Line2D l){
+		for(FormeGeometriqueLigne mesFomes : m_geometrieComplexe){
+			if(mesFomes.getLine2D().intersectsLine(l))
+				return true;
 		}
-		return null;
+		return false;
+	}
+	private boolean intersects(Rectangle r){
+		Rectangle2D rec = new Rectangle2D.Double(r.x, r.y, r.width, r.height);
+		for(FormeGeometriqueLigne forme : m_geometrieComplexe){
+			if(rec.intersectsLine(forme.getLine2D()))
+				return true;
+		}
+		return false;
+	}
+	private boolean intersects(HeritageGraph her){
+		if(intersects(her.getRectangle()))
+			return true;
+		for(Line2D line  :her.getLignesLiens()){
+			if(intersects(line))
+				return true;
+		}
+		return false;
+	}
+	private boolean intersects(ContrainteGraph cont){
+		if(intersects(cont.getRectangle()))
+			return true;
+		for(Line2D l : cont.getLigneLiens()){
+			if(intersects(l))
+				return true;
+		}
+		return false;
+	}
+	private boolean findIntersection(){
+		ArrayList<McdComposentGraphique> comps = m_mcd.getMcdComponents();
+		for(McdComposentGraphique comp : comps){
+			if(comp instanceof CardinaliteGraph){
+				CardinaliteGraph c = (CardinaliteGraph) comp;
+				if(c==this||c.m_estCoupe||c.m_cardinalite.getRelation()==m_cardinalite.getRelation())
+					continue;
+				if(c.intersects(this))
+					return true;
+			}
+			else if(comp instanceof EntiteGraph){
+				if(comp != m_entiteGraph && intersects(((EntiteGraph) comp).getRectangle()))
+					return true;
+			}
+			else if(comp instanceof RelationGraph){
+				if(comp != m_relationGraph && intersects(((RelationGraph) comp).getRectangle()))
+					return true;
+			}
+			else if(comp instanceof HeritageGraph){
+				if(intersects((HeritageGraph)comp))
+					return true;
+			}
+			else if(comp instanceof ContrainteGraph){
+				if(intersects((ContrainteGraph)comp))
+					return true;
+			}
+		}
+		return false;
 	}
 	public static void resetCompteurLettre(){
 		m_lastCarac="A";
