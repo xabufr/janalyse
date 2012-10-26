@@ -260,6 +260,8 @@ public class McdPreferencesManager {
 		set(PGroupe.ENTITE, PCle.GRADIANT_COLOR, true);
 		
 		set(PGroupe.PROPRIETE, PCle.SCHEMA, "%[0e1]%[1E]_%p");
+		
+		set(PGroupe.HTML, PCle.CSS, "h1, div {\ntext-align: center;\n}\ndiv {\n border: 1px solid black;\n    margin-bottom: -1px;\n    padding: 1px;\n}\ndiv.entite p \n{\n    background-color: black;\n    margin: 0;\n    color: white;\n}\n.mld. cleEtrangere \n{\n    border-bottom: 1px black dashed;\n}\ndiv.entite \n{\n    margin-bottom: 5px;\n    background-color: silver;\n}\n .mld. clePrimaire{\n text-decoration: underline; \n}");
 	}
 }
 

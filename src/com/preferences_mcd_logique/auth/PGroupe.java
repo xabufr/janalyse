@@ -6,5 +6,6 @@ public enum PGroupe{
 	HERITAGE,
 	ENTITE,
 	CARDINALITE,
-	CONTRAINTE
+	CONTRAINTE,
+	HTML
 }

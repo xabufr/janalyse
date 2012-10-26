@@ -7,6 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -35,6 +37,11 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.JTextPane;
 import javax.swing.JCheckBox;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import javax.swing.JTextArea;
+import java.awt.Insets;
+import java.awt.GridLayout;
 
 @SuppressWarnings("serial")
 public class FenetrePreferences extends JDialog {
@@ -44,6 +51,7 @@ public class FenetrePreferences extends JDialog {
 	private JTextField m_previsualisationProp;
 	private JPanel m_panelEntites;
 	private FenetrePrincipale m_parent;
+	private JTextArea m_cssHTML;
 
 	public FenetrePreferences(FenetrePrincipale princ) {
 		m_parent = princ;
@@ -54,14 +62,14 @@ public class FenetrePreferences extends JDialog {
 		setTitle("Préférences");
 		McdPreferencesManager.getInstance().push();
 
-		setBounds(100, 100, 674, 316);
+		setBounds(100, 100, 658, 328);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		contentPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		{
 			JTabbedPane tabbedPaneGeneral = new JTabbedPane(JTabbedPane.TOP);
-			contentPanel.add(tabbedPaneGeneral, "cell 0 0,grow");
+			contentPanel.add(tabbedPaneGeneral);
 			{
 				JTabbedPane tabbedPaneMcd = new JTabbedPane(JTabbedPane.TOP);
 				tabbedPaneMcd.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -127,6 +135,34 @@ public class FenetrePreferences extends JDialog {
 					panel.add(txtpnpProprit, "cell 0 2 2 1,grow");
 				}
 			}
+			{
+				JPanel panel = new JPanel();
+				tabbedPaneGeneral.addTab("Export HTML", null, panel, null);
+				GridBagLayout gbl_panel = new GridBagLayout();
+				gbl_panel.columnWidths = new int[]{0, 0};
+				gbl_panel.rowHeights = new int[]{0, 0, 0};
+				gbl_panel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+				gbl_panel.rowWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+				panel.setLayout(gbl_panel);
+				{
+					JLabel lblCssDuHtml = new JLabel("CSS du HTML, pour plus d'infos sur les balises voir le manuel");
+					GridBagConstraints gbc_lblCssDuHtml = new GridBagConstraints();
+					gbc_lblCssDuHtml.insets = new Insets(0, 0, 5, 0);
+					gbc_lblCssDuHtml.gridx = 0;
+					gbc_lblCssDuHtml.gridy = 0;
+					panel.add(lblCssDuHtml, gbc_lblCssDuHtml);
+				}
+				{
+					m_cssHTML = new JTextArea();
+					JScrollPane scroll = new JScrollPane(m_cssHTML);
+					GridBagConstraints gbc_cssHTML = new GridBagConstraints();
+					gbc_cssHTML.fill = GridBagConstraints.BOTH;
+					gbc_cssHTML.gridx = 0;
+					gbc_cssHTML.gridy = 1;
+					panel.add(scroll, gbc_cssHTML);
+					m_cssHTML.setText((String) McdPreferencesManager.getInstance().get(PGroupe.HTML, PCle.CSS));
+				}
+			}
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -140,6 +176,7 @@ public class FenetrePreferences extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						setVisible(false);
 						McdPreferencesManager.getInstance().set(PGroupe.PROPRIETE, PCle.SCHEMA, m_textField.getText());
+						McdPreferencesManager.getInstance().set(PGroupe.HTML, PCle.CSS, m_cssHTML.getText());
 						McdPreferencesManager.getInstance().save();
 						if(m_parent.getMcd()!=null)
 							m_parent.getMcd().repaint();

@@ -20,5 +20,6 @@ public enum PCle{
 	SCHEMA,
 	OMBRE,
 	OMBRE_COLOR,
-	CIF
+	CIF,
+	CSS
 }
