@@ -186,7 +186,7 @@ public class FenetrePreferences extends JDialog {
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton("Annuler");
 				cancelButton.setActionCommand("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					
@@ -196,6 +196,19 @@ public class FenetrePreferences extends JDialog {
 					}
 				});
 				buttonPane.add(cancelButton);
+			}
+			{
+				JButton btnParDfaut = new JButton("Par Défaut");
+				btnParDfaut.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						McdPreferencesManager.getInstance().loadDefault();
+						McdPreferencesManager.getInstance().save();
+						FenetrePreferences.this.setVisible(false);
+						if(m_parent.getMcd()!=null)
+							m_parent.getMcd().repaint();
+					}
+				});
+				buttonPane.add(btnParDfaut);
 			}
 		}
 	}

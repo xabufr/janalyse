@@ -185,7 +185,7 @@ public class McdPreferencesManager {
 	
 	
 	//Rien de bien interessant au delà, juste du travail de chinois...
-	private void loadDefault(){
+	public void loadDefault(){
 		setFont(PGroupe.HERITAGE, PCle.FONT, "Serif", Font.PLAIN, 10);
 		setFont(PGroupe.HERITAGE, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
 		set(PGroupe.HERITAGE,  PCle.COLOR, Color.GREEN);
