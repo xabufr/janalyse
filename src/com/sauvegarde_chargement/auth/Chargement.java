@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+import org.jdom2.DataConversionException;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -142,8 +143,8 @@ public class Chargement{
 			}
 			e.setProprietes(props);
 			eg.setEntite(e);
-			eg.setMcd(mcd);
 			mcd.addMcdComponents(eg);
+			eg.setMcd(mcd);
 			ids.put(i, eg);
 			++i;
 		}
@@ -176,9 +177,8 @@ public class Chargement{
 				e.addPropriete(prop);
 			}
 			eg.setRelation(e);
+			mcd.addMcdComponents(eg);
 			eg.setMcd(mcd);
-			mcd.addMcdComponents(eg);
-			mcd.addMcdComponents(eg);
 			ids.put(i, eg);
 			++i;
 		}
@@ -217,6 +217,17 @@ public class Chargement{
 			
 			e.setType(HeritageType.valueOf(courant.getAttributeValue("type")));
 			
+			{
+				Element entiteMere = courant.getChild("Entite-mere");
+				if(entiteMere != null){
+					try {
+						EntiteGraph eGraph = (EntiteGraph) ids.get(entiteMere.getAttribute("id").getIntValue());
+						e.setMere(eGraph.getEntite());
+					} catch (DataConversionException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
 			for (Element entite : courant.getChildren("Entite")){
 				EntiteGraph ent  = (EntiteGraph)ids.get(Integer.valueOf(entite.getAttributeValue("id")));;
 				e.addEnfant(ent.getEntite());

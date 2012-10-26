@@ -251,6 +251,7 @@ public class Sauvegarde {
 					entite.setAttribute(new Attribute("id", String.valueOf(j)));
 					
 					cardinalite.addContent(entite);
+					break;
 				}
 			
 			for (int j=0; j<relationGraph.size(); ++j)
@@ -259,6 +260,7 @@ public class Sauvegarde {
 					relation.setAttribute(new Attribute("id", String.valueOf(j+entiteGraph.size())));
 					
 					cardinalite.addContent(relation);
+					break;
 				}
 			
 			allCardinalite.addContent(cardinalite);
@@ -286,6 +288,7 @@ public class Sauvegarde {
 						entite.setAttribute(new Attribute("id", String.valueOf(j)));
 						
 						heritage.addContent(entite);
+						break;
 					}
 			
 					if	(entiteGraph.get(j).getEntite() == h.getMere()){
@@ -293,6 +296,7 @@ public class Sauvegarde {
 						entite.setAttribute(new Attribute("id", String.valueOf(j)));
 						
 						heritage.addContent(entite);
+						break;
 					}
 						
 				}
@@ -322,6 +326,7 @@ public class Sauvegarde {
 						entite.setAttribute(new Attribute("id", String.valueOf(j)));
 						
 						contrainte.addContent(entite);
+						break;
 					}
 			
 			for (int j=0; j<relationGraph.size(); ++j)
@@ -331,6 +336,7 @@ public class Sauvegarde {
 						relation.setAttribute(new Attribute("id", String.valueOf(j+entiteGraph.size())));
 						
 						contrainte.addContent(relation);
+						break;
 					}
 			allContrainte.addContent(contrainte);
 		}

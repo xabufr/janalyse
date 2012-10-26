@@ -305,8 +305,10 @@ public class FenetrePrincipale {
 		m_mntmAnnuler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
 		m_mntmAnnuler.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(m_mcd != null)
+				if(m_mcd != null){
 					m_mcd.annuler();
+					updateMcdUi(m_mcd);
+				}
 			}
 		});
 		mnEdition.add(m_mntmAnnuler);
@@ -314,8 +316,10 @@ public class FenetrePrincipale {
 		m_mntmRefaire = new JMenuItem("Refaire");
 		m_mntmRefaire.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(m_mcd != null)
+				if(m_mcd != null){
 					m_mcd.refaire();
+					updateMcdUi(m_mcd);
+				}
 			}
 		});
 		m_mntmRefaire.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
