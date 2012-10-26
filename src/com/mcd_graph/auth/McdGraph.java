@@ -998,7 +998,7 @@ public class McdGraph extends JPanel{
 	public void setSaved(Boolean s){
 		m_isSaved=s;
 	}
-	public Boolean isSaved(){
+	public boolean isSaved(){
 		return m_isSaved;
 	}
 	public File getFile() {
@@ -1007,10 +1007,10 @@ public class McdGraph extends JPanel{
 	public void setFile(File file) {
 		m_file = file;
 	}
-	public Boolean peutAnnuler(){
+	public boolean peutAnnuler(){
 		return !m_listeAnnuler.isEmpty();
 	}
-	public Boolean peutRefaire(){
+	public boolean peutRefaire(){
 		return !m_listeRefaire.isEmpty();
 	}
 	public ArrayList<Object> getLogic(){
@@ -1020,5 +1020,9 @@ public class McdGraph extends JPanel{
 			ret.add(keys.nextElement());
 		}
 		return ret;
+	}
+	public void reorganiser(){
+		new McdGraphOrganizer(this);
+		repaint();
 	}
 }

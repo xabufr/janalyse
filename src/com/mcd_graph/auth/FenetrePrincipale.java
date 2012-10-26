@@ -327,6 +327,18 @@ public class FenetrePrincipale {
 		
 		JSeparator separator_3 = new JSeparator();
 		mnEdition.add(separator_3);
+		
+		JMenuItem mntmRorganiser = new JMenuItem("Réorganiser");
+		mntmRorganiser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd!=null)
+					m_mcd.reorganiser();
+			}
+		});
+		mnEdition.add(mntmRorganiser);
+		
+		JSeparator separator_4 = new JSeparator();
+		mnEdition.add(separator_4);
 		mnEdition.add(mntmPrfrences);
 		
 		JMenu mnAide = new JMenu("Aide");
@@ -611,17 +623,6 @@ public class FenetrePrincipale {
 			if(sauv==JOptionPane.CANCEL_OPTION)
 				return false;
 			
-			int index = -1;
-			int nb = m_mcdContener.getTabCount();
-			for(int i=0;i<nb;++i){
-				if(((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()==mcd){
-					index=i;
-					break;
-				}
-			}
-			if(index==-1)
-				return true;
-			m_mcdContener.remove(index);
 			if(mcd==m_mcd){
 				m_mcd = null;
 				if(m_mcdContener.getTabCount()!=0){
@@ -629,10 +630,21 @@ public class FenetrePrincipale {
 					m_mcd = (McdGraph) ((JScrollPane)m_mcdContener.getSelectedComponent()).getViewport().getView();
 				}
 			}
-			if(sauv!=JOptionPane.OK_OPTION)
-				return true;
-			mcd.saveMcdComposent();
+			if(sauv==JOptionPane.OK_OPTION){
+				mcd.saveMcdComposent();
+			}
 		}
+		int index = -1;
+		int nb = m_mcdContener.getTabCount();
+		for(int i=0;i<nb;++i){
+			if(((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()==mcd){
+				index=i;
+				break;
+			}
+		}
+		if(index==-1)
+			return true;
+		m_mcdContener.remove(index);
 		return true;
 	}
 	public void updateMcdUi(McdGraph mcd){
