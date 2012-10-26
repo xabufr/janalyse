@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Stack;
 
 import javax.swing.JPanel;
@@ -45,9 +46,9 @@ import com.sauvegarde_chargement.auth.Sauvegarde;
 
 @SuppressWarnings("serial")
 public class McdGraph extends JPanel{
-	private McdComposentGraphique m_focus;
-	private McdComposentGraphique m_copie;
-	private Point m_deltaSelect;
+	private List<McdComposentGraphique> m_focus;
+	private List<McdComposentGraphique> m_copie;
+	private List<Point> m_deltaSelect;
 	private Point m_beginSelect;
 	private Hashtable<McdGraphStateE, McdGraphState> m_states;
 	private McdGraphStateE m_currentState;
@@ -79,10 +80,11 @@ public class McdGraph extends JPanel{
 		m_logicObjects = new Hashtable<Object, McdComposentGraphique> ();
 		m_listeAnnuler = new Stack<Hashtable<Object,McdComposentGraphique>>();
 		m_listeRefaire = new Stack<Hashtable<Object,McdComposentGraphique>>();
-		m_focus = null;
+		m_focus = new ArrayList<McdComposentGraphique>();
+		m_copie = new ArrayList<McdComposentGraphique>();
 		m_isMoving = false;
 		m_isSaved=false;
-		m_deltaSelect = new Point();
+		m_deltaSelect = new ArrayList<Point>();
 		m_beginSelect = new Point();
 		setFile(null);
 		
@@ -590,10 +592,20 @@ public class McdGraph extends JPanel{
 		public void mousePressed(MouseEvent e) {
 			requestFocusInWindow();
 			Boolean found=false;
+			if ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0){
+				for (McdComposentGraphique c : m_components){
+					if (!(c instanceof CardinaliteGraph) && ((FormeGeometrique)c).contient(e.getPoint())){
+						c.setFocus(true);
+						m_focus.add(c);
+					}
+					
+				}
+			}
 			for(McdComposentGraphique component : m_componentsSecond){
 				if(((FormeGeometrique)component).contient(e.getPoint())){
 					found=true;
-					if(component!=m_focus){
+					if(!m_focus.contains(component)){
+						setMcdComposentGraphiquetFocus(null);
 						m_time=System.currentTimeMillis();
 						setMcdComposentGraphiquetFocus(component);
 						break;
@@ -604,76 +616,103 @@ public class McdGraph extends JPanel{
 				for(McdComposentGraphique component : m_componentsFirst){
 					if(((FormeGeometrique)component).contient(e.getPoint())){
 						found=true;
-						if(component!=m_focus){
+						if(!m_focus.contains(component)){
+							setMcdComposentGraphiquetFocus(null);
 							m_time=System.currentTimeMillis();
 							setMcdComposentGraphiquetFocus(component);
 							break;
 						}
 					}
 				}
+				m_selectMulti.resetList();
+				m_selectMulti.setTrace(true);
+				m_selectMulti.setDepart(e.getPoint());
 			}
-			if(m_focus!=null&&e.getClickCount()==1&&found){ // 1 click -> mode move
-					if(!m_focus.isMovable())
+			if(m_focus.size()!=0&&e.getClickCount()==1&&found){ // 1 click -> mode move
+				for (McdComposentGraphique composent : m_focus){
+					if(!composent.isMovable())
 						return;
-					FormeGeometrique forme = (FormeGeometrique)m_focus;
+					FormeGeometrique forme = (FormeGeometrique)composent;
 					if (forme.contient(
 							e.getPoint())){
-						setMcdComposentGraphiquetFocus(m_focus);
-						m_deltaSelect.x = e.getPoint().x - forme.getPosition().x;
-						m_deltaSelect.y = e.getPoint().y - forme.getPosition().y;
-						m_isMoving=true;
-						saveAnnulerModification();
+						for (McdComposentGraphique comp : m_focus){
+							if (comp instanceof CardinaliteGraph)
+								return;
+							FormeGeometrique f = (FormeGeometrique)comp;
+							setMcdComposentGraphiquetFocus(comp);
+							Point p = new Point();
+							p.x = e.getPoint().x - f.getPosition().x;
+							if (e.getPoint().y > f.getPosition().y)
+								p.y = e.getPoint().y - f.getPosition().y;
+							else
+								p.y = e.getPoint().y - f.getPosition().y;
+							m_deltaSelect.add(p);
+							m_isMoving=true;
+							saveAnnulerModification();
+						}
 					}
-				
+				}
 			}
 			else if(found&&(System.currentTimeMillis()-m_time>=m_interval)|| // doubleclick
 					e.getClickCount()==2)
 			{
 				saveAnnulerModification();
-				if(m_focus instanceof RelationGraph)
-				{
-					new FenetreEditionRelation(McdGraph.this, (RelationGraph)m_focus).setVisible(true);
-					((RelationGraph)m_focus).actualiser();
-				}
-				else if (m_focus instanceof ContrainteGraph){
-					new FenetreEditionContrainte(McdGraph.this, (ContrainteGraph)m_focus).setVisible(true);
-					((ContrainteGraph) m_focus).update();
-				}
-				else if (m_focus instanceof HeritageGraph){
-					new FenetreEditionHeritage(McdGraph.this, (HeritageGraph)m_focus).setVisible(true);
-					((HeritageGraph)m_focus).update();
-				}
-				else if (m_focus instanceof EntiteGraph){
-					new FenetreEditionEntite(McdGraph.this, (EntiteGraph)m_focus).setVisible(true);
-				}
-				else if(m_focus instanceof CardinaliteGraph){
-					new FenetreEditionCardinalite(McdGraph.this, (CardinaliteGraph)m_focus).setVisible(true);
+				for (McdComposentGraphique composent : m_focus){
+					if(composent instanceof RelationGraph)
+					{
+						new FenetreEditionRelation(McdGraph.this, (RelationGraph)composent).setVisible(true);
+						((RelationGraph)composent).actualiser();
+					}
+					else if (composent instanceof ContrainteGraph){
+						new FenetreEditionContrainte(McdGraph.this, (ContrainteGraph)composent).setVisible(true);
+						((ContrainteGraph) composent).update();
+					}
+					else if (composent instanceof HeritageGraph){
+						new FenetreEditionHeritage(McdGraph.this, (HeritageGraph)composent).setVisible(true);
+						((HeritageGraph)composent).update();
+					}
+					else if (composent instanceof EntiteGraph){
+						new FenetreEditionEntite(McdGraph.this, (EntiteGraph)composent).setVisible(true);
+					}
+					else if(composent instanceof CardinaliteGraph){
+						new FenetreEditionCardinalite(McdGraph.this, (CardinaliteGraph)composent).setVisible(true);
+					}
 				}
 				setMcdComposentGraphiquetFocus(null);
 			}
 			else if(!found){//Click en dehors
 				setMcdComposentGraphiquetFocus(null);
 			}
-			m_selectMulti.setDepart(e.getPoint());
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
 			m_isMoving=false;
+			m_deltaSelect.clear();
+			if (m_selectMulti.getFocus().size() != 0)
+				m_focus = m_selectMulti.getFocus();
 			m_selectMulti.reset();
-			m_selectMulti.test();
 			repaint();
 		}
 
 		public void mouseDragged(MouseEvent e) {
-			if (m_focus != null&&m_isMoving){
-				FormeGeometrique forme = (FormeGeometrique)m_focus;
-				Point tmp = new Point();
-				tmp.x = e.getPoint().x - m_deltaSelect.x;
-				tmp.y = e.getPoint().y - m_deltaSelect.y;
-				forme.setPosition(tmp);
+			if (m_focus.size() != 0&&m_isMoving){
+				int i=0;
+				for (McdComposentGraphique composent : m_focus){
+					if (composent instanceof CardinaliteGraph)
+						return;
+					FormeGeometrique forme = (FormeGeometrique)composent;
+					Point tmp = new Point();
+						tmp.x = e.getPoint().x - m_deltaSelect.get(i).x;
+						tmp.y = e.getPoint().y - m_deltaSelect.get(i).y;
+					forme.setPosition(tmp);
+					++i;
+				}
 			}
-			m_selectMulti.setPosCurseur(e.getPoint());
-			m_selectMulti.setDraw(true);
+			
+			if (m_selectMulti.isTrace()){
+				m_selectMulti.setPosCurseur(e.getPoint());
+				m_selectMulti.setDraw(true);
+			}
 			repaint();
 		}
 
@@ -681,8 +720,12 @@ public class McdGraph extends JPanel{
 			
 		}
 		public void keyPressed(KeyEvent e) {
-			if(e.getKeyCode() == KeyEvent.VK_DELETE&&m_focus!=null){
-				deleteMcdComposent(m_focus);
+			if(e.getKeyCode() == KeyEvent.VK_DELETE&&m_focus.size()!=0){
+				for (McdComposentGraphique composent : m_focus)
+					deleteMcdComposent(composent);
+				
+				m_focus.clear();
+				repaint();
 			}
 		}
 		public void keyReleased(KeyEvent e) {
@@ -694,8 +737,6 @@ public class McdGraph extends JPanel{
 	}
 	private void deleteMcdComposent(McdComposentGraphique comp){
 		saveAnnulerModification();
-		if(comp==m_focus)
-			setMcdComposentGraphiquetFocus(null);
 		if(comp instanceof EntiteGraph){
 			Entite e = ((EntiteGraph) comp).getEntite();
 			for(McdComposentGraphique composant : m_components){
@@ -718,6 +759,13 @@ public class McdGraph extends JPanel{
 					}
 					((HeritageGraph) composant).update();
 				}
+				else if(composant instanceof CardinaliteGraph){
+					Cardinalite c = ((CardinaliteGraph)composant).getCardinalite();
+					if (c.getEntite().equals(e)){
+						composant.prepareDelete();
+						m_componentsFirst.remove(composant);
+					}
+				}
 			}
 		}
 		else if(comp instanceof RelationGraph){
@@ -730,20 +778,30 @@ public class McdGraph extends JPanel{
 						((ContrainteGraph) composant).update();
 					}
 				}
+				else if(composant instanceof CardinaliteGraph){
+					Cardinalite c = ((CardinaliteGraph)composant).getCardinalite();
+					if (c.getRelation().equals(r)){
+						composant.prepareDelete();
+						m_componentsFirst.remove(composant);
+					}
+				}
 			}
 		}
 		comp.prepareDelete();
-		m_components.remove(comp);
 		if(m_componentsFirst.contains(comp))
 			m_componentsFirst.remove(comp);
 		else
 			m_componentsSecond.remove(comp);
+		
+		m_components.clear();
+		m_components.addAll(m_componentsFirst);
+		m_components.addAll(m_componentsSecond);
 	}
 	public void copyMcdComposent(){
 		m_copie = m_focus;
 	}
 	public void pastMcdComposent() throws CloneNotSupportedException{
-		if (m_copie != null){
+		if (m_copie.size() != 0){
 			saveAnnulerModification();
 			if (m_copie instanceof EntiteGraph){
 				EntiteGraph eg = new EntiteGraph();
@@ -822,12 +880,20 @@ public class McdGraph extends JPanel{
 		new Sauvegarde(this);
 	}
 	private void setMcdComposentGraphiquetFocus(McdComposentGraphique comp){
-		if(m_focus!=null){
-			m_focus.setFocus(false);
+		if(m_focus.size()!=0){
+			for (McdComposentGraphique composent : m_focus)
+				composent.setFocus(false);
 		}
-		m_focus=comp;
-		if(m_focus!=null){
-			m_focus.setFocus(true);
+		
+		if (comp == null)
+			m_focus.clear();
+			
+		if (!m_focus.contains(comp) && comp != null)
+			m_focus.add(comp);
+		
+		if(m_focus.size()!=0){
+			for (McdComposentGraphique composent : m_focus)
+				composent.setFocus(true);
 		}
 		repaint();
 	}
