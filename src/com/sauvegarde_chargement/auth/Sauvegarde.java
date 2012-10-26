@@ -185,7 +185,7 @@ public class Sauvegarde {
 			Attribute posy = new Attribute("y", String.valueOf(rg.getPosition().y));
 			relation.setAttribute(posy);
 
-			Attribute nomR = new Attribute("nom", e.getNom());
+			Attribute nomR = new Attribute("nom", e.getNomReel());
 			relation.setAttribute(nomR);
 
 			Attribute commentaireR = new Attribute("commentaire", e.getCommentaire());
