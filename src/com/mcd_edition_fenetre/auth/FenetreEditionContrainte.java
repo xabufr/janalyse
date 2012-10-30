@@ -174,6 +174,8 @@ public class FenetreEditionContrainte extends JDialog{
 					m_contrainte.addRelation(e);
 				}
 				
+				m_contrainte.setNom((ContrainteType)m_type.getSelectedItem());
+				
 				if (m_contrainte.getNom().equals("1")){
 					Entite e = (Entite)JOptionPane.showInputDialog(null, "Veuillez choisir le sens de lecture:", "Sélection sens de lecture", JOptionPane.PLAIN_MESSAGE, null, m_modelEntite.toArray(), m_modelEntite.getElementAt(0));
 					m_contrainte.setSens(e);
@@ -182,8 +184,6 @@ public class FenetreEditionContrainte extends JDialog{
 					Relation r = (Relation)JOptionPane.showInputDialog(null, "Veuillez choisir le sens de lecture:", "Sélection sens de lecture", JOptionPane.PLAIN_MESSAGE, null, m_modelRelation.toArray(), m_modelRelation.getElementAt(0));
 					m_contrainte.setSens(r);
 				}
-				
-				m_contrainte.setNom((ContrainteType)m_type.getSelectedItem());
 				
 				m_contrainteGraph.update();
 				m_mcd.repaint();
