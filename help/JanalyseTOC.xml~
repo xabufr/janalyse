@@ -5,7 +5,7 @@
 <toc version="1.0">
   <tocitem text="JAnalyse">
     <tocitem text="Présentation" target="presentation">
-      <tocitem text="Création du MCD" target="creermcd" />
+      <tocitem text="Création du MCD" target="creerrmcd" />
       <tocitem text="Création et édition des objets" target="creerentite" />
     </tocitem>
     <tocitem text="A Propos" target="apropos" />

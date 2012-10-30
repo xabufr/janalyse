@@ -1,0 +1,29 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   
+<link rel="stylesheet" href="../jhexamples.css" type="text/css">
+   
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>JAnalyse</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<h1>Création et édition d'un objet</h1>
+<h2>Création</h2>
+<p>Pour créer un entité, vous devez tout d'abord sélectionner le mode &laquo;Insertion d'objets&raquo;, représenté par:<br />
+<img src="../images/objet.png" /><br />
+Une fois le mode sélectionné, vous pouvez cliquer sur une zone du MCD pour ajouter tous les objets dont vous aurez besoin.<br />
+Nous allons maintenant voir comment éditer ces objets
+</p>
+<h2>Édition</h2>
+<p>L'édition des objets nécessite de passer au mode édition, représenté par:<br />
+<img src="../images/edit.png" /><br />
+Une fois le mode selectionné, vous pouvez double-cliquer sur les objets pour modifier leurs noms, 
+y ajouter des commentaires, ou encore ajouter et modifier leurs propriétés.
+Pour ajouter une propriété, renseigner tous les champs nécéssaires (au moins le nom), puis cliquez sur &laquo;Créer&raquo;.<br />
+Pour modifier une propriété, sélectionnez-la tout d'abord dans la liste, puis modifiez les champs qui vous intéressent. 
+Une fois fait, cliquez sur &laquo;Modifier&raquo; pour appliquer les modifications.
+</p>
+</body>
+</html>

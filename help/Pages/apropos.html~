@@ -1,0 +1,27 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   
+<link rel="stylesheet" href="../jhexamples.css" type="text/css">
+   
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>JAnalyse</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<h1>A Propos</h1>
+<p>JAnalyse a été écrit en JAVA à l'aide des bibliothèques suivantes:
+<ul>
+<li>JFontChooser (<a href="http://jfontchooser.sourceforge.jp/site/jfontchooser/">http://jfontchooser.sourceforge.jp/site/jfontchooser/</a>)</li>
+<li>Base64 (<a href="http://iharder.net/base64">http://iharder.net/base64</a>)</li>
+<li>JDom (<a href="http://www.jdom.org/">http://www.jdom.org/</a>)</li>
+<li>JavaHelp (<a href="http://javahelp.java.net/">http://javahelp.java.net/</a>)</li>
+</ul></p>
+<p>Développeurs:
+<ul><li>Alexandre Ramel</li>
+<li>Thomas LOUBIOU</li>
+</ul></p>
+<p>Page du projet: <a href="https://www.assembla.com/spaces/show/janalyse">https://www.assembla.com/spaces/show/janalyse</a><br />
+En cas de bug, veuillez rapporter celui-ci sur la page ticket du projet</p>
+</body>
+</html>

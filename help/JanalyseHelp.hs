@@ -6,18 +6,18 @@ PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp HelpSet Version 2.0//EN"
 <helpset version="2.0">
 
   <!-- title -->
-  <title>Merge Demo</title>
+  <title>JAnalyse Manuel</title>
 
   <!-- maps -->
   <maps>
-     <homeID>intro</homeID>
+     <homeID>presentation</homeID>
      <mapref location="Map.jhm"/>
   </maps>
 
   <!-- views -->
   <view mergetype="javax.help.UniteAppendMerge">
     <name>TOC</name>
-    <label>Table Of Contents</label>
+    <label>Table Des Matières</label>
     <type>javax.help.TOCView</type>
     <data>JanalyseTOC.xml</data>
   </view>
