@@ -40,6 +40,7 @@ import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
 import com.sauvegarde_chargement.auth.Chargement;
 import com.ui_help.auth.APropos;
+import com.ui_help.auth.HelpDialog;
 
 import java.awt.Insets;
 import java.util.ArrayList;
@@ -354,6 +355,14 @@ public class FenetrePrincipale {
 			}
 		});
 		mnAide.add(mntmAPropos);
+		
+		JMenuItem mntmManuel = new JMenuItem("Manuel");
+		mntmManuel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new HelpDialog().show(arg0);
+			}
+		});
+		mnAide.add(mntmManuel);
 		
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);

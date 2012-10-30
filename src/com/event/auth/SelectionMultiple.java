@@ -93,10 +93,10 @@ public class SelectionMultiple {
 		
 		m_rect.setBounds(x, y, width, height);
 		g.setColor((Color)prefs.get(PGroupe.SELECTEUR, PCle.COLOR_CONTOUR));
-		if (!(boolean)prefs.get(PGroupe.SELECTEUR, PCle.LIGNE_CONTINUE))
+		if (!(Boolean)prefs.get(PGroupe.SELECTEUR, PCle.LIGNE_CONTINUE))
 			g2.setStroke(dashed);
 		
-		if ((boolean)prefs.get(PGroupe.SELECTEUR, PCle.FORME_ARRONDIE))
+		if ((Boolean)prefs.get(PGroupe.SELECTEUR, PCle.FORME_ARRONDIE))
 			g.drawRoundRect(x, y, width, height, 5, 5);
 		else
 			g.drawRect(x, y, width, height);
