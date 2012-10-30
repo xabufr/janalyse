@@ -110,7 +110,11 @@ public class McdGraphOrganizer {
 				break;
 			}
 		}
-		tri[1][1] = depart;
+		if(m_groupes.size()==1)
+			tri[0][0] = depart;
+		else
+			tri[1][1] = depart;
+		
 		depart.estPlace=true;
 		//Placer tous les autres composants en récursif
 		placerAutresGroupes(1,1, tri);
