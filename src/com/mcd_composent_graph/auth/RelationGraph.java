@@ -190,8 +190,6 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 
 	public void prepareDelete() {
 		m_mcd.removeLogic(m_relation);
-		m_relation.setProprietes(null);
-		m_relation=null;
 	}
 	
 	public void setFocus(Boolean f){

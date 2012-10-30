@@ -166,7 +166,6 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 
 	public void prepareDelete() {
 		m_mcd.removeLogic(m_entite);
-		m_entite=null;
 	}
 	public void addLien(McdComposentGraphique comp, Point p){
 		m_liensB.put(comp, p);

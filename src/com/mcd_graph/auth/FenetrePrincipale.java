@@ -38,9 +38,10 @@ import com.export.auth.ExportSql;
 import com.export.auth.ExportPng;
 import com.export.auth.ExporterHTML;
 import com.mld.auth.MLDPanel;
+import com.preferences_mcd_logique.auth.McdPreferencesManager;
+import com.preferences_mcd_logique.auth.PCle;
+import com.preferences_mcd_logique.auth.PGroupe;
 import com.sauvegarde_chargement.auth.Chargement;
-import com.sauvegarde_chargement.auth.ChargementEtat;
-import com.sauvegarde_chargement.auth.SauvegardeEtat;
 import com.ui_help.auth.APropos;
 
 import java.awt.Insets;
@@ -475,7 +476,21 @@ public class FenetrePrincipale {
 		});
 		frame.addWindowListener(new WindowListener() {
 			public void windowOpened(WindowEvent arg0) {
-				new ChargementEtat(FenetrePrincipale.this);
+				McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+				ArrayList<String> lst = (ArrayList<String>)prefs.get(PGroupe.ETAT, PCle.SAVE);
+				if (lst == null)
+					return;
+				for (String s : lst){
+					File f = new File(s);
+					
+					if (!f.exists())
+						continue;
+					
+					createNewMcd();
+					getTabs().setSelectedIndex(getTabs().getComponents().length-1);
+					
+					new Chargement(getMcd(), s);
+				}
 			}
 			public void windowIconified(WindowEvent arg0) {
 				// TODO Auto-generated method stub
@@ -516,12 +531,17 @@ public class FenetrePrincipale {
 
 	public void quitter() {
 		ArrayList<McdGraph> mcds = new ArrayList<McdGraph>();
+		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+		ArrayList<String> lst = new ArrayList();
 		int nb = m_mcdContener.getTabCount();
 		for(int i=0;i<nb;++i){
 			mcds.add((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView());
+			String s = ((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()).getFile().getAbsolutePath();
+			lst.add(s);
 		}
 		
-		new SauvegardeEtat(mcds, m_mcdContener.getSelectedIndex());
+		prefs.set(PGroupe.ETAT, PCle.SAVE, lst);
+		prefs.save();
 		
 		for(McdGraph mcd : mcds){
 			if(!fermerMcd(mcd)){

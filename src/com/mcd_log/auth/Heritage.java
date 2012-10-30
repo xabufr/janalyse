@@ -27,6 +27,11 @@ public class Heritage implements Cloneable{
 	}
 	public Heritage clone() throws CloneNotSupportedException{
 		Heritage h = (Heritage) super.clone();
+		ArrayList<Entite> enfants = new ArrayList<>();
+		for (Entite e : getEnfants())
+			enfants.add(e);
+		
+		h.setEnfants(enfants);
 		return h;
 	}
 	public Entite getMere() {

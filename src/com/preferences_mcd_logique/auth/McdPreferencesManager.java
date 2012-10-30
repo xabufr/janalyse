@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.prefs.BackingStoreException;
@@ -254,6 +255,8 @@ public class McdPreferencesManager {
 		set(PGroupe.SELECTEUR, PCle.COLOR_CONTOUR, Color.BLACK);
 		set(PGroupe.SELECTEUR, PCle.FORME_ARRONDIE, true);
 		set(PGroupe.SELECTEUR, PCle.LIGNE_CONTINUE, false);
+		
+		set(PGroupe.ETAT, PCle.SAVE, new ArrayList<String>());
 	}
 }
 
