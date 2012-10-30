@@ -6,7 +6,10 @@
 	<classpathentry kind="lib" path="forms-1.3.0.jar" sourcepath="forms-1.3.0-src.zip"/>
 	<classpathentry kind="lib" path="jfontchooser-1.0.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="jdom-2.0.3.jar"/>
-	<classpathentry kind="lib" path="cobra-0.98.4/lib/cobra.jar"/>
-	<classpathentry kind="lib" path="cobra-0.98.4/lib/js.jar"/>
+	<classpathentry kind="lib" path="javahelp/lib/jh.jar"/>
+	<classpathentry kind="lib" path="javahelp/lib/jhall.jar"/>
+	<classpathentry kind="lib" path="javahelp/lib/jhbasic.jar"/>
+	<classpathentry kind="lib" path="javahelp/lib/jsearch.jar"/>
+	<classpathentry kind="lib" path="manuel.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
