@@ -82,7 +82,7 @@ public class Chargement{
 	}
 	
 	public Chargement(McdGraph mcd, String f) {	
-			File file = new File("src/save/"+f);
+			File file = new File(f);
 			
 			SAXBuilder sax = new SAXBuilder();
 			try {
@@ -229,9 +229,12 @@ public class Chargement{
 				}
 			}
 			for (Element entite : courant.getChildren("Entite")){
-				EntiteGraph ent  = (EntiteGraph)ids.get(Integer.valueOf(entite.getAttributeValue("id")));;
+				EntiteGraph ent  = (EntiteGraph)ids.get(Integer.valueOf(entite.getAttributeValue("id")));
 				e.addEnfant(ent.getEntite());
 			}
+			
+			EntiteGraph ent  = (EntiteGraph)ids.get(Integer.valueOf(courant.getChild("Entite-mere").getAttributeValue("id")));
+			e.setMere(ent.getEntite());
 			
 			eg.setHeritage(e);
 			eg.setMcd(mcd);

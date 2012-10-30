@@ -20,6 +20,9 @@ public enum PCle{
 	SCHEMA,
 	OMBRE,
 	OMBRE_COLOR,
+	FORME_ARRONDIE,
+	LIGNE_CONTINUE,
+	SAVE,
 	CIF,
 	CSS
 }

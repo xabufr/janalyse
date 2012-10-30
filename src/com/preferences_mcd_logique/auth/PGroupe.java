@@ -7,5 +7,7 @@ public enum PGroupe{
 	ENTITE,
 	CARDINALITE,
 	CONTRAINTE,
+	SELECTEUR,
+	ETAT,
 	HTML
 }

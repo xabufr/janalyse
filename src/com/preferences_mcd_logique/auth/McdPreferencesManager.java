@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.prefs.BackingStoreException;
@@ -261,6 +262,12 @@ public class McdPreferencesManager {
 		
 		set(PGroupe.PROPRIETE, PCle.SCHEMA, "%[0e1]%[1E]_%p");
 		
+		set(PGroupe.SELECTEUR, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.SELECTEUR, PCle.FORME_ARRONDIE, true);
+		set(PGroupe.SELECTEUR, PCle.LIGNE_CONTINUE, false);
+		
+		set(PGroupe.ETAT, PCle.SAVE, new ArrayList<String>());
+
 		set(PGroupe.HTML, PCle.CSS, "h1, div {\ntext-align: center;\n}\ndiv {\n border: 1px solid black;\n    margin-bottom: -1px;\n    padding: 1px;\n}\ndiv.entite p \n{\n    background-color: black;\n    margin: 0;\n    color: white;\n}\n.mld. cleEtrangere \n{\n    border-bottom: 1px black dashed;\n}\ndiv.entite \n{\n    margin-bottom: 5px;\n    background-color: silver;\n}\n .mld. clePrimaire{\n text-decoration: underline; \n}");
 	}
 }
