@@ -11,7 +11,6 @@ public interface FormeGeometrique {
 	public abstract void setPosition(Point p);
 	public abstract Point getPosition();
 }
-
 class FormeGeometriqueRectangle implements FormeGeometrique{
 	private Rectangle m_rect;
 	
