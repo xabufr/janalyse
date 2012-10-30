@@ -40,6 +40,8 @@ public class McdGraphOrganizer {
 				g = new Groupe();
 				if(comp instanceof HeritageGraph){
 					HeritageGraph her = (HeritageGraph) comp;
+					g.components.add(her);
+					registedInvertedGroupe(her, g);
 					if(her.getHeritage().getMere()!=null){
 						g.components.add(m_mcd.getGraphicComponent(her.getHeritage().getMere()));
 						registedInvertedGroupe(m_mcd.getGraphicComponent(her.getHeritage().getMere()), g);
@@ -102,7 +104,6 @@ public class McdGraphOrganizer {
 		}
 		//Première étape: trouver un groupe de départ
 		Groupe depart = m_groupes.get(0);
-		System.out.println(min+" "+max);
 		for(Groupe g : m_groupes){
 			if(g.groupes.size()==min){
 				depart=g;
@@ -140,20 +141,22 @@ public class McdGraphOrganizer {
 	}
 	private void placerComposantGrille(int x, int y, Groupe[][] groupes, McdComposentGraphique comp, McdComposentGraphique composants[][], int centreXgroupe, int centreYgroupe){
 		ArrayList<McdComposentGraphique> ptsCommuns;
-		for(int i=-1;i<2;++i){
-			if(x+i<0||x+i>=groupes.length)
-				continue;
-			for(int j=0;j<2;++j){
-				if(j==0&&i==0)
+		for(int ptCom=0;ptCom<2;++ptCom){
+			for(int i=-1;i<2;++i){
+				if(x+i<0||x+i>=groupes.length)
 					continue;
-				if(j+y<0||j+y>=groupes[x+i].length)
-					continue;
-				ptsCommuns = pointsCommun(groupes[x][y], groupes[x+i][y+j]);
-				if(ptsCommuns==null)
-					continue;
-				if(composants[centreXgroupe+i][centreYgroupe+j]==null){
-					composants[centreXgroupe+i][centreYgroupe+j]=comp;
-					return;
+				for(int j=0;j<2;++j){
+					if(j==0&&i==0)
+						continue;
+					if(j+y<0||j+y>=groupes[x+i].length)
+						continue;
+					ptsCommuns = pointsCommun(groupes[x][y], groupes[x+i][y+j]);
+					if(ptsCommuns==null&&ptCom==0)
+						continue;
+					if(composants[centreXgroupe+i][centreYgroupe+j]==null){
+						composants[centreXgroupe+i][centreYgroupe+j]=comp;
+						return;
+					}
 				}
 			}
 		}
@@ -175,9 +178,7 @@ public class McdGraphOrganizer {
 				continue;
 			g.estPlace=true;
 			Position pos = trouverPlaceLibre(x,y,tableau);
-			System.out.println(x+" "+y);
 			if(pos!=null){
-				System.out.println(pos.x+" "+pos.y);
 				tableau[pos.x][pos.y] = g;
 				placerAutresGroupes(pos.x, pos.y, tableau);
 			}
@@ -227,7 +228,7 @@ public class McdGraphOrganizer {
 			for(int j=0;j<composants[i].length;++j){
 				if(composants[i][j]==null)
 					continue;
-				 ((FormeGeometrique) composants[i][j]).setPosition(new Point((max.width+50)*i,(max.height+50)*j));
+				 ((FormeGeometrique) composants[i][j]).setPosition(new Point((max.width+25)*i,(max.height+25)*j));
 			}
 		}
 		//On peut maintenant placer les contraintes
