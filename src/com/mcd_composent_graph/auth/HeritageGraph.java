@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 	private List<EntiteGraph> m_entitesGraph;
 	private Boolean m_needUpdateGraphic;
 	private FormeGeometriqueRectangle m_geometrie;
+	private ArrayList<Line2D> m_lignesLiens;
 	private final Point m_centre = new Point();
 
 	public Rectangle getRectangle(){
@@ -51,6 +54,7 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		m_geometrie = new FormeGeometriqueRectangle(new Rectangle());
 		m_entitesGraph = new ArrayList<EntiteGraph>();
 		m_needUpdateGraphic = false;
+		m_lignesLiens = new ArrayList<Line2D>();
 	}
 	public Heritage getHeritage() {
 		return m_heritage;
@@ -98,7 +102,7 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		m_centre.setLocation(getPosition());
 		m_centre.x += getDimension().width/2;
 		m_centre.y += getDimension().height/2;
-
+		m_lignesLiens.clear();
 		if (m_entiteGraphMere != null){	
 			Point e = m_entiteGraphMere.getValidLinkPosition(this);
 			Point e1 = new Point();
@@ -123,6 +127,7 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 			int py[] = {0, p[0].y, p[1].y};
 			
 			g.drawLine(m_centre.x, m_centre.y, e.x, e.y);
+			m_lignesLiens.add(new Line2D.Double(m_centre.x, m_centre.y, e.x, e.y));
 			g2.translate(e.x, e.y);
 			g2.rotate(a);
 			g.fillPolygon(px, py, 3);
@@ -133,12 +138,33 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		for (EntiteGraph eg : m_entitesGraph){
 			Point e = eg.getValidLinkPosition(this);
 			g.drawLine(m_centre.x, m_centre.y, e.x, e.y);
+			m_lignesLiens.add(new Line2D.Double(m_centre.x, m_centre.y, e.x, e.y));
 		}
 		
-		if(!m_focus)
-			g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR));
-		else
-			g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR_FOCUS));
+		
+		if(!(Boolean) prefs.get(PGroupe.HERITAGE, PCle.GRADIANT_COLOR)){
+			if(!m_focus)
+				g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR));
+			else
+				g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.COLOR_FOCUS));
+		}
+		else{
+			Graphics2D g2 = (Graphics2D) g;
+			GradientPaint paint=null;
+			if(!m_focus){
+				paint = new GradientPaint(getPosition().x, 0, 
+						(Color)prefs.get(PGroupe.HERITAGE, PCle.COLOR), 
+						getPosition().x+getDimension().width, 0, 
+						(Color)prefs.get(PGroupe.HERITAGE, PCle.COLOR_2));
+			}
+			else{
+				paint = new GradientPaint(getPosition().x, 0, 
+						(Color)prefs.get(PGroupe.HERITAGE, PCle.COLOR_FOCUS), 
+						getPosition().x+getDimension().width, 0, 
+						(Color)prefs.get(PGroupe.HERITAGE, PCle.COLOR_2_FOCUS));
+			}
+			g2.setPaint(paint);
+		}
 		g.fillArc(pos.x, pos.y, dim.width, dim.height, 0, 180);
 		g.fillRect(pos.x, pos.y+dim.height/2, dim.width, dim.height/2);
 		
@@ -239,10 +265,13 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 
 	public void dessinerOmbre(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
-		if ((boolean)prefs.get(PGroupe.HERITAGE, PCle.OMBRE)){
+		if ((Boolean)prefs.get(PGroupe.HERITAGE, PCle.OMBRE)){
 			g.setColor((Color)prefs.get(PGroupe.HERITAGE, PCle.OMBRE_COLOR));
 			g.fillRect(this.getPosition().x+2, this.getPosition().y+this.getDimension().height/2, this.getDimension().width, this.getDimension().height/2+2);
 
 		}
+	}
+	public ArrayList<Line2D> getLignesLiens(){
+		return m_lignesLiens;
 	}
 }

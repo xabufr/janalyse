@@ -39,9 +39,6 @@ import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.HeritageType;
 import com.mcd_log.auth.Relation;
 import com.mcd_log.auth.Entite;
-import com.preferences_mcd_logique.auth.McdPreferencesManager;
-import com.preferences_mcd_logique.auth.PCle;
-import com.preferences_mcd_logique.auth.PGroupe;
 import com.sauvegarde_chargement.auth.Sauvegarde;
 
 @SuppressWarnings("serial")
@@ -89,6 +86,7 @@ public class McdGraph extends JPanel{
 		this.setSize(new Dimension(80, 80));
 		this.setState(McdGraphStateE.INSERT_ENTITE);
 		this.setFocusable(true);
+		saveAnnulerModification();
 	}
 	
 	public void paintComponent(Graphics g){
@@ -96,9 +94,8 @@ public class McdGraph extends JPanel{
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
-		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
-		
 		Point min = new Point(0,0), max = new Point(0,0);
+
 		for(McdComposentGraphique component : m_components)
 			component.dessinerOmbre(g);
 		
@@ -261,7 +258,6 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
-			saveAnnulerModification();
 			EntiteGraph eg = new EntiteGraph();
 			eg.setEntite(new Entite("Entite"+(m_last++)));
 			eg.setPosition(e.getPoint());
@@ -269,6 +265,7 @@ public class McdGraph extends JPanel{
 			m_components.add(eg);
 			m_componentsSecond.add(eg);
 			repaint();
+			saveAnnulerModification();
 		}
 
 		public void mouseReleased(MouseEvent e) {
@@ -307,7 +304,6 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
-			saveAnnulerModification();
 			RelationGraph eg = new RelationGraph();
 			eg.setRelation(new Relation("Relation"+(m_last++)));
 			eg.setPosition(e.getPoint());
@@ -315,6 +311,7 @@ public class McdGraph extends JPanel{
 			m_components.add(eg);
 			m_componentsSecond.add(eg);
 			repaint();
+			saveAnnulerModification();
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
@@ -385,7 +382,6 @@ public class McdGraph extends JPanel{
 					clear();
 					return;
 				}
-				saveAnnulerModification();
 				//Cas relation entite/relation
 				if((m_objects[0] instanceof EntiteGraph &&
 						m_objects[1] instanceof RelationGraph)||
@@ -434,6 +430,7 @@ public class McdGraph extends JPanel{
 				clear();
 			}
 			repaint();
+			saveAnnulerModification();
 		}
 
 		public void mouseReleased(MouseEvent e) {
@@ -472,7 +469,6 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
-			saveAnnulerModification();
 			ContrainteGraph contG = new ContrainteGraph();
 			Contrainte cont = new Contrainte(ContrainteType.X);
 			
@@ -483,6 +479,7 @@ public class McdGraph extends JPanel{
 			m_components.add(contG);
 			m_componentsFirst.add(contG);
 			repaint();
+			saveAnnulerModification();
 		}
 
 		public void mouseReleased(MouseEvent e) {
@@ -525,7 +522,6 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
-			saveAnnulerModification();
 			HeritageGraph herG = new HeritageGraph();
 			Heritage her = new Heritage(HeritageType.XT);
 			
@@ -536,6 +532,7 @@ public class McdGraph extends JPanel{
 			m_components.add(herG);
 			m_componentsFirst.add(herG);
 			repaint();
+			saveAnnulerModification();
 		}
 
 		public void mouseReleased(MouseEvent e) {
@@ -634,8 +631,7 @@ public class McdGraph extends JPanel{
 					if(!composent.isMovable())
 						return;
 					FormeGeometrique forme = (FormeGeometrique)composent;
-					if (forme.contient(
-							e.getPoint())){
+					if (forme.contient(e.getPoint())){
 						for (McdComposentGraphique comp : m_focus){
 							if (comp instanceof CardinaliteGraph)
 								return;
@@ -657,7 +653,6 @@ public class McdGraph extends JPanel{
 			else if(found&&(System.currentTimeMillis()-m_time>=m_interval)|| // doubleclick
 					e.getClickCount()==2)
 			{
-				saveAnnulerModification();
 				for (McdComposentGraphique composent : m_focus){
 					if(composent instanceof RelationGraph)
 					{
@@ -684,6 +679,7 @@ public class McdGraph extends JPanel{
 			else if(!found){//Click en dehors
 				setMcdComposentGraphiquetFocus(null);
 			}
+			saveAnnulerModification();
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
@@ -737,7 +733,6 @@ public class McdGraph extends JPanel{
 		}
 	}
 	private void deleteMcdComposent(McdComposentGraphique comp){
-		saveAnnulerModification();
 		if(comp instanceof EntiteGraph){
 			Entite e = ((EntiteGraph) comp).getEntite();
 			for(McdComposentGraphique composant : m_components){
@@ -797,9 +792,11 @@ public class McdGraph extends JPanel{
 		m_components.clear();
 		m_components.addAll(m_componentsFirst);
 		m_components.addAll(m_componentsSecond);
+
+		saveAnnulerModification();
 	}
 	public void copyMcdComposent(){
-		List<McdComposentGraphique> tmp = new ArrayList();
+		List<McdComposentGraphique> tmp = new ArrayList<McdComposentGraphique>();
 		for (McdComposentGraphique c : m_focus)
 			tmp.add(c);
 		for (McdComposentGraphique composent : m_components){
@@ -882,7 +879,7 @@ public class McdGraph extends JPanel{
 				
 				cg.setContrainte(c);
 				cg.setPosition(newPos);
-				List lst = new ArrayList<>();
+				List<Object> lst = new ArrayList<Object>();
 				for (Entite e : c.getEntites())
 					lst.add(e);
 				for (Relation r : c.getRelations())
@@ -910,7 +907,7 @@ public class McdGraph extends JPanel{
 				
 				hg.setHeritage(h);
 				hg.setPosition(newPos);
-				List lst = new ArrayList<>();
+				List<Object> lst = new ArrayList<Object>();
 				for (Entite e : h.getEnfants())
 					lst.add(e);
 				
@@ -936,6 +933,7 @@ public class McdGraph extends JPanel{
 				m_components.add(cg);
 				m_componentsFirst.add(cg);
 			}
+			saveAnnulerModification();
 		}
 		repaint();
 	}
@@ -1090,8 +1088,6 @@ public class McdGraph extends JPanel{
 	public void annuler(){
 		if(m_listeAnnuler.isEmpty())
 			return;
-		if(m_listeRefaire.isEmpty())
-			saveAnnulerModification();
 		setMcdComposentGraphiquetFocus(null);
 		Hashtable<Object, McdComposentGraphique> nouvelleLogique = m_listeAnnuler.pop();
 		m_listeRefaire.push(nouvelleLogique);
@@ -1137,7 +1133,7 @@ public class McdGraph extends JPanel{
 	public void setSaved(Boolean s){
 		m_isSaved=s;
 	}
-	public Boolean isSaved(){
+	public boolean isSaved(){
 		return m_isSaved;
 	}
 	public File getFile() {
@@ -1146,10 +1142,10 @@ public class McdGraph extends JPanel{
 	public void setFile(File file) {
 		m_file = file;
 	}
-	public Boolean peutAnnuler(){
+	public boolean peutAnnuler(){
 		return !m_listeAnnuler.isEmpty();
 	}
-	public Boolean peutRefaire(){
+	public boolean peutRefaire(){
 		return !m_listeRefaire.isEmpty();
 	}
 	public ArrayList<Object> getLogic(){
@@ -1159,5 +1155,9 @@ public class McdGraph extends JPanel{
 			ret.add(keys.nextElement());
 		}
 		return ret;
+	}
+	public void reorganiser(){
+		new McdGraphOrganizer(this);
+		repaint();
 	}
 }

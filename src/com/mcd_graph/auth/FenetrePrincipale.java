@@ -1,11 +1,8 @@
 package com.mcd_graph.auth;
 
 import java.awt.EventQueue;
-import java.awt.Graphics2D;
 import java.awt.Point;
 
-import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
@@ -47,13 +44,10 @@ import com.ui_help.auth.APropos;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.awt.event.InputEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.JSplitPane;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
@@ -312,8 +306,10 @@ public class FenetrePrincipale {
 		m_mntmAnnuler.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
 		m_mntmAnnuler.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(m_mcd != null)
+				if(m_mcd != null){
 					m_mcd.annuler();
+					updateMcdUi(m_mcd);
+				}
 			}
 		});
 		mnEdition.add(m_mntmAnnuler);
@@ -321,8 +317,10 @@ public class FenetrePrincipale {
 		m_mntmRefaire = new JMenuItem("Refaire");
 		m_mntmRefaire.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(m_mcd != null)
+				if(m_mcd != null){
 					m_mcd.refaire();
+					updateMcdUi(m_mcd);
+				}
 			}
 		});
 		m_mntmRefaire.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
@@ -330,6 +328,18 @@ public class FenetrePrincipale {
 		
 		JSeparator separator_3 = new JSeparator();
 		mnEdition.add(separator_3);
+		
+		JMenuItem mntmRorganiser = new JMenuItem("Réorganiser");
+		mntmRorganiser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd!=null)
+					m_mcd.reorganiser();
+			}
+		});
+		mnEdition.add(mntmRorganiser);
+		
+		JSeparator separator_4 = new JSeparator();
+		mnEdition.add(separator_4);
 		mnEdition.add(mntmPrfrences);
 		
 		JMenu mnAide = new JMenu("Aide");
@@ -629,9 +639,20 @@ public class FenetrePrincipale {
 		if(mcd==null)
 			return false;
 		if(!mcd.isSaved()){
-			if(JOptionPane.showConfirmDialog(null,"MCD non sauvegardé, voulez-vous le fermer ?")!=
-					JOptionPane.OK_OPTION)
+			int sauv = JOptionPane.showConfirmDialog(null,"MCD non sauvegardé, voulez-vous sauver ?");
+			if(sauv==JOptionPane.CANCEL_OPTION)
 				return false;
+			
+			if(mcd==m_mcd){
+				m_mcd = null;
+				if(m_mcdContener.getTabCount()!=0){
+					m_mcdContener.setSelectedIndex(0);
+					m_mcd = (McdGraph) ((JScrollPane)m_mcdContener.getSelectedComponent()).getViewport().getView();
+				}
+			}
+			if(sauv==JOptionPane.OK_OPTION){
+				mcd.saveMcdComposent();
+			}
 		}
 		int index = -1;
 		int nb = m_mcdContener.getTabCount();
@@ -642,15 +663,8 @@ public class FenetrePrincipale {
 			}
 		}
 		if(index==-1)
-			return false;
+			return true;
 		m_mcdContener.remove(index);
-		if(mcd==m_mcd){
-			m_mcd = null;
-			if(m_mcdContener.getTabCount()!=0){
-				m_mcdContener.setSelectedIndex(0);
-				m_mcd = (McdGraph) ((JScrollPane)m_mcdContener.getSelectedComponent()).getViewport().getView();
-			}
-		}
 		return true;
 	}
 	public void updateMcdUi(McdGraph mcd){

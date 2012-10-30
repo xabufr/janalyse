@@ -8,5 +8,6 @@ public enum PGroupe{
 	CARDINALITE,
 	CONTRAINTE,
 	SELECTEUR,
-	ETAT
+	ETAT,
+	HTML
 }

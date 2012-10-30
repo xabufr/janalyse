@@ -24,7 +24,6 @@ import javax.swing.JComboBox;
 import com.mcd_composent_graph.auth.RelationGraph;
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Propriete;
-import com.mcd_log.auth.ProprieteType;
 import com.mcd_log.auth.ProprieteTypeE;
 import com.mcd_log.auth.Relation;
 
@@ -51,14 +50,16 @@ public class FenetreEditionRelation extends JDialog {
 	private DefaultListModel m_model;
 	private Propriete m_currentPropriete;
 	private JCheckBox m_nullable;
-	private JSpinner m_taille;
+	private JSpinner m_taille[];
 	private JTextPane m_txtpnCommentaire;
 	private JCheckBox m_autoIncrement;
 	private JButton m_btnCreer;
+	private JPanel m_panel, m_panelTaille;
 	/**
 	 * Create the dialog.
 	 */
 	public FenetreEditionRelation(McdGraph mcd, RelationGraph relation) {
+		relation.getRelation().setCif(false);
 		setMinimumSize(new Dimension(0, 380));
 		m_relation = relation.getRelation();
 		m_relationCopie = new Relation(relation.getRelation());
@@ -100,17 +101,17 @@ public class FenetreEditionRelation extends JDialog {
 			}
 		}
 		{
-			JPanel panel = new JPanel();
-			panel.setBorder(new LineBorder(Color.GRAY));
-			contentPanel.add(panel, "cell 0 2,grow");
-			panel.setLayout(new MigLayout("", "[][grow,center]", "[][][][][grow][][][]"));
+			m_panel = new JPanel();
+			m_panel.setBorder(new LineBorder(Color.GRAY));
+			contentPanel.add(m_panel, "cell 0 2,grow");
+			m_panel.setLayout(new MigLayout("", "[][grow,center]", "[][][][][grow][][][]"));
 			{
 				JLabel lblProprietes = new JLabel("Propriete");
-				panel.add(lblProprietes, "cell 0 0 2 1,alignx center");
+				m_panel.add(lblProprietes, "cell 0 0 2 1,alignx center");
 			}
 			{
 				JLabel lblNom_1 = new JLabel("Nom");
-				panel.add(lblNom_1, "cell 0 1");
+				m_panel.add(lblNom_1, "cell 0 1");
 			}
 			{
 				m_nomPropriete = new JTextField();
@@ -121,16 +122,24 @@ public class FenetreEditionRelation extends JDialog {
 						}
 					}
 				});
-				panel.add(m_nomPropriete, "cell 1 1,growx");
+				m_panel.add(m_nomPropriete, "cell 1 1,growx");
 				m_nomPropriete.setColumns(10);
 			}
 			{
 				JLabel lblType = new JLabel("Type");
-				panel.add(lblType, "cell 0 2");
+				m_panel.add(lblType, "cell 0 2");
 			}
 			{
 				m_typePropriete = new JComboBox();
-				panel.add(m_typePropriete, "cell 1 2,growx");
+				m_typePropriete.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						changeTaille(ProprieteTypeE.getValue((String) m_typePropriete.getSelectedItem()));
+					}
+				});
+
+				m_panel.add(m_typePropriete, "cell 1 2,growx");
+				m_panelTaille = new JPanel();
+				
 				for(ProprieteTypeE type : ProprieteTypeE.values()){
 					m_typePropriete.addItem(type.getName());
 				}
@@ -140,42 +149,41 @@ public class FenetreEditionRelation extends JDialog {
 				btnModifier.addActionListener(new modifierPropriete());
 				{
 					JLabel lblTaille = new JLabel("Taille");
-					panel.add(lblTaille, "cell 0 3");
+					m_panel.add(lblTaille, "cell 0 3");
+					m_panel.add(m_panelTaille, "cell 1 3");
 				}
 				{
-					m_taille = new JSpinner();
-					m_taille.setModel(new SpinnerNumberModel(0, 0, 255, 1));
-					panel.add(m_taille, "cell 1 3,growx");
+					m_taille = null;
 				}
 				{
 					JLabel lblCommentaire_1 = new JLabel("Commentaire");
-					panel.add(lblCommentaire_1, "cell 0 4");
+					m_panel.add(lblCommentaire_1, "cell 0 4");
 				}
 				{
 					m_txtpnCommentaire = new JTextPane();
-					panel.add(m_txtpnCommentaire, "cell 1 4,grow");
+					m_panel.add(m_txtpnCommentaire, "cell 1 4,grow");
 				}
 				{
 					JLabel lblNull = new JLabel("Null");
-					panel.add(lblNull, "cell 0 5");
+					m_panel.add(lblNull, "cell 0 5");
 				}
 				{
 					m_nullable = new JCheckBox("");
-					panel.add(m_nullable, "cell 1 5");
+					m_panel.add(m_nullable, "cell 1 5");
 				}
 				{
 					JLabel lblAutoIncrement = new JLabel("Auto Increment");
-					panel.add(lblAutoIncrement, "cell 0 6");
+					m_panel.add(lblAutoIncrement, "cell 0 6");
 				}
 				{
 					m_autoIncrement = new JCheckBox("");
-					panel.add(m_autoIncrement, "cell 1 6");
+					m_panel.add(m_autoIncrement, "cell 1 6");
 				}
-				panel.add(btnModifier, "cell 0 7,growx");
+				m_panel.add(btnModifier, "cell 0 7,growx");
 			}
 			{
 				m_btnCreer = new JButton("Créer");
-				panel.add(m_btnCreer, "cell 1 7,growx");
+				m_panel.add(m_btnCreer, "cell 1 7,growx");
 				m_btnCreer.addActionListener(new createurPropriete());
 			}
 		}
@@ -272,9 +280,9 @@ public class FenetreEditionRelation extends JDialog {
 		m_autoIncrement.setSelected(p.isAutoIncrement());
 		m_txtpnCommentaire.setText(p.getCommentaire());
 		m_nullable.setSelected(p.isNull());
-		m_taille.setValue((Integer)p.getTaille());
-		m_typePropriete.setSelectedItem(p.getType().getType().getName());
-
+		m_typePropriete.setSelectedItem(p.getType().getName());
+		changeTaille(p.getType());
+		alimenterTaille(p);
 		
 		m_currentPropriete = p;
 	}
@@ -294,11 +302,11 @@ public class FenetreEditionRelation extends JDialog {
 			if(m_nomPropriete.getText().trim().isEmpty())
 				return;
 			ProprieteTypeE type = ProprieteTypeE.getValue(m_typePropriete.getSelectedItem().toString());
-			Propriete prop = new Propriete(m_nomPropriete.getText(), new ProprieteType(type));
+			Propriete prop = new Propriete(m_nomPropriete.getText(), type);
 			prop.setAutoIncrement(m_autoIncrement.isSelected());
 			prop.setNull(m_nullable.isSelected());
 			prop.setCommentaire(m_txtpnCommentaire.getText());
-			prop.setTaille(((Integer)m_taille.getValue()).intValue());
+			alimenterPropriete(prop);
 
 			m_model.addElement(prop);
 			m_relationCopie.addPropriete(prop);
@@ -311,11 +319,11 @@ public class FenetreEditionRelation extends JDialog {
 				return;
 			m_currentPropriete.setName(m_nomPropriete.getText());
 			ProprieteTypeE t = ProprieteTypeE.getValue(m_typePropriete.getSelectedItem().toString());
-			m_currentPropriete.getType().setType(t);
+			m_currentPropriete.setType(t);
 			m_currentPropriete.setAutoIncrement(m_autoIncrement.isSelected());
 			m_currentPropriete.setNull(m_nullable.isSelected());
 			m_currentPropriete.setCommentaire(m_txtpnCommentaire.getText());
-			m_currentPropriete.setTaille(((Integer)m_taille.getValue()).intValue());
+			alimenterPropriete(m_currentPropriete);
 			m_listeProprietes.updateUI();
 		}
 	}
@@ -332,6 +340,30 @@ public class FenetreEditionRelation extends JDialog {
 		public void actionPerformed(ActionEvent e) {
 			FenetreEditionRelation.this.setVisible(false);
 			m_mcd.repaint();
+		}
+	}
+	private void changeTaille(ProprieteTypeE type){
+		m_panelTaille.removeAll();
+		if(type.getNombreTaille()==0){
+			m_taille=null;
+		}
+		else{
+			m_taille=new JSpinner[type.getNombreTaille()];
+			for(int i=0;i<type.getNombreTaille();++i){
+				m_taille[i]=new JSpinner(new SpinnerNumberModel(0, 0, 255, 1));
+				m_panelTaille.add(m_taille[i], "cell "+(i+1)+" 3,growx");
+			}
+		}
+		m_panelTaille.updateUI();
+	}
+	private void alimenterTaille(Propriete p){
+		for(int i=0;i<p.getType().getNombreTaille();++i){
+			m_taille[i].setValue(p.getTaille(i));
+		}
+	}
+	private void alimenterPropriete(Propriete p){
+		for(int i=0;i<p.getType().getNombreTaille();++i){
+			p.setTaille(i, (Integer) m_taille[i].getValue());
 		}
 	}
 }

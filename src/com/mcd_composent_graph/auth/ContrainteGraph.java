@@ -29,6 +29,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 	private Boolean m_needUpdateGraphic;
 	private McdGraph m_mcd;
 	private FormeGeometriqueRectangle m_geometrie;
+	private ArrayList<Line2D> m_lignesLiens;
 	private final Point m_centre = new Point();
 
 	public Rectangle getRectangle(){
@@ -57,6 +58,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 		m_entiteGraph = new ArrayList<EntiteGraph>();
 		m_relationGraph = new ArrayList<RelationGraph>();
 		m_needUpdateGraphic = true;
+		m_lignesLiens = new ArrayList<Line2D>();
 		
 	}
 	public void update(){
@@ -104,11 +106,12 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 		m_centre.y += dim.height / 2;
 		
 		g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.COLOR_LINE));
+		m_lignesLiens.clear();
 		for (RelationGraph r : m_relationGraph){
 			centreObjet = r.getPosition();
 			centreObjet.x += r.getDimension().width / 2;
 			centreObjet.y += r.getDimension().height / 2;
-			
+			m_lignesLiens.add(new Line2D.Double(m_centre.x, m_centre.y, centreObjet.x, centreObjet.y));
 			g.drawLine(m_centre.x, m_centre.y, centreObjet.x, centreObjet.y);
 			if (m_contrainte.getSens() instanceof Relation && r.getRelation().equals((Relation)m_contrainte.getSens())){
 				Point e1 = new Point();
@@ -148,7 +151,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 			Point p = e.getValidLinkPosition(this);
 			if (!m_contrainte.getType().toString().equals("1"))
 				g2.setStroke(dashed);
-			
+			m_lignesLiens.add(new Line2D.Double(m_centre.x, m_centre.y, p.x, p.y));
 			g2.draw(new Line2D.Double(m_centre.x, m_centre.y, p.x, p.y));
 			if (m_contrainte.getSens() instanceof Entite && e.getEntite().equals((Entite)m_contrainte.getSens())){
 				Point e1 = new Point();
@@ -258,10 +261,12 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 
 	public void dessinerOmbre(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
-		if ((boolean)prefs.get(PGroupe.CONTRAINTE, PCle.OMBRE)){
+		if ((Boolean)prefs.get(PGroupe.CONTRAINTE, PCle.OMBRE)){
 			g.setColor((Color)prefs.get(PGroupe.CONTRAINTE, PCle.OMBRE_COLOR));
 			g.fillOval(this.getPosition().x+2, this.getPosition().y+2, this.getDimension().width, this.getDimension().height);
 		}
 	}
-	
+	public ArrayList<Line2D> getLigneLiens(){
+		return m_lignesLiens;
+	}
 }

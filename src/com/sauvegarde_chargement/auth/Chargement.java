@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+import org.jdom2.DataConversionException;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -32,7 +33,6 @@ import com.mcd_log.auth.Contrainte;
 import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.Propriete;
-import com.mcd_log.auth.ProprieteType;
 import com.mcd_log.auth.ProprieteTypeE;
 import com.mcd_log.auth.Relation;
 import com.mcd_log.auth.HeritageType;
@@ -125,13 +125,16 @@ public class Chargement{
 			e.setCommentaire(courant.getAttributeValue("commentaire"));
 			
 			for (Element p : courant.getChildren("Propriete")){
-				Propriete prop = new Propriete(null, null);
+				Propriete prop = new Propriete(null, ProprieteTypeE.NONE);
 				
 				prop.setName(p.getAttributeValue("nom"));
 				prop.setCommentaire(p.getAttributeValue("commentaire"));
-				ProprieteType type = new ProprieteType(ProprieteTypeE.valueOf(p.getAttributeValue("type")));
+				ProprieteTypeE type = ProprieteTypeE.valueOf(p.getAttributeValue("type"));
 				prop.setType(type);
-				prop.setTaille(Integer.parseInt(p.getAttributeValue("taille")));
+				for(int i1=0;i1<type.getNombreTaille();++i1){
+					prop.setTaille(i1,Integer.parseInt(p.getAttributeValue("taille"+i1)));
+				}
+				
 				prop.setClePrimaire(Boolean.parseBoolean(p.getAttributeValue("clé_primaire")));
 				prop.setNull(Boolean.parseBoolean(p.getAttributeValue("null")));
 				prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incrémenté")));
@@ -140,8 +143,8 @@ public class Chargement{
 			}
 			e.setProprietes(props);
 			eg.setEntite(e);
-			eg.setMcd(mcd);
 			mcd.addMcdComponents(eg);
+			eg.setMcd(mcd);
 			ids.put(i, eg);
 			++i;
 		}
@@ -163,8 +166,10 @@ public class Chargement{
 				
 				prop.setName(p.getAttributeValue("nom"));
 				prop.setCommentaire(p.getAttributeValue("commentaire"));
-				prop.setType(new ProprieteType(ProprieteTypeE.valueOf(p.getAttributeValue("type"))));
-				prop.setTaille(Integer.parseInt(p.getAttributeValue("taille")));
+				prop.setType(ProprieteTypeE.valueOf(p.getAttributeValue("type")));
+				for(int i1=0;i1<prop.getType().getNombreTaille();++i1){
+					prop.setTaille(i1, Integer.parseInt(p.getAttributeValue("taille"+i1)));
+				}
 				prop.setClePrimaire(Boolean.parseBoolean(p.getAttributeValue("clé_primaire")));
 				prop.setNull(Boolean.parseBoolean(p.getAttributeValue("null")));
 				prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incrémenté")));
@@ -172,9 +177,8 @@ public class Chargement{
 				e.addPropriete(prop);
 			}
 			eg.setRelation(e);
+			mcd.addMcdComponents(eg);
 			eg.setMcd(mcd);
-			mcd.addMcdComponents(eg);
-			mcd.addMcdComponents(eg);
 			ids.put(i, eg);
 			++i;
 		}
@@ -213,6 +217,17 @@ public class Chargement{
 			
 			e.setType(HeritageType.valueOf(courant.getAttributeValue("type")));
 			
+			{
+				Element entiteMere = courant.getChild("Entite-mere");
+				if(entiteMere != null){
+					try {
+						EntiteGraph eGraph = (EntiteGraph) ids.get(entiteMere.getAttribute("id").getIntValue());
+						e.setMere(eGraph.getEntite());
+					} catch (DataConversionException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
 			for (Element entite : courant.getChildren("Entite")){
 				EntiteGraph ent  = (EntiteGraph)ids.get(Integer.valueOf(entite.getAttributeValue("id")));
 				e.addEnfant(ent.getEntite());

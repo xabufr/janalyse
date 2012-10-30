@@ -147,11 +147,13 @@ public class Sauvegarde {
 				propriete.setAttribute(commentaireP);
 				
 				
-				Attribute typeP = new Attribute("type", p.getType().getType().toString());
+				Attribute typeP = new Attribute("type", p.getType().toString());
 				propriete.setAttribute(typeP);
 				
-				Attribute tailleP = new Attribute("taille", String.valueOf(p.getTaille()));
-				propriete.setAttribute(tailleP);
+				for(int i1=0;i1<p.getType().getNombreTaille();++i1){
+					Attribute tailleP = new Attribute("taille"+i1, String.valueOf(p.getTaille(i1)));
+					propriete.setAttribute(tailleP);
+				}
 				
 				Attribute cleP = new Attribute("clé_primaire", String.valueOf(p.isClePrimaire()));
 				propriete.setAttribute(cleP);
@@ -183,7 +185,7 @@ public class Sauvegarde {
 			Attribute posy = new Attribute("y", String.valueOf(rg.getPosition().y));
 			relation.setAttribute(posy);
 
-			Attribute nomR = new Attribute("nom", e.getNom());
+			Attribute nomR = new Attribute("nom", e.getNomReel());
 			relation.setAttribute(nomR);
 
 			Attribute commentaireR = new Attribute("commentaire", e.getCommentaire());
@@ -202,11 +204,13 @@ public class Sauvegarde {
 					propriete.setAttribute(commentaireP);
 				}
 				
-				Attribute typeP = new Attribute("type", p.getType().getType().toString());
+				Attribute typeP = new Attribute("type", p.getType().toString());
 				propriete.setAttribute(typeP);
 				
-				Attribute tailleP = new Attribute("taille", String.valueOf(p.getTaille()));
-				propriete.setAttribute(tailleP);
+				for(int i1=0;i1<p.getType().getNombreTaille();++i1){
+					Attribute tailleP = new Attribute("taille"+i1, String.valueOf(p.getTaille(i1)));
+					propriete.setAttribute(tailleP);
+				}
 				
 				Attribute cleP = new Attribute("clé_primaire", String.valueOf(p.isClePrimaire()));
 				propriete.setAttribute(cleP);
@@ -247,6 +251,7 @@ public class Sauvegarde {
 					entite.setAttribute(new Attribute("id", String.valueOf(j)));
 					
 					cardinalite.addContent(entite);
+					break;
 				}
 			
 			for (int j=0; j<relationGraph.size(); ++j)
@@ -255,6 +260,7 @@ public class Sauvegarde {
 					relation.setAttribute(new Attribute("id", String.valueOf(j+entiteGraph.size())));
 					
 					cardinalite.addContent(relation);
+					break;
 				}
 			
 			allCardinalite.addContent(cardinalite);
@@ -282,6 +288,7 @@ public class Sauvegarde {
 						entite.setAttribute(new Attribute("id", String.valueOf(j)));
 						
 						heritage.addContent(entite);
+						break;
 					}
 			
 					if	(entiteGraph.get(j).getEntite() == h.getMere()){
@@ -289,6 +296,7 @@ public class Sauvegarde {
 						entite.setAttribute(new Attribute("id", String.valueOf(j)));
 						
 						heritage.addContent(entite);
+						break;
 					}
 						
 				}
@@ -318,6 +326,7 @@ public class Sauvegarde {
 						entite.setAttribute(new Attribute("id", String.valueOf(j)));
 						
 						contrainte.addContent(entite);
+						break;
 					}
 			
 			for (int j=0; j<relationGraph.size(); ++j)
@@ -327,6 +336,7 @@ public class Sauvegarde {
 						relation.setAttribute(new Attribute("id", String.valueOf(j+entiteGraph.size())));
 						
 						contrainte.addContent(relation);
+						break;
 					}
 			allContrainte.addContent(contrainte);
 		}

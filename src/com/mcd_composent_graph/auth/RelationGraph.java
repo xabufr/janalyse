@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
@@ -76,6 +78,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 	}
 	public void dessiner(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+		updateCif();
 		if(m_calculerTaille)
 		{
 			this.actualiser();
@@ -119,10 +122,30 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 			dim.width = (int) (dim.height*1.2);
 		
 		setDimension(dim);
-		if(!m_focus)
-			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR));
-		else
-			g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_FOCUS));
+		
+		if(!(Boolean) prefs.get(PGroupe.RELATION, PCle.GRADIANT_COLOR)){
+			if(!m_focus)
+				g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR));
+			else
+				g.setColor((Color) prefs.get(PGroupe.RELATION, PCle.COLOR_FOCUS));
+		}
+		else{
+			Graphics2D g2 = (Graphics2D) g;
+			GradientPaint paint=null;
+			if(!m_focus){
+				paint = new GradientPaint(getPosition().x, 0, 
+						(Color)prefs.get(PGroupe.RELATION, PCle.COLOR), 
+						getPosition().x+getDimension().width, 0, 
+						(Color)prefs.get(PGroupe.RELATION, PCle.COLOR_2));
+			}
+			else{
+				paint = new GradientPaint(getPosition().x, 0, 
+						(Color)prefs.get(PGroupe.RELATION, PCle.COLOR_FOCUS), 
+						getPosition().x+getDimension().width, 0, 
+						(Color)prefs.get(PGroupe.RELATION, PCle.COLOR_2_FOCUS));
+			}
+			g2.setPaint(paint);
+		}
 		
 		g.fillOval(pos.x, pos.y, dim.width, dim.height);
 		if(!m_focus)
@@ -199,9 +222,37 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 
 	public void dessinerOmbre(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
-		if ((boolean)prefs.get(PGroupe.RELATION, PCle.OMBRE)){
+		if ((Boolean)prefs.get(PGroupe.RELATION, PCle.OMBRE)){
 			g.setColor((Color)prefs.get(PGroupe.RELATION, PCle.OMBRE_COLOR));
 			g.fillOval(this.getPosition().x+3, this.getPosition().y+3, this.getDimension().width, this.getDimension().height);
 		}
+	}
+	private void updateCif(){
+		if(!(Boolean)McdPreferencesManager.getInstance().get(PGroupe.RELATION, PCle.CIF)){
+			m_relation.setCif(false);
+			return;
+		}
+		if(!m_relation.getProprietes().isEmpty()){
+			m_relation.setCif(false);
+			return;
+		}
+		ArrayList<CardinaliteGraph> cards = m_mcd.getCardinalitesGraph();
+		int nombre=0;
+		int max[]=new int[2];
+		for(CardinaliteGraph c : cards){
+			if(c.getCardinalite().getRelation()==m_relation){
+				if(++nombre>2){
+					m_relation.setCif(false);
+					return;
+				}
+				max[nombre-1]=c.getCardinalite().getMax();
+			}
+		}
+		if(((max[0]==0||max[0]==1)&&(max[1]==-1||max[1]==2))||
+				((max[1]==0||max[1]==1)&&(max[0]==-1||max[0]==2))){
+			m_relation.setCif(true);
+		}
+		else
+			m_relation.setCif(false);
 	}
 }

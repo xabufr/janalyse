@@ -7,6 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -15,7 +17,6 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JTabbedPane;
 
 import com.mcd_log.auth.Propriete;
-import com.mcd_log.auth.ProprieteType;
 import com.mcd_log.auth.ProprieteTypeE;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
@@ -36,6 +37,11 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.RowSpec;
 import javax.swing.JTextPane;
 import javax.swing.JCheckBox;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import javax.swing.JTextArea;
+import java.awt.Insets;
+import java.awt.GridLayout;
 
 @SuppressWarnings("serial")
 public class FenetrePreferences extends JDialog {
@@ -45,6 +51,7 @@ public class FenetrePreferences extends JDialog {
 	private JTextField m_previsualisationProp;
 	private JPanel m_panelEntites;
 	private FenetrePrincipale m_parent;
+	private JTextArea m_cssHTML;
 
 	public FenetrePreferences(FenetrePrincipale princ) {
 		m_parent = princ;
@@ -55,14 +62,14 @@ public class FenetrePreferences extends JDialog {
 		setTitle("Préférences");
 		McdPreferencesManager.getInstance().push();
 
-		setBounds(100, 100, 674, 316);
+		setBounds(100, 100, 658, 328);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[grow]", "[grow]"));
+		contentPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		{
 			JTabbedPane tabbedPaneGeneral = new JTabbedPane(JTabbedPane.TOP);
-			contentPanel.add(tabbedPaneGeneral, "cell 0 0,grow");
+			contentPanel.add(tabbedPaneGeneral);
 			{
 				JTabbedPane tabbedPaneMcd = new JTabbedPane(JTabbedPane.TOP);
 				tabbedPaneMcd.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -109,7 +116,7 @@ public class FenetrePreferences extends JDialog {
 					m_textField.addCaretListener(new CaretListener() {
 						public void caretUpdate(CaretEvent arg0) {
 							McdPreferencesManager.getInstance().set(PGroupe.PROPRIETE, PCle.SCHEMA, m_textField.getText());
-							Propriete p = new Propriete("Propriete", new ProprieteType(ProprieteTypeE.NONE));
+							Propriete p = new Propriete("Propriete", ProprieteTypeE.NONE);
 							m_previsualisationProp.setText(p.getVirtualName("Entite"));
 						}
 					});
@@ -128,6 +135,34 @@ public class FenetrePreferences extends JDialog {
 					panel.add(txtpnpProprit, "cell 0 2 2 1,grow");
 				}
 			}
+			{
+				JPanel panel = new JPanel();
+				tabbedPaneGeneral.addTab("Export HTML", null, panel, null);
+				GridBagLayout gbl_panel = new GridBagLayout();
+				gbl_panel.columnWidths = new int[]{0, 0};
+				gbl_panel.rowHeights = new int[]{0, 0, 0};
+				gbl_panel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+				gbl_panel.rowWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+				panel.setLayout(gbl_panel);
+				{
+					JLabel lblCssDuHtml = new JLabel("CSS du HTML, pour plus d'infos sur les balises voir le manuel");
+					GridBagConstraints gbc_lblCssDuHtml = new GridBagConstraints();
+					gbc_lblCssDuHtml.insets = new Insets(0, 0, 5, 0);
+					gbc_lblCssDuHtml.gridx = 0;
+					gbc_lblCssDuHtml.gridy = 0;
+					panel.add(lblCssDuHtml, gbc_lblCssDuHtml);
+				}
+				{
+					m_cssHTML = new JTextArea();
+					JScrollPane scroll = new JScrollPane(m_cssHTML);
+					GridBagConstraints gbc_cssHTML = new GridBagConstraints();
+					gbc_cssHTML.fill = GridBagConstraints.BOTH;
+					gbc_cssHTML.gridx = 0;
+					gbc_cssHTML.gridy = 1;
+					panel.add(scroll, gbc_cssHTML);
+					m_cssHTML.setText((String) McdPreferencesManager.getInstance().get(PGroupe.HTML, PCle.CSS));
+				}
+			}
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -141,15 +176,17 @@ public class FenetrePreferences extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						setVisible(false);
 						McdPreferencesManager.getInstance().set(PGroupe.PROPRIETE, PCle.SCHEMA, m_textField.getText());
+						McdPreferencesManager.getInstance().set(PGroupe.HTML, PCle.CSS, m_cssHTML.getText());
 						McdPreferencesManager.getInstance().save();
-						m_parent.getMcd().repaint();
+						if(m_parent.getMcd()!=null)
+							m_parent.getMcd().repaint();
 					}
 				});
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton("Annuler");
 				cancelButton.setActionCommand("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					
@@ -159,6 +196,19 @@ public class FenetrePreferences extends JDialog {
 					}
 				});
 				buttonPane.add(cancelButton);
+			}
+			{
+				JButton btnParDfaut = new JButton("Par Défaut");
+				btnParDfaut.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						McdPreferencesManager.getInstance().loadDefault();
+						McdPreferencesManager.getInstance().save();
+						FenetrePreferences.this.setVisible(false);
+						if(m_parent.getMcd()!=null)
+							m_parent.getMcd().repaint();
+					}
+				});
+				buttonPane.add(btnParDfaut);
 			}
 		}
 	}
@@ -173,29 +223,34 @@ public class FenetrePreferences extends JDialog {
 					fontChooser.getSelectedFontSize());
 		}
 	}
-	private void changeColor(PGroupe g, PCle c, String titre){
+	private void changeColor(PGroupe g, PCle c, String titre, JButton b){
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		Color color = JColorChooser.showDialog(null, titre, (Color) prefs.get(g, c));
 		if(color!=null){
 			prefs.set(g, c, color);
+			b.setBackground(color);
 		}
 	}
+	private void initButtonColor(JButton b, PGroupe g, PCle c){
+		b.setBackground((Color)McdPreferencesManager.getInstance().get(g, c));
+	}
 	private void initializeWithoutProperties(JPanel parentPanel, final PGroupe g){
-		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+		final McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		parentPanel.setLayout(new MigLayout("", "[398.00px,grow]", "[][grow]"));
 		{
 			JLabel lblOmbre = new JLabel("Ombre");
 			parentPanel.add(lblOmbre, "flowx,cell 0 0");
 			
 			final JCheckBox ombre = new JCheckBox("");
-			ombre.setSelected((boolean)prefs.get(g, PCle.OMBRE));
+			ombre.setSelected((Boolean)prefs.get(g, PCle.OMBRE));
 			parentPanel.add(ombre, "cell 0 0");
 			
 			final JButton couleurOmbre = new JButton("Couleur");
-			couleurOmbre.setEnabled((boolean)prefs.get(g, PCle.OMBRE));
+			initButtonColor(couleurOmbre, g, PCle.OMBRE_COLOR);
+			couleurOmbre.setEnabled((Boolean)prefs.get(g, PCle.OMBRE));
 			couleurOmbre.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					changeColor(g, PCle.OMBRE_COLOR, "Couleur de l'ombre");
+					changeColor(g, PCle.OMBRE_COLOR, "Couleur de l'ombre", couleurOmbre);
 				}
 			});
 			parentPanel.add(couleurOmbre, "cell 0 0");
@@ -209,6 +264,20 @@ public class FenetrePreferences extends JDialog {
 						couleurOmbre.setEnabled(false);
 				}
 			});
+			if(!g.equals(PGroupe.CONTRAINTE))
+			{
+				JLabel lblDeg = new JLabel("Dégradé");
+				parentPanel.add(lblDeg, "cell 0 0");
+				
+				final JCheckBox deg = new JCheckBox("");
+				deg.setSelected((Boolean)prefs.get(g, PCle.GRADIANT_COLOR));
+				parentPanel.add(deg, "cell 0 0");
+				deg.addActionListener(new ActionListener() {					
+					public void actionPerformed(ActionEvent e) {
+						prefs.set(g, PCle.GRADIANT_COLOR, deg.isSelected());
+					}
+				});
+			}
 			
 			JSplitPane splitPane = new JSplitPane();
 			parentPanel.add(splitPane, "cell 0 1,grow");
@@ -235,10 +304,11 @@ public class FenetrePreferences extends JDialog {
 					panel.add(choisirPNom, "flowx,cell 1 1");
 				}
 				{
-					JButton btnCouleurNom = new JButton("Couleur");
+					final JButton btnCouleurNom = new JButton("Couleur");
+					initButtonColor(btnCouleurNom, g, PCle.FONT_COLOR);
 					btnCouleurNom.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.FONT_COLOR, "Couleur nom entité");
+							changeColor(g, PCle.FONT_COLOR, "Couleur nom entité", btnCouleurNom);
 						}
 					});
 					panel.add(btnCouleurNom, "cell 3 1");
@@ -248,24 +318,37 @@ public class FenetrePreferences extends JDialog {
 					panel.add(lblCouleurFond_1, "cell 0 3");
 				}
 				{
-					JButton choisirCFond = new JButton("Choisir");
+					final JButton choisirCFond = new JButton("Choisir");
+					initButtonColor(choisirCFond, g, PCle.COLOR);
 					choisirCFond.addActionListener(new ActionListener() {									
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.COLOR, "Couleur fond entité");
+							changeColor(g, PCle.COLOR, "Couleur fond entité", choisirCFond);
 						}
 					});
 					panel.add(choisirCFond, "cell 1 3 3 1");
+				}
+				if(!g.equals(PGroupe.CONTRAINTE))
+				{
+					final JButton choisirCFond = new JButton("Choisir");
+					initButtonColor(choisirCFond, g, PCle.COLOR_2);
+					choisirCFond.addActionListener(new ActionListener() {									
+						public void actionPerformed(ActionEvent e) {
+							changeColor(g, PCle.COLOR_2, "Couleur fond entité", choisirCFond);
+						}
+					});
+					panel.add(choisirCFond, "cell 2 3 3 1");
 				}
 				{
 					JLabel lblCouleurContours = new JLabel("Couleur contours");
 					panel.add(lblCouleurContours, "cell 0 4");
 				}
 				{
-					JButton choisirCContour = new JButton("Choisir");
+					final JButton choisirCContour = new JButton("Choisir");
+					initButtonColor(choisirCContour, g, PCle.COLOR_CONTOUR);
 					choisirCContour.addActionListener(new ActionListener() {
 						
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.COLOR_CONTOUR, "Couleur contours entité");
+							changeColor(g, PCle.COLOR_CONTOUR, "Couleur contours entité", choisirCContour);
 							
 						}
 					});
@@ -296,10 +379,11 @@ public class FenetrePreferences extends JDialog {
 					panel.add(focusChoisirPNom, "cell 1 1");
 				}
 				{
-					JButton btnCouleurNomFocus = new JButton("Couleur");
+					final JButton btnCouleurNomFocus = new JButton("Couleur");
+					initButtonColor(btnCouleurNomFocus, g, PCle.FONT_COLOR_FOCUS);
 					btnCouleurNomFocus.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.FONT_COLOR_FOCUS, "Couleur nom entité focus");
+							changeColor(g, PCle.FONT_COLOR_FOCUS, "Couleur nom entité focus", btnCouleurNomFocus);
 						}
 					});
 					panel.add(btnCouleurNomFocus, "cell 2 1");
@@ -309,27 +393,38 @@ public class FenetrePreferences extends JDialog {
 					panel.add(lblCouleurFond_2, "cell 0 3");
 				}
 				{
-					JButton focusChoisirCFond = new JButton("Choisir");
+					final JButton focusChoisirCFond = new JButton("Choisir");
+					initButtonColor(focusChoisirCFond, g, PCle.COLOR_FOCUS);
 					focusChoisirCFond.addActionListener(new ActionListener() {
 						
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.COLOR_FOCUS, "Couleur fond entités focus");
+							changeColor(g, PCle.COLOR_FOCUS, "Couleur fond entités focus", focusChoisirCFond);
 							
 						}
 					});
 					panel.add(focusChoisirCFond, "cell 1 3");
+				}
+				if(!g.equals(PGroupe.CONTRAINTE))
+				{
+					final JButton choisirCFond = new JButton("Choisir");
+					initButtonColor(choisirCFond, g, PCle.COLOR_2_FOCUS);
+					choisirCFond.addActionListener(new ActionListener() {									
+						public void actionPerformed(ActionEvent e) {
+							changeColor(g, PCle.COLOR_2_FOCUS, "Couleur fond entités focus", choisirCFond);
+						}
+					});
+					panel.add(choisirCFond, "cell 2 3");
 				}
 				{
 					JLabel lblCouleurContours_1 = new JLabel("Couleur contours");
 					panel.add(lblCouleurContours_1, "cell 0 4");
 				}
 				{
-					JButton focusChoisirCContour = new JButton("Choisir");
-					focusChoisirCContour.addActionListener(new ActionListener() {
-						
-						@Override
+					final JButton focusChoisirCContour = new JButton("Choisir");
+					initButtonColor(focusChoisirCContour, g, PCle.COLOR_CONTOUR_FOCUS);
+					focusChoisirCContour.addActionListener(new ActionListener() {						
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.COLOR_CONTOUR_FOCUS, "Couleur contours entités focus");
+							changeColor(g, PCle.COLOR_CONTOUR_FOCUS, "Couleur contours entités focus", focusChoisirCContour);
 							
 						}
 					});
@@ -366,10 +461,11 @@ public class FenetrePreferences extends JDialog {
 					panel.add(choisirPNom, "flowx,cell 1 1");
 				}
 				{
-					JButton btnCouleurNom = new JButton("Couleur");
+					final JButton btnCouleurNom = new JButton("Couleur");
+					initButtonColor(btnCouleurNom, g, PCle.FONT_COLOR);
 					btnCouleurNom.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.FONT_COLOR, "Couleur nom entité");
+							changeColor(g, PCle.FONT_COLOR, "Couleur nom entité", btnCouleurNom);
 						}
 					});
 					panel.add(btnCouleurNom, "cell 3 1");
@@ -379,11 +475,12 @@ public class FenetrePreferences extends JDialog {
 					panel.add(lblCouleurContours, "cell 0 4");
 				}
 				{
-					JButton choisirCContour = new JButton("Choisir");
+					final JButton choisirCContour = new JButton("Choisir");
+					initButtonColor(choisirCContour, g, PCle.COLOR_CONTOUR);
 					choisirCContour.addActionListener(new ActionListener() {
 						
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.COLOR_CONTOUR, "Couleur contours entité");
+							changeColor(g, PCle.COLOR_CONTOUR, "Couleur contours entité", choisirCContour);
 							
 						}
 					});
@@ -414,10 +511,11 @@ public class FenetrePreferences extends JDialog {
 					panel.add(focusChoisirPNom, "cell 1 1");
 				}
 				{
-					JButton btnCouleurNomFocus = new JButton("Couleur");
+					final JButton btnCouleurNomFocus = new JButton("Couleur");
+					initButtonColor(btnCouleurNomFocus, g, PCle.FONT_COLOR_FOCUS);
 					btnCouleurNomFocus.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.FONT_COLOR_FOCUS, "Couleur nom entité focus");
+							changeColor(g, PCle.FONT_COLOR_FOCUS, "Couleur nom entité focus", btnCouleurNomFocus);
 						}
 					});
 					panel.add(btnCouleurNomFocus, "cell 2 1");
@@ -427,13 +525,11 @@ public class FenetrePreferences extends JDialog {
 					panel.add(lblCouleurContours_1, "cell 0 4");
 				}
 				{
-					JButton focusChoisirCContour = new JButton("Choisir");
-					focusChoisirCContour.addActionListener(new ActionListener() {
-						
-						@Override
+					final JButton focusChoisirCContour = new JButton("Choisir");
+					initButtonColor(focusChoisirCContour, g, PCle.COLOR_CONTOUR_FOCUS);
+					focusChoisirCContour.addActionListener(new ActionListener() {						
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.COLOR_CONTOUR_FOCUS, "Couleur contours entités focus");
-							
+							changeColor(g, PCle.COLOR_CONTOUR_FOCUS, "Couleur contours entités focus", focusChoisirCContour);
 						}
 					});
 					panel.add(focusChoisirCContour, "cell 1 4");
@@ -442,21 +538,22 @@ public class FenetrePreferences extends JDialog {
 		}
 	}
 	private void initializeWithProperties(JPanel parentPanel, final PGroupe g){
-		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+		final McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		parentPanel.setLayout(new MigLayout("", "[276px,grow]", "[grow]"));
 		{
 			JLabel lblOmbre = new JLabel("Ombre");
 			parentPanel.add(lblOmbre, "flowx");
 
 			final JCheckBox ombre = new JCheckBox("");
-			ombre.setSelected((boolean)prefs.get(g, PCle.OMBRE));
+			ombre.setSelected((Boolean)prefs.get(g, PCle.OMBRE));
 			parentPanel.add(ombre, "cell 0 0");
 
 			final JButton couleurOmbre = new JButton("Couleur");
-			couleurOmbre.setEnabled((boolean)prefs.get(g, PCle.OMBRE));
+			initButtonColor(couleurOmbre, g, PCle.OMBRE_COLOR);
+			couleurOmbre.setEnabled((Boolean)prefs.get(g, PCle.OMBRE));
 			couleurOmbre.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					changeColor(g, PCle.OMBRE_COLOR, "Couleur de l'ombre");
+					changeColor(g, PCle.OMBRE_COLOR, "Couleur de l'ombre", couleurOmbre);
 				}
 			});
 			parentPanel.add(couleurOmbre, "cell 0 0");
@@ -470,6 +567,32 @@ public class FenetrePreferences extends JDialog {
 						couleurOmbre.setEnabled(false);
 				}
 			});
+			{
+				JLabel lblDeg = new JLabel("Dégradé");
+				parentPanel.add(lblDeg, "cell 0 0");
+				
+				final JCheckBox deg = new JCheckBox("");
+				deg.setSelected((Boolean)prefs.get(g, PCle.GRADIANT_COLOR));
+				parentPanel.add(deg, "cell 0 0");
+				deg.addActionListener(new ActionListener() {					
+					public void actionPerformed(ActionEvent e) {
+						prefs.set(g, PCle.GRADIANT_COLOR, deg.isSelected());
+					}
+				});
+			}
+			if(g.equals(PGroupe.RELATION)){
+				JLabel lblCif = new JLabel("Nommage automatique des CIF");
+				parentPanel.add(lblCif, "cell 0 0");
+				
+				final JCheckBox cif = new JCheckBox("");
+				cif.setSelected((Boolean)prefs.get(g, PCle.CIF));
+				parentPanel.add(cif, "cell 0 0");
+				cif.addActionListener(new ActionListener() {					
+					public void actionPerformed(ActionEvent e) {
+						prefs.set(g, PCle.CIF, cif.isSelected());
+					}
+				});
+			}
 		}
 		{
 			JSplitPane splitPane = new JSplitPane();
@@ -497,10 +620,11 @@ public class FenetrePreferences extends JDialog {
 					panel.add(btnChoisirPNom, "cell 1 1,alignx left,aligny top");
 				}
 				{
-					JButton btnCouleurNom = new JButton("Couleur");
+					final JButton btnCouleurNom = new JButton("Couleur");
+					initButtonColor(btnCouleurNom, g, PCle.FONT_NOM_COLOR);
 					btnCouleurNom.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.FONT_NOM_COLOR, "Couleur nom relations");
+							changeColor(g, PCle.FONT_NOM_COLOR, "Couleur nom relations", btnCouleurNom);
 						}
 					});
 					panel.add(btnCouleurNom, "cell 2 1");
@@ -519,10 +643,11 @@ public class FenetrePreferences extends JDialog {
 					panel.add(btnChoisirPPropriete, "cell 1 2,alignx left,aligny top");
 				}
 				{
-					JButton couleurProp = new JButton("Couleur");
+					final JButton couleurProp = new JButton("Couleur");
+					initButtonColor(couleurProp, g, PCle.FONT_NOM_COLOR);
 					couleurProp.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.FONT_NOM_COLOR, "Couleur propriété relation");
+							changeColor(g, PCle.FONT_NOM_COLOR, "Couleur propriété relation", couleurProp);
 						}
 					});
 					panel.add(couleurProp, "cell 2 2");
@@ -532,24 +657,37 @@ public class FenetrePreferences extends JDialog {
 					panel.add(lblCouleurFond, "cell 0 3,alignx left,aligny top");
 				}
 				{
-					JButton btnChoisirCFond = new JButton("Choisir");
+					final JButton btnChoisirCFond = new JButton("Choisir");
+					initButtonColor(btnChoisirCFond, g, PCle.COLOR);
 					btnChoisirCFond.addActionListener(new ActionListener() {
 						
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.COLOR, "Couleur fond relation");
+							changeColor(g, PCle.COLOR, "Couleur fond relation", btnChoisirCFond);
 						}
 					});
 					panel.add(btnChoisirCFond, "cell 1 3,alignx center,aligny center");
+				}
+				{
+					final JButton btnChoisirCFond = new JButton("Choisir");
+					initButtonColor(btnChoisirCFond, g, PCle.COLOR_2);
+					btnChoisirCFond.addActionListener(new ActionListener() {
+						
+						public void actionPerformed(ActionEvent e) {
+							changeColor(g, PCle.COLOR_2, "Couleur fond relation", btnChoisirCFond);
+						}
+					});
+					panel.add(btnChoisirCFond, "cell 2 3,alignx center,aligny center");
 				}
 				{
 					JLabel lblCouleurContour = new JLabel("Couleur contour");
 					panel.add(lblCouleurContour, "cell 0 4,alignx left,aligny top");
 				}
 				{
-					JButton btnChoisirCContour = new JButton("Choisir");
+					final JButton btnChoisirCContour = new JButton("Choisir");
+					initButtonColor(btnChoisirCContour, g, PCle.COLOR_CONTOUR);
 					btnChoisirCContour.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.COLOR_CONTOUR, "Couleur contours relations");
+							changeColor(g, PCle.COLOR_CONTOUR, "Couleur contours relations", btnChoisirCContour);
 						}
 					});
 					panel.add(btnChoisirCContour, "cell 1 4,alignx center,aligny center");
@@ -577,10 +715,11 @@ public class FenetrePreferences extends JDialog {
 					panel.add(focusChoisirPNom, "cell 1 1");
 				}
 				{
-					JButton couleurNomFocus = new JButton("Couleur");
+					final JButton couleurNomFocus = new JButton("Couleur");
+					initButtonColor(couleurNomFocus, g, PCle.FONT_NOM_COLOR_FOCUS);
 					couleurNomFocus.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.FONT_NOM_COLOR_FOCUS, "Couleur nom relations focus");
+							changeColor(g, PCle.FONT_NOM_COLOR_FOCUS, "Couleur nom relations focus", couleurNomFocus);
 						}
 					});
 					panel.add(couleurNomFocus, "cell 2 1");
@@ -599,10 +738,11 @@ public class FenetrePreferences extends JDialog {
 					panel.add(focusChoisirPPropriete, "cell 1 2");
 				}
 				{
-					JButton couleurPropFocus = new JButton("Couleur");
+					final JButton couleurPropFocus = new JButton("Couleur");
+					initButtonColor(couleurPropFocus, g, PCle.FONT_COLOR_FOCUS);
 					couleurPropFocus.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.FONT_COLOR_FOCUS, "Couleur propriétés relations focus");
+							changeColor(g, PCle.FONT_COLOR_FOCUS, "Couleur propriétés relations focus", couleurPropFocus);
 						}
 					});
 					panel.add(couleurPropFocus, "cell 2 2");
@@ -612,23 +752,35 @@ public class FenetrePreferences extends JDialog {
 					panel.add(label, "cell 0 3");
 				}
 				{
-					JButton focusChoisirCFond = new JButton("Choisir");
+					final JButton focusChoisirCFond = new JButton("Choisir");
+					initButtonColor(focusChoisirCFond, g, PCle.COLOR_FOCUS);
 					focusChoisirCFond.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.COLOR_FOCUS, "Couleur fond relation focus");
+							changeColor(g, PCle.COLOR_FOCUS, "Couleur fond relation focus", focusChoisirCFond);
 						}
 					});
 					panel.add(focusChoisirCFond, "cell 1 3");
+				}
+				{
+					final JButton focusChoisirCFond = new JButton("Choisir");
+					initButtonColor(focusChoisirCFond, g, PCle.COLOR_2_FOCUS);
+					focusChoisirCFond.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							changeColor(g, PCle.COLOR_2_FOCUS, "Couleur fond relation focus", focusChoisirCFond);
+						}
+					});
+					panel.add(focusChoisirCFond, "cell 2 3");
 				}
 				{
 					JLabel label = new JLabel("Couleur contour");
 					panel.add(label, "cell 0 4");
 				}
 				{
-					JButton focusChoisirCContour = new JButton("Choisir");
+					final JButton focusChoisirCContour = new JButton("Choisir");
+					initButtonColor(focusChoisirCContour, g, PCle.COLOR_CONTOUR_FOCUS);
 					focusChoisirCContour.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							changeColor(g, PCle.COLOR_CONTOUR_FOCUS, "Couleur contours relation focus");
+							changeColor(g, PCle.COLOR_CONTOUR_FOCUS, "Couleur contours relation focus", focusChoisirCContour);
 						}
 					});
 					panel.add(focusChoisirCContour, "cell 1 4");

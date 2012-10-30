@@ -8,6 +8,9 @@ import com.export.auth.ExportSql;
 import com.export.auth.Base64.InputStream;
 import com.mcd_graph.auth.McdGraph;
 import com.mld.auth.MldLog;
+import com.preferences_mcd_logique.auth.McdPreferencesManager;
+import com.preferences_mcd_logique.auth.PCle;
+import com.preferences_mcd_logique.auth.PGroupe;
 
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JCheckBox;
@@ -103,8 +106,10 @@ public class ExporterHTML extends JDialog {
 						fileWriter = new FileWriter(file);
 						MldLog mld = new MldLog(m_mcd);
 						
+						String cssHTML = (String) McdPreferencesManager.getInstance().get(PGroupe.HTML, PCle.CSS);
+						
 						fileWriter.write("<html><head><meta http-equiv='content-type' content='text/html; charset=utf-8'/><style type='text/css'>"+
-								m_css+
+								cssHTML+
 								"</style>" +
 								"<style> " +
 								m_cssSql+
@@ -176,6 +181,5 @@ public class ExporterHTML extends JDialog {
 		return ret;
 	}
 	
-	private String m_css="h1, div {text-align: center;}div {    border: 1px solid black;    margin-bottom: -1px;    padding: 1px;}div.entite p {    background-color: black;    margin: 0;    color: white;}.mld. cleEtrangere {    border-bottom: 1px black dashed;}div.entite {    margin-bottom: 5px;    background-color: silver;} .mld. clePrimaire{ text-decoration: underline; }";
 	private String m_shCore, m_cssSql, m_brushSql, m_cssThemeSh;
 }
