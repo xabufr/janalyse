@@ -824,7 +824,7 @@ public class McdGraph extends JPanel{
 		
 		Point pos = null;
 		Point newPos = new Point();
-		Hashtable <Object, Object> lstObject = new Hashtable<>();
+		Hashtable <Object, Object> lstObject = new Hashtable<Object, Object>();
 		
 		for (McdComposentGraphique composent : m_copie){
 			if (composent instanceof CardinaliteGraph || composent instanceof HeritageGraph || composent instanceof ContrainteGraph)
