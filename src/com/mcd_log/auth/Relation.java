@@ -62,6 +62,9 @@ public class Relation implements Cloneable{
 	public void setCif(Boolean c){
 		m_isCif=c;
 	}
+	public String toString(){
+		return m_nom;
+	}
 	private String m_nom;
 	private String m_commentaire;
 	private ArrayList<Propriete> m_proprietes;

@@ -894,7 +894,7 @@ public class McdGraph extends JPanel{
 						c.addRelation((Relation)lstObject.get(o));
 				}
 					
-				//c.setSens(lstObject.get(c.getSens()));
+				c.setSens(lstObject.get(c.getSens()));
 				cg.setMcd(McdGraph.this);
 				
 				m_components.add(cg);

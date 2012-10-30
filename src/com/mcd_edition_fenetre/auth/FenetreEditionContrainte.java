@@ -22,7 +22,6 @@ import com.mcd_log.auth.Relation;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -30,8 +29,8 @@ public class FenetreEditionContrainte extends JDialog{
 	private McdGraph m_mcd;
 	private ContrainteGraph m_contrainteGraph;
 	private Contrainte m_contrainte;
-	private JList m_lstRelation;
-	private JList m_lstEntite;
+	private JList<Relation> m_lstRelation;
+	private JList<Entite> m_lstEntite;
 	private JButton m_ajouterEntite;
 	private JButton m_supprimerEntite;
 	private JButton m_ajouterRelation;
