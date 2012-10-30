@@ -886,9 +886,8 @@ public class McdGraph extends JPanel{
 					lst.add(r);
 				c.getEntites().clear();
 				c.getRelations().clear();
+				System.out.println(lst);
 				for (Object o : lst){
-					if (!lstObject.contains(o))
-						continue;
 					if (o instanceof Entite)
 						c.addEntite((Entite)lstObject.get(o));
 					else
