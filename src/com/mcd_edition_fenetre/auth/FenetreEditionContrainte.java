@@ -105,7 +105,11 @@ public class FenetreEditionContrainte extends JDialog{
 		m_supprimerEntite = new JButton("Supprimer");
 		m_supprimerEntite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				m_modelEntite.removeElement(m_lstEntite.getSelectedValue());
+				for (Entite ent : m_lstEntite.getSelectedValuesList()){
+					m_modelEntite.removeElement(ent);
+					if (m_type.getSelectedItem().equals("1") && m_contrainte.getSens().equals(ent))
+						m_contrainte.setSens(null);
+				}
 			}
 		});
 		panel_1.add(m_supprimerEntite, "cell 0 2");
@@ -138,7 +142,11 @@ public class FenetreEditionContrainte extends JDialog{
 		m_supprimerRelation = new JButton("Supprimer");
 		m_supprimerRelation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				m_modelRelation.removeElement(m_lstRelation.getSelectedValue());
+				for (Relation r : m_lstRelation.getSelectedValuesList()){
+					m_modelRelation.removeElement(r);
+					if (m_type.getSelectedItem().equals("I") && m_contrainte.getSens().equals(r))
+						m_contrainte.setSens(null);
+				}
 			}
 		});
 		panel_2.add(m_supprimerRelation, "cell 0 2");
@@ -177,12 +185,16 @@ public class FenetreEditionContrainte extends JDialog{
 				m_contrainte.setNom((ContrainteType)m_type.getSelectedItem());
 				
 				if (m_contrainte.getNom().equals("1")){
-					Entite e = (Entite)JOptionPane.showInputDialog(null, "Veuillez choisir le sens de lecture:", "Sélection sens de lecture", JOptionPane.PLAIN_MESSAGE, null, m_modelEntite.toArray(), m_modelEntite.getElementAt(0));
-					m_contrainte.setSens(e);
+					if (m_modelEntite.getSize() > 0){
+						Entite e = (Entite)JOptionPane.showInputDialog(null, "Veuillez choisir le sens de lecture:", "Sélection sens de lecture", JOptionPane.PLAIN_MESSAGE, null, m_modelEntite.toArray(), m_modelEntite.getElementAt(0));
+						m_contrainte.setSens(e);
+					}
 				}
 				else if (m_contrainte.getNom().equals("I")){
-					Relation r = (Relation)JOptionPane.showInputDialog(null, "Veuillez choisir le sens de lecture:", "Sélection sens de lecture", JOptionPane.PLAIN_MESSAGE, null, m_modelRelation.toArray(), m_modelRelation.getElementAt(0));
-					m_contrainte.setSens(r);
+					if (m_modelRelation.getSize() > 0){
+						Relation r = (Relation)JOptionPane.showInputDialog(null, "Veuillez choisir le sens de lecture:", "Sélection sens de lecture", JOptionPane.PLAIN_MESSAGE, null, m_modelRelation.toArray(), m_modelRelation.getElementAt(0));
+						m_contrainte.setSens(r);
+					}
 				}
 				
 				m_contrainteGraph.update();
