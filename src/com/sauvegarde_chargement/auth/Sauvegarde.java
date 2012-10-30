@@ -319,25 +319,42 @@ public class Sauvegarde {
 			Attribute type = new Attribute("type", c.getNom());
 			contrainte.setAttribute(type);
 			
-			for (int j=0; j<entiteGraph.size(); ++j)
-				for (int u=0; u<c.getEntites().size(); ++u)
-					if (entiteGraph.get(j).getEntite() == c.getEntites().get(u)){
+			for (int j=0; j<entiteGraph.size(); ++j){
+				for (int u=0; u<c.getEntites().size(); ++u){
+					if (entiteGraph.get(j).getEntite().equals(c.getEntites().get(u))){
 						Element entite = new Element("Entite");
 						entite.setAttribute(new Attribute("id", String.valueOf(j)));
 						
 						contrainte.addContent(entite);
-						break;
 					}
 			
-			for (int j=0; j<relationGraph.size(); ++j)
-				for (int u=0; u<c.getRelations().size(); ++u)
-					if (relationGraph.get(j).getRelation() == c.getRelations().get(u)){
+					if (entiteGraph.get(j).getEntite().equals(c.getSens())){
+						Element entite = new Element("Sens");
+						entite.setAttribute(new Attribute("id", String.valueOf(j)));
+						
+						contrainte.addContent(entite);
+					}
+				}
+			}
+			
+			for (int j=0; j<relationGraph.size(); ++j){
+				for (int u=0; u<c.getRelations().size(); ++u){
+					if (relationGraph.get(j).getRelation().equals(c.getRelations().get(u))){
 						Element relation = new Element("Relation");
 						relation.setAttribute(new Attribute("id", String.valueOf(j+entiteGraph.size())));
 						
 						contrainte.addContent(relation);
-						break;
 					}
+					
+					if (relationGraph.get(j).getRelation().equals(c.getSens())){
+						Element relation = new Element("Sens");
+						relation.setAttribute(new Attribute("id", String.valueOf(j+entiteGraph.size())));
+						
+						contrainte.addContent(relation);
+					}
+				}
+			}
+
 			allContrainte.addContent(contrainte);
 		}
 		mcd.addContent(allContrainte);
