@@ -891,7 +891,6 @@ public class McdGraph extends JPanel{
 					lst.add(r);
 				c.getEntites().clear();
 				c.getRelations().clear();
-				System.out.println(lst);
 				for (Object o : lst){
 					if (o instanceof Entite)
 						c.addEntite((Entite)lstObject.get(o));
@@ -899,7 +898,9 @@ public class McdGraph extends JPanel{
 						c.addRelation((Relation)lstObject.get(o));
 				}
 					
-				c.setSens(lstObject.get(c.getSens()));
+				if (!c.getSens().equals(null))
+					c.setSens(lstObject.get(c.getSens()));
+				
 				cg.setMcd(McdGraph.this);
 				
 				m_components.add(cg);

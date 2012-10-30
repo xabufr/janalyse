@@ -57,6 +57,16 @@ public class Contrainte implements Cloneable{
 	
 	public Contrainte clone() throws CloneNotSupportedException{
 		Contrainte c = (Contrainte) super.clone();
+		ArrayList<Entite> entites = new ArrayList<Entite>();
+		for (Entite e : getEntites())
+			entites.add(e);
+		
+		ArrayList<Relation> relations = new ArrayList<Relation>();
+		for (Relation r : getRelations())
+			relations.add(r);
+		
+		c.setEntites(entites);
+		c.setRelations(relations);
 		return c;
 	}
 

@@ -255,14 +255,18 @@ public class Chargement{
 			for (Element entite : courant.getChildren("Entite")){
 				EntiteGraph ent  = (EntiteGraph) ids.get(Integer.valueOf(entite.getAttributeValue("id")));;
 				e.addEntite(ent.getEntite());
-				if (e.getNom().equals("1") && courant.getChild("Sens").getAttributeValue("id").equals(entite.getAttributeValue("id")))
+				if (e.getNom().equals("1") 
+						&& (courant.getChild("Sens") != null)
+						&& courant.getChild("Sens").getAttributeValue("id").equals(entite.getAttributeValue("id")))
 					e.setSens(ent.getEntite());
 			}
 				
 			for (Element relation : courant.getChildren("Relation")){
 				RelationGraph rel  = (RelationGraph) ids.get(Integer.valueOf(relation.getAttributeValue("id")));;
 				e.addRelation(rel.getRelation());
-				if (e.getNom().equals("I") && courant.getChild("Sens").getAttributeValue("id").equals(relation.getAttributeValue("id")))
+				if (e.getNom().equals("I") 
+						&& (courant.getChild("Sens") != null)
+						&& courant.getChild("Sens").getAttributeValue("id").equals(relation.getAttributeValue("id")))
 					e.setSens(rel.getRelation());
 			}
 			
