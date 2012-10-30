@@ -100,7 +100,8 @@ public class McdGraph extends JPanel{
 			component.dessinerOmbre(g);
 		
 		for(McdComposentGraphique component : m_componentsFirst){
-			component.dessiner(g);
+			if (!(component instanceof ContrainteGraph))
+					component.dessiner(g);
 			if(component instanceof CardinaliteGraph)
 				continue;
 			if(component instanceof FormeGeometrique){
@@ -173,6 +174,10 @@ public class McdGraph extends JPanel{
 					}
 				}
 			}
+		}
+		for(McdComposentGraphique component : m_componentsFirst){
+			if (component instanceof ContrainteGraph)
+				component.dessiner(g);
 		}
 		Dimension nouvelleDim = new Dimension(max.x,max.y);
 		if(min.x<0)

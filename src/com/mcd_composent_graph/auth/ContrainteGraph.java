@@ -124,12 +124,13 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 			e1.x = centreObjet.x+20;
 			e1.y = centreObjet.y;
 			a = angle(m_centre, e1, centreObjet)*-1;
+			t /= (int)Math.sqrt((Math.pow(c, 2)*Math.pow(Math.cos(a), 2))+(Math.pow(b, 2)*Math.pow(Math.sin(a), 2)));
 			
 			p.x = (int)((t*Math.cos(a))+centreObjet.x);
 			p.y = (int)((t*Math.sin(a))+centreObjet.y);
 			
 			m_lignesLiens.add(new Line2D.Double(m_centre.x, m_centre.y, p.x, p.y));
-			g.drawLine(m_centre.x, m_centre.y, centreObjet.x, centreObjet.y);
+			g.drawLine(m_centre.x, m_centre.y, p.x, p.y);
 			if (m_contrainte.getSens() instanceof Relation && r.getRelation().equals((Relation)m_contrainte.getSens())){
 				Point p1[] = new Point[2];
 				p1[0] = new Point();
