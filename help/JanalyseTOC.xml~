@@ -5,8 +5,23 @@
 <toc version="1.0">
   <tocitem text="JAnalyse">
     <tocitem text="Présentation" target="presentation">
-      <tocitem text="Création du MCD" target="creerrmcd" />
+      <tocitem text="Création du MCD" target="creermcd" />
       <tocitem text="Création et édition des objets" target="creerentite" />
+      <tocitem text="Création et édition des relations" target="todo" />
+      <tocitem text="Création et édition des héritages" target="todo" />
+      <tocitem text="Création et édition des contraintes" target="todo" />
+      <tocitem text="Présentation des outils" target="todo" />
+      <tocitem text="L'outils édition" target="todo" />
+      <tocitem text="Réorganiser son MCD" target="todo" />
+      <tocitem text="La sauvegarde" target="todo" />
+      <tocitem text="Le MLD" target="todo" />
+      <tocitem text="Fonctionnalités (liste complète)" target="todo" />
+    </tocitem>
+    <tocitem text="Personnaliser son MCD" target="todo" />
+    <tocitem text="Exporter son travail">
+      <tocitem text="Exporter en image PNG" target="todo" />
+      <tocitem text="Exporter vers une base de données" target="todo" />
+      <tocitem text="Exporter vers une page HTML" target="todo" />
     </tocitem>
     <tocitem text="A Propos" target="apropos" />
   </tocitem>

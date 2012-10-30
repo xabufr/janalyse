@@ -8,4 +8,5 @@
 	<mapID target="apropos" url="Pages/apropos.html" />
 	<mapID target="creerentite" url="Pages/presentation/creerentite.html" />
 	<mapID target="creermcd" url="Pages/presentation/creermcd.html" />
+	<mapID target="todo" url="Pages/todo.html" />
 </map>
