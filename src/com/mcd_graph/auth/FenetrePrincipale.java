@@ -72,19 +72,6 @@ public class FenetrePrincipale {
 	private JButton m_btnMld;
 	private JButton m_btnDico;
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					
-					FenetrePrincipale window = new FenetrePrincipale();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	public FenetrePrincipale() {
 		m_stateButtons = new ArrayList<JButton>();
 		initialize();
@@ -166,6 +153,7 @@ public class FenetrePrincipale {
 				}
 			}
 		});
+		frame.setVisible(true);
 	}
 	private void setEnabledButton(JButton b){
 		for(JButton button : m_stateButtons){
@@ -372,7 +360,9 @@ public class FenetrePrincipale {
 		mntmMettreJours.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(Updater.hasNewVersion()){
-					
+					String fichier = null;
+					if((fichier=Updater.downloadUpdate())!=null)
+						Updater.restart(fichier);
 				}
 				else{
 					JOptionPane.showMessageDialog(FenetrePrincipale.this.frame, "Aucune mise à jours disponible");

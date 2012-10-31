@@ -29,8 +29,8 @@ public class FenetreEditionContrainte extends JDialog{
 	private McdGraph m_mcd;
 	private ContrainteGraph m_contrainteGraph;
 	private Contrainte m_contrainte;
-	private JList<Relation> m_lstRelation;
-	private JList<Entite> m_lstEntite;
+	private JList m_lstRelation;
+	private JList m_lstEntite;
 	private JButton m_ajouterEntite;
 	private JButton m_supprimerEntite;
 	private JButton m_ajouterRelation;
@@ -105,7 +105,8 @@ public class FenetreEditionContrainte extends JDialog{
 		m_supprimerEntite = new JButton("Supprimer");
 		m_supprimerEntite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for (Entite ent : m_lstEntite.getSelectedValuesList()){
+				for (Object o: m_lstEntite.getSelectedValues()){
+					Entite ent = (Entite) o;
 					m_modelEntite.removeElement(ent);
 					if (m_type.getSelectedItem().equals("1") && m_contrainte.getSens().equals(ent))
 						m_contrainte.setSens(null);
@@ -142,7 +143,8 @@ public class FenetreEditionContrainte extends JDialog{
 		m_supprimerRelation = new JButton("Supprimer");
 		m_supprimerRelation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for (Relation r : m_lstRelation.getSelectedValuesList()){
+				for (Object o : m_lstRelation.getSelectedValues()){
+					Relation r = (Relation) o;
 					m_modelRelation.removeElement(r);
 					if (m_type.getSelectedItem().equals("I") && m_contrainte.getSens().equals(r))
 						m_contrainte.setSens(null);
