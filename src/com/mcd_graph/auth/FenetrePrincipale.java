@@ -41,6 +41,7 @@ import com.preferences_mcd_logique.auth.PGroupe;
 import com.sauvegarde_chargement.auth.Chargement;
 import com.ui_help.auth.APropos;
 import com.ui_help.auth.HelpDialog;
+import com.version.auth.Updater;
 
 import java.awt.Insets;
 import java.util.ArrayList;
@@ -363,6 +364,22 @@ public class FenetrePrincipale {
 			}
 		});
 		mnAide.add(mntmManuel);
+		
+		JSeparator separator_5 = new JSeparator();
+		mnAide.add(separator_5);
+		
+		JMenuItem mntmMettreJours = new JMenuItem("Mettre à jours");
+		mntmMettreJours.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(Updater.hasNewVersion()){
+					
+				}
+				else{
+					JOptionPane.showMessageDialog(FenetrePrincipale.this.frame, "Aucune mise à jours disponible");
+				}
+			}
+		});
+		mnAide.add(mntmMettreJours);
 		
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
