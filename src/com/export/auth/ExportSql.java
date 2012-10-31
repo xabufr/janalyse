@@ -141,7 +141,7 @@ public class ExportSql {
 				sql += " NOT NULL";
 			
 			if (p.isAutoIncrement())
-				sql += " INDENTITY(1, 1)";
+				sql += " IDENTITY(1, 1)";
 			
 			if (p.isClePrimaire())
 				clePrimaire = p;
