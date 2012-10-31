@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -86,15 +88,18 @@ public class ExportSql {
 		}
 	}
 	
-	private String ajoutCleEtrangere(Entite e, ProprieteCleEtrangere p){
+	private String ajoutCleEtrangere(Entite e, List<ProprieteCleEtrangere> fk){
 		String sql = "";
 		String cle = "";
-		for (Propriete id : p.getEntite().getProprietes())
-			if (id.isClePrimaire())
-				cle = id.getVirtualName(p.getEntite().getName());
-		sql += "ALTER TABLE "+e.getName()+"\n";
-		sql += "\tADD CONSTRAINT FK_"+e.getName().toUpperCase()+"_"+p.getEntite().getName().toUpperCase()+" FOREIGN KEY("+p.getVirtualName(e.getName())+") REFERENCES "+p.getEntite().getName()+"("+cle+");";
 		
+		for (ProprieteCleEtrangere p : fk){
+			for (Propriete id : p.getEntite().getProprietes())
+				if (id.isClePrimaire())
+					cle = id.getVirtualName(p.getEntite().getName());
+			
+			sql += "ALTER TABLE "+e.getName()+"\n";
+			sql += "\tADD CONSTRAINT FK_"+e.getName().toUpperCase()+"_"+p.getEntite().getName().toUpperCase()+" FOREIGN KEY("+p.getVirtualName(e.getName())+") REFERENCES "+p.getEntite().getName()+"("+cle+");\n";
+		}
 		return sql;
 	}
 	
@@ -162,13 +167,14 @@ public class ExportSql {
 		return false;
 	}
 	
-	private ProprieteCleEtrangere getCleEtrangere(Entite e){
+	private List<ProprieteCleEtrangere> getCleEtrangere(Entite e){
+		List<ProprieteCleEtrangere> fk = new ArrayList<ProprieteCleEtrangere>();
 		for (Propriete p : e.getProprietes()){
 			if (p instanceof ProprieteCleEtrangere){
-				return (ProprieteCleEtrangere)p;
+				fk.add((ProprieteCleEtrangere)p);
 			}
 		}
-		return null;
+		return fk;
 	}
 	
 	private String getExtension(File f){
