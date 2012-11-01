@@ -1,4 +1,4 @@
-package com.Dico.auth;
+package com.dico.auth;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;

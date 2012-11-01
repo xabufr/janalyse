@@ -29,7 +29,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import com.Dico.auth.DicoPanel;
+import com.dico.auth.DicoPanel;
 import com.event.auth.QuitListener;
 import com.export.auth.ExportSql;
 import com.export.auth.ExportPng;
@@ -382,6 +382,7 @@ public class FenetrePrincipale {
 		m_boutonInsertionEntite.setMaximumSize(new Dimension(32, 32));
 		m_boutonInsertionEntite.setMargin(new Insets(0, 0, 0, 0));
 		m_boutonInsertionEntite.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/objet.png")));
+		m_boutonInsertionEntite.setToolTipText("Insertion d'entité");
 		m_stateButtons.add(m_boutonInsertionEntite);
 		toolBar.add(m_boutonInsertionEntite);
 		
@@ -391,6 +392,7 @@ public class FenetrePrincipale {
 		m_boutonInsertionRelation.setMaximumSize(new Dimension(32, 32));
 		m_boutonInsertionRelation.setPreferredSize(new Dimension(32, 32));
 		m_boutonInsertionRelation.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/relation.png")));
+		m_boutonInsertionRelation.setToolTipText("Insertion de relation");
 		m_stateButtons.add(m_boutonInsertionRelation);
 		toolBar.add(m_boutonInsertionRelation);
 		
@@ -400,6 +402,7 @@ public class FenetrePrincipale {
 		m_boutonInsertionLien.setMinimumSize(new Dimension(32, 32));
 		m_boutonInsertionLien.setMaximumSize(new Dimension(32, 32));
 		m_boutonInsertionLien.setMargin(new Insets(0, 0, 0, 0));
+		m_boutonInsertionLien.setToolTipText("Insertion de lien");
 		m_stateButtons.add(m_boutonInsertionLien);
 		toolBar.add(m_boutonInsertionLien);
 		
@@ -409,6 +412,7 @@ public class FenetrePrincipale {
 		m_boutonInsertionContrainte.setMinimumSize(new Dimension(32, 32));
 		m_boutonInsertionContrainte.setMaximumSize(new Dimension(32, 32));
 		m_boutonInsertionContrainte.setMargin(new Insets(0, 0, 0, 0));
+		m_boutonInsertionContrainte.setToolTipText("Insertion de contrainte");
 		m_stateButtons.add(m_boutonInsertionContrainte);
 		toolBar.add(m_boutonInsertionContrainte);
 		
@@ -418,6 +422,7 @@ public class FenetrePrincipale {
 		m_boutonInsertionHeritage.setMinimumSize(new Dimension(32, 32));
 		m_boutonInsertionHeritage.setMaximumSize(new Dimension(32, 32));
 		m_boutonInsertionHeritage.setMargin(new Insets(0, 0, 0, 0));
+		m_boutonInsertionHeritage.setToolTipText("Insertion d'héritage");
 		m_stateButtons.add(m_boutonInsertionHeritage);
 		toolBar.add(m_boutonInsertionHeritage);
 		
@@ -428,6 +433,7 @@ public class FenetrePrincipale {
 		m_boutonEdition.setMinimumSize(new Dimension(32, 32));
 		m_boutonEdition.setMaximumSize(new Dimension(32, 32));
 		m_boutonEdition.setMargin(new Insets(0, 0, 0, 0));
+		m_boutonEdition.setToolTipText("Mode d'édition");
 		m_stateButtons.add(m_boutonEdition);
 		toolBar.add(m_boutonEdition);
 		

@@ -3,7 +3,7 @@ package com.export.auth;
 import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 
-import com.Dico.auth.DicoLog;
+import com.dico.auth.DicoLog;
 import com.export.auth.ExportSql;
 import com.export.auth.Base64.InputStream;
 import com.mcd_graph.auth.McdGraph;

@@ -1,4 +1,4 @@
-package com.Dico.auth;
+package com.dico.auth;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
