@@ -41,6 +41,7 @@ import com.preferences_mcd_logique.auth.PGroupe;
 import com.sauvegarde_chargement.auth.Chargement;
 import com.ui_help.auth.APropos;
 import com.ui_help.auth.HelpDialog;
+import com.version.auth.Updater;
 
 import java.awt.Insets;
 import java.util.ArrayList;
@@ -71,19 +72,6 @@ public class FenetrePrincipale {
 	private JButton m_btnMld;
 	private JButton m_btnDico;
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					
-					FenetrePrincipale window = new FenetrePrincipale();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	public FenetrePrincipale() {
 		m_stateButtons = new ArrayList<JButton>();
 		initialize();
@@ -165,6 +153,7 @@ public class FenetrePrincipale {
 				}
 			}
 		});
+		frame.setVisible(true);
 	}
 	private void setEnabledButton(JButton b){
 		for(JButton button : m_stateButtons){
@@ -363,6 +352,24 @@ public class FenetrePrincipale {
 			}
 		});
 		mnAide.add(mntmManuel);
+		
+		JSeparator separator_5 = new JSeparator();
+		mnAide.add(separator_5);
+		
+		JMenuItem mntmMettreJours = new JMenuItem("Mettre à jours");
+		mntmMettreJours.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(Updater.hasNewVersion()){
+					String fichier = null;
+					if((fichier=Updater.downloadUpdate())!=null)
+						Updater.restart(fichier);
+				}
+				else{
+					JOptionPane.showMessageDialog(FenetrePrincipale.this.frame, "Aucune mise à jours disponible");
+				}
+			}
+		});
+		mnAide.add(mntmMettreJours);
 		
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
