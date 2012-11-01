@@ -219,6 +219,14 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 		super.setFocus(f);
 		m_calculerTaille=true;
 	}
+	
+	public ArrayList<ProprieteGraph> getPropriete(){
+		return m_proprietes;
+	}
+	
+	public void setPropriete(ArrayList<ProprieteGraph> prop){
+		m_proprietes = prop;
+	}
 
 	public void dessinerOmbre(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();

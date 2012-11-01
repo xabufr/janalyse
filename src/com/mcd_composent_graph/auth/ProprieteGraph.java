@@ -42,7 +42,7 @@ public class ProprieteGraph implements FormeGeometrique{
 			g.drawLine(p.x, p.y + 2, p.x + getDimension(g,f, proprietaire).width, p.y + 2);
 		}
 		setPosition(p);
-		m_geometrie.setRectangle(new Rectangle(p.x, p.y, getDimension(g, f, proprietaire).width, getDimension(g, f, proprietaire).height));
+		m_geometrie.setRectangle(new Rectangle(p.x, p.y-getDimension(g, f, proprietaire).height, getDimension(g, f, proprietaire).width, getDimension(g, f, proprietaire).height));
 	}
 
 	public Boolean contient(Point p) {

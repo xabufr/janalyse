@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Entite;
@@ -31,6 +32,7 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 	private Hashtable<McdComposentGraphique, Point> m_liensB;
 	private Hashtable<Face, Integer> m_nombreParFace;
 	private Hashtable<Face, Point[]> m_pointsSorted;
+	private List<ProprieteGraph> m_lstPropGraph;
 	public Rectangle getRectangle(){
 		return m_geometrie.getRectangle();
 	}
@@ -58,6 +60,7 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 		m_liens = new Hashtable<EntiteGraph.Face, ArrayList<McdComposentGraphique>>();
 		m_liensB = new Hashtable<McdComposentGraphique, Point>();
 		m_pointsSorted = new Hashtable<EntiteGraph.Face, Point[]>();
+		m_lstPropGraph = new ArrayList<ProprieteGraph>();
 		for(Face f : Face.values()){
 			m_liens.put(f, new ArrayList<McdComposentGraphique>());
 		}
@@ -66,6 +69,7 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 
 	public void dessiner(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+		m_lstPropGraph.clear();
 		Point pos = getPosition();
 		int x, y, widthMax=0, heightMax=0;
 		
@@ -162,7 +166,7 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 					new Point(x, y),
 					m_entite.getName());
 			
-			
+			m_lstPropGraph.add(dessinPropriete);
 			y += font.getHeight() + 4;
 		}
 	}
@@ -319,5 +323,11 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 			g.setColor((Color)prefs.get(PGroupe.ENTITE, PCle.OMBRE_COLOR));
 			g.fillRect(this.getPosition().x+5, this.getPosition().y+5, this.getDimension().width, this.getDimension().height);
 		}
+	}
+	public List<ProprieteGraph> getLstPropGraph() {
+		return m_lstPropGraph;
+	}
+	public void setLstPropGraph(List<ProprieteGraph> lstPropGraph) {
+		this.m_lstPropGraph = lstPropGraph;
 	}
 }
