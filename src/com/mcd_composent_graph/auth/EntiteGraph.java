@@ -10,7 +10,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
-import java.awt.image.SampleModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -284,7 +283,7 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 		updateLienFaces();
 		Face curFace = getFace(comp);
 		int nombre = m_nombreParFace.get(curFace);
-		Enumeration<McdComposentGraphique> key = m_liensB.keys();
+
 		Point curPoint = m_liensB.get(comp);
 		Point points[] = m_pointsSorted.get(curFace);
 		int index;

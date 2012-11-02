@@ -1,6 +1,5 @@
 package com.mcd_graph.auth;
 
-import java.awt.EventQueue;
 import java.awt.Point;
 
 import javax.swing.JFrame;
@@ -149,6 +148,8 @@ public class FenetrePrincipale {
 					break;
 				case INSERT_RELATION:
 					setEnabledButton(m_boutonInsertionRelation);
+					break;
+				default:
 					break;
 				}
 			}
@@ -524,31 +525,20 @@ public class FenetrePrincipale {
 					new Chargement(getMcd(), s);
 				}
 			}
-			public void windowIconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			public void windowDeiconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			public void windowDeactivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowIconified(WindowEvent arg0) {}
+			
+			public void windowDeiconified(WindowEvent arg0) {}
+			
+			public void windowDeactivated(WindowEvent arg0) {}
 			
 			public void windowClosing(WindowEvent arg0) {
 				quitter();
 				
 			}
-			public void windowClosed(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			public void windowActivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			
+			public void windowClosed(WindowEvent arg0) {}
+			
+			public void windowActivated(WindowEvent arg0) {}
 		});
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
@@ -564,7 +554,7 @@ public class FenetrePrincipale {
 	public void quitter() {
 		ArrayList<McdGraph> mcds = new ArrayList<McdGraph>();
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
-		ArrayList<String> lst = new ArrayList();
+		ArrayList<String> lst = new ArrayList<String>();
 		int nb = m_mcdContener.getTabCount();
 		for(int i=0;i<nb;++i){
 			mcds.add((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView());
@@ -645,17 +635,6 @@ public class FenetrePrincipale {
 				return;
 			super.show(m_mcdContener, p.x, p.y);
 		}
-	}
-	private String getExtension(File f){
-		String ext=f.getName();
-		
-		int index = ext.lastIndexOf(".");
-		String ret = null;
-		if(index>0&&index<ext.length()-1){
-			ret = ext.substring(index+1).toLowerCase();
-		}
-		
-		return ret;
 	}
 	private Boolean fermerMcd(McdGraph mcd){
 		if(mcd==null)

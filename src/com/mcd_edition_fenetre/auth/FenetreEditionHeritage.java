@@ -29,10 +29,10 @@ public class FenetreEditionHeritage extends JDialog{
 	private HeritageGraph m_heritageGraph;
 	private Heritage m_heritage;
 	private Entite m_oldEntite;
-	private JComboBox m_type;
-	private JComboBox m_entiteMere;
-	private DefaultListModel m_model;
-	private JList m_lstEnfant;
+	private JComboBox<HeritageType> m_type;
+	private JComboBox<Entite> m_entiteMere;
+	private DefaultListModel<Entite> m_model;
+	private JList<Entite> m_lstEnfant;
 
 	public FenetreEditionHeritage(McdGraph mcd, HeritageGraph her) {
 		m_mcd = mcd;
@@ -51,7 +51,7 @@ public class FenetreEditionHeritage extends JDialog{
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		getContentPane().add(lblNewLabel_1, "cell 0 0,alignx right");
 		
-		m_type = new JComboBox();
+		m_type = new JComboBox<HeritageType>();
 		for (HeritageType s : HeritageType.values()){
 			m_type.addItem(s);
 			if (s.toString().equals(m_heritage.getType().toString()))
@@ -63,11 +63,11 @@ public class FenetreEditionHeritage extends JDialog{
 		JLabel lblNewLabel = new JLabel("Entité Mère:");
 		getContentPane().add(lblNewLabel, "cell 0 1,alignx right");
 		
-		m_model = new DefaultListModel();
+		m_model = new DefaultListModel<Entite>();
 		for (Entite e : m_heritage.getEnfants())
 			m_model.addElement(e);
 		
-		m_entiteMere = new JComboBox();
+		m_entiteMere = new JComboBox<Entite>();
 			
 		for (Entite e : m_heritage.getEnfants())
 			m_entiteMere.addItem(e);
@@ -103,7 +103,7 @@ public class FenetreEditionHeritage extends JDialog{
 		getContentPane().add(lblEntitFilles, "cell 1 2,alignx center");
 		lblEntitFilles.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		m_lstEnfant = new JList();
+		m_lstEnfant = new JList<Entite>();
 		m_lstEnfant.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		m_lstEnfant.setModel(m_model);
 		getContentPane().add(m_lstEnfant, "cell 1 3,grow");

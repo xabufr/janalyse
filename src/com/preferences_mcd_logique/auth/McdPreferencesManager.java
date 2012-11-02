@@ -13,8 +13,6 @@ import java.util.Hashtable;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import com.sun.xml.internal.ws.util.ByteArrayBuffer;
-
 public class McdPreferencesManager {
 
 	private McdPreferencesManager() {

@@ -2,7 +2,6 @@ package com.export.auth;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,11 +10,6 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import org.jdom2.Document;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
-
-import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Propriete;
