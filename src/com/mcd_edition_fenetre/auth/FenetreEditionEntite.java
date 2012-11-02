@@ -17,11 +17,11 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.border.LineBorder;
@@ -43,13 +43,13 @@ public class FenetreEditionEntite extends JDialog{
 	private JTextField m_commentairePropriete;
 	private McdGraph m_mcd;
 	private Entite m_entite;
-	private DefaultListModel m_model;
-	private JComboBox m_type;
+	private DefaultListModel<Propriete> m_model;
+	private JComboBox<String> m_type;
 	private JSpinner m_taille[];
 	private JCheckBox m_isCle;
 	private JCheckBox m_isNull;
 	private JCheckBox m_isAutoIncremente;
-	private JList m_lstPropriete;
+	private JList<Propriete> m_lstPropriete;
 	private JButton m_boutonCreer;
 	private JButton m_boutonModifier;
 	private JPanel m_panel;
@@ -87,6 +87,8 @@ public class FenetreEditionEntite extends JDialog{
 				panel.add(lblCommentaire, "cell 0 1,alignx trailing");
 				
 				m_commentaireEntite = new JTextField();
+				if (m_entite.getCommentaire() != null)
+					m_commentaireEntite.setText(m_entite.getCommentaire());
 				panel.add(m_commentaireEntite, "cell 1 1,growx");
 				m_commentaireEntite.setColumns(10);
 			}
@@ -95,7 +97,7 @@ public class FenetreEditionEntite extends JDialog{
 			content.add(m_panel, "cell 0 1,grow");
 			m_panel.setLayout(new MigLayout("", "[][137.00,grow,center]", "[][][][grow][][][][][][]"));
 			{
-				m_type = new JComboBox();
+				m_type = new JComboBox<String>();
 				
 				JLabel lblProprit = new JLabel("Propriété");
 				m_panel.add(lblProprit, "cell 0 0 2 1,alignx center");
@@ -237,11 +239,11 @@ public class FenetreEditionEntite extends JDialog{
 				});
 				panel_3.add(button_1, "cell 1 3");
 				
-				m_model = new DefaultListModel();
+				m_model = new DefaultListModel<Propriete>();
 				for (Propriete p : m_entite.getProprietes())
 					m_model.addElement(p);
 				
-				m_lstPropriete = new JList();
+				m_lstPropriete = new JList<Propriete>();
 				JScrollPane scrollPane = new JScrollPane(m_lstPropriete);
 				scrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 				m_lstPropriete.setModel(m_model);
@@ -268,10 +270,14 @@ public class FenetreEditionEntite extends JDialog{
 	
 	private class BoutonOkListener implements ActionListener{
 		public void actionPerformed(ActionEvent arg0) {
-			if (!m_nomEntite.getText().equals(null) && !m_nomEntite.getText().equals(""));
+			if (!m_nomEntite.getText().equals(null) && !m_nomEntite.getText().equals(""))
 				m_entite.setName(m_nomEntite.getText());
+			else{
+				JOptionPane.showMessageDialog(null, "Veuillez insérer un nom d'entité", "Erreur nom entité", JOptionPane.ERROR_MESSAGE);
+				return;	
+			}
 				
-			if (!m_commentaireEntite.getText().equals(null) && !m_commentaireEntite.getText().equals(""));
+			if (!m_commentaireEntite.getText().equals(null))
 				m_entite.setCommentaire(m_commentaireEntite.getText());
 				
 			m_entite.getProprietes().clear();
@@ -288,8 +294,12 @@ public class FenetreEditionEntite extends JDialog{
 			Propriete p = (Propriete)m_lstPropriete.getSelectedValue();
 			if (!m_nomPropriete.getText().equals(null) && !m_nomPropriete.getText().equals(""))
 				p.setName(m_nomPropriete.getText());
+			else{
+				JOptionPane.showMessageDialog(null, "Veuillez insérer un nom de propriété", "Erreur nom propriété", JOptionPane.ERROR_MESSAGE);
+				return;	
+			}
 				
-			if (!m_commentairePropriete.getText().equals(null) && m_commentairePropriete.getText().equals(""))
+			if (!m_commentairePropriete.getText().equals(null))
 				p.setCommentaire(m_commentairePropriete.getText());
 			
 			ProprieteTypeE t = ProprieteTypeE.getValue(m_type.getSelectedItem().toString());
@@ -310,7 +320,7 @@ public class FenetreEditionEntite extends JDialog{
 				ProprieteTypeE t = ProprieteTypeE.getValue(m_type.getSelectedItem().toString());
 				p = new Propriete(m_nomPropriete.getText(), t);
 				
-				if (!m_commentairePropriete.getText().equals(null) && m_commentairePropriete.getText().equals(""))
+				if (!m_commentairePropriete.getText().equals(null))
 					p.setCommentaire(m_commentairePropriete.getText());
 				
 				alimenterPropriete(p);
@@ -328,6 +338,10 @@ public class FenetreEditionEntite extends JDialog{
 				m_isCle.setSelected(false);
 				m_isNull.setSelected(false);
 				m_isAutoIncremente.setSelected(false);
+			}
+			else{
+				JOptionPane.showMessageDialog(null, "Veuillez insérer un nom de propriété", "Erreur nom propriété", JOptionPane.ERROR_MESSAGE);
+				return;	
 			}
 		}
 	}
