@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JList;
@@ -43,11 +44,11 @@ public class FenetreEditionRelation extends JDialog {
 	private JTextField m_nom;
 	private JTextField m_nomPropriete;
 	private JTextField m_commentaire;
-	private JComboBox m_typePropriete;
-	private JList m_listeProprietes;
+	private JComboBox<String> m_typePropriete;
+	private JList<Propriete> m_listeProprietes;
 	private McdGraph m_mcd;
 	private Relation m_relationCopie, m_relation;
-	private DefaultListModel m_model;
+	private DefaultListModel<Propriete> m_model;
 	private Propriete m_currentPropriete;
 	private JCheckBox m_nullable;
 	private JSpinner m_taille[];
@@ -130,7 +131,7 @@ public class FenetreEditionRelation extends JDialog {
 				m_panel.add(lblType, "cell 0 2");
 			}
 			{
-				m_typePropriete = new JComboBox();
+				m_typePropriete = new JComboBox<String>();
 				m_typePropriete.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						changeTaille(ProprieteTypeE.getValue((String) m_typePropriete.getSelectedItem()));
@@ -193,10 +194,10 @@ public class FenetreEditionRelation extends JDialog {
 			contentPanel.add(panel, "cell 1 2,grow");
 			panel.setLayout(new MigLayout("", "[181px][]", "[100px][][][][]"));
 			{
-				m_listeProprietes = new JList();
+				m_listeProprietes = new JList<Propriete>();
 				JScrollPane scrollPane = new JScrollPane(m_listeProprietes);
 				scrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-				m_model = new DefaultListModel();
+				m_model = new DefaultListModel<Propriete>();
 				for(Propriete prop : m_relationCopie.getProprietes()){
 					m_model.addElement(prop);
 				}
@@ -299,8 +300,10 @@ public class FenetreEditionRelation extends JDialog {
 	}
 	private class createurPropriete implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			if(m_nomPropriete.getText().trim().isEmpty())
+			if(m_nomPropriete.getText().trim().isEmpty()){
+				JOptionPane.showMessageDialog(null, "Veuillez insérer un nom de propriété", "Erreur nom propriété", JOptionPane.ERROR_MESSAGE);
 				return;
+			}
 			ProprieteTypeE type = ProprieteTypeE.getValue(m_typePropriete.getSelectedItem().toString());
 			Propriete prop = new Propriete(m_nomPropriete.getText(), type);
 			prop.setAutoIncrement(m_autoIncrement.isSelected());
@@ -317,7 +320,14 @@ public class FenetreEditionRelation extends JDialog {
 		public void actionPerformed(ActionEvent arg0) {
 			if(m_currentPropriete==null)
 				return;
-			m_currentPropriete.setName(m_nomPropriete.getText());
+			
+			if (!m_nomPropriete.getText().equals(""))
+				m_currentPropriete.setName(m_nomPropriete.getText());
+			else{
+				JOptionPane.showMessageDialog(null, "Veuillez insérer un nom de propriété", "Erreur nom propriété", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+				
 			ProprieteTypeE t = ProprieteTypeE.getValue(m_typePropriete.getSelectedItem().toString());
 			m_currentPropriete.setType(t);
 			m_currentPropriete.setAutoIncrement(m_autoIncrement.isSelected());
@@ -329,7 +339,12 @@ public class FenetreEditionRelation extends JDialog {
 	}
 	private class validerModifications implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			m_relationCopie.setNom(m_nom.getText());
+			if (!m_nom.getText().equals(""))
+				m_relationCopie.setNom(m_nom.getText());
+			else{
+				JOptionPane.showMessageDialog(null, "Veuillez insérer un nom de relation", "Erreur nom relation", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			m_relationCopie.setCommentaire(m_commentaire.getText());
 			m_relation.copyFrom(m_relationCopie);
 			FenetreEditionRelation.this.setVisible(false);
