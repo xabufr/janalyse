@@ -3,7 +3,9 @@ package com.mcd_graph.auth;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -41,6 +43,9 @@ import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.HeritageType;
 import com.mcd_log.auth.Relation;
 import com.mcd_log.auth.Entite;
+import com.preferences_mcd_logique.auth.McdPreferencesManager;
+import com.preferences_mcd_logique.auth.PCle;
+import com.preferences_mcd_logique.auth.PGroupe;
 import com.sauvegarde_chargement.auth.Sauvegarde;
 
 @SuppressWarnings("serial")
@@ -210,34 +215,37 @@ public class McdGraph extends JPanel{
 		
 		//affichage commentaire
 		boolean show = true;
-		for (McdComposentGraphique c : m_componentsSecond){
-			if (c instanceof EntiteGraph 
+		if ((Boolean)McdPreferencesManager.getInstance().get(PGroupe.COMMENTAIRE, PCle.SHOW)){
+			for (McdComposentGraphique c : m_componentsSecond){
+				if (c instanceof EntiteGraph 
+						&& getMousePosition() != null
+						&& ((EntiteGraph)c).contient(getMousePosition())
+						&& ((EntiteGraph)c).getEntite().getCommentaire() != ""){
+					for (ProprieteGraph p : ((EntiteGraph)c).getLstPropGraph())
+						if (p.contient(getMousePosition())
+						&& (p.getPropriete().getCommentaire() != "")){
+							showCommentaire(g, getMousePosition(), p.getPropriete().getCommentaire());
+							show = false;
+						}
+					if (show)
+						showCommentaire(g, getMousePosition(), ((EntiteGraph)c).getEntite().getCommentaire());
+				}
+				else if (c instanceof RelationGraph 
 					&& getMousePosition() != null
-					&& ((EntiteGraph)c).contient(getMousePosition())
-					&& ((EntiteGraph)c).getEntite().getCommentaire() != ""){
-				for (ProprieteGraph p : ((EntiteGraph)c).getLstPropGraph())
-					if (p.contient(getMousePosition())
-					&& (p.getPropriete().getCommentaire() != "")){
-						showCommentaire(g, getMousePosition(), p.getPropriete().getCommentaire());
-						show = false;
-					}
-				if (show)
-					showCommentaire(g, getMousePosition(), ((EntiteGraph)c).getEntite().getCommentaire());
-			}
-			else if (c instanceof RelationGraph 
-				&& getMousePosition() != null
-				&& ((RelationGraph)c).contient(getMousePosition())
-				&& ((RelationGraph)c).getRelation().getCommentaire() != ""){
-				for (ProprieteGraph p : ((RelationGraph)c).getPropriete())
-					if (p.contient(getMousePosition())
-					&& (p.getPropriete().getCommentaire() != "")){
-						showCommentaire(g, getMousePosition(), p.getPropriete().getCommentaire());
-						show = false;
-					}
-				if (show)
-					showCommentaire(g, getMousePosition(), ((RelationGraph)c).getRelation().getCommentaire());
+					&& ((RelationGraph)c).contient(getMousePosition())
+					&& ((RelationGraph)c).getRelation().getCommentaire() != ""){
+					for (ProprieteGraph p : ((RelationGraph)c).getPropriete())
+						if (p.contient(getMousePosition())
+						&& (p.getPropriete().getCommentaire() != "")){
+							showCommentaire(g, getMousePosition(), p.getPropriete().getCommentaire());
+							show = false;
+						}
+					if (show)
+						showCommentaire(g, getMousePosition(), ((RelationGraph)c).getRelation().getCommentaire());
+				}
 			}
 		}
+		
 		if (m_selectMulti.isDraw())
 			m_selectMulti.dessiner(g, m_components);
 		
@@ -314,7 +322,8 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseMoved(MouseEvent arg0) {
-			if (mouseInComponent())
+			McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+			if (mouseInComponent() && (Boolean)prefs.get(PGroupe.COMMENTAIRE, PCle.SHOW))
 				repaint();
 		}
 		public void keyPressed(KeyEvent arg0) {
@@ -361,7 +370,8 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseMoved(MouseEvent arg0) {
-			if (mouseInComponent())
+			McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+			if (mouseInComponent() && (Boolean)prefs.get(PGroupe.COMMENTAIRE, PCle.SHOW))
 				repaint();
 		}
 
@@ -481,7 +491,8 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseMoved(MouseEvent e) {
-			if (mouseInComponent())
+			McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+			if (mouseInComponent() && (Boolean)prefs.get(PGroupe.COMMENTAIRE, PCle.SHOW))
 				repaint();
 		}
 		public void keyPressed(KeyEvent e) {
@@ -531,7 +542,8 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseMoved(MouseEvent e) {
-			if (mouseInComponent())
+			McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+			if (mouseInComponent() && (Boolean)prefs.get(PGroupe.COMMENTAIRE, PCle.SHOW))
 				repaint();
 		}
 
@@ -585,7 +597,8 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseMoved(MouseEvent e) {
-			if (mouseInComponent())
+			McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+			if (mouseInComponent() && (Boolean)prefs.get(PGroupe.COMMENTAIRE, PCle.SHOW))
 				repaint();
 		}
 
@@ -756,7 +769,8 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mouseMoved(MouseEvent arg0) {
-			if (mouseInComponent())
+			McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+			if (mouseInComponent() && (Boolean)prefs.get(PGroupe.COMMENTAIRE, PCle.SHOW))
 				repaint();
 		}
 		public void keyPressed(KeyEvent e) {
@@ -1219,6 +1233,7 @@ public class McdGraph extends JPanel{
 		return false;
 	}
 	private void showCommentaire(Graphics g, Point c, String com){
+		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		FontMetrics font = g.getFontMetrics();
 		Dimension dim = new Dimension();
 		Point p = new Point();
@@ -1242,14 +1257,33 @@ public class McdGraph extends JPanel{
 		p.x = c.x;
 		p.y = c.y-dim.height;
 		
-		g.setColor(Color.LIGHT_GRAY);
+		if ((Boolean)prefs.get(PGroupe.COMMENTAIRE, PCle.OMBRE)){
+			g.setColor((Color)prefs.get(PGroupe.COMMENTAIRE, PCle.OMBRE_COLOR));
+			g.fillRect(p.x+5, p.y+5, dim.width, dim.height);
+		}
+		
+		if(!(Boolean) prefs.get(PGroupe.COMMENTAIRE, PCle.GRADIANT_COLOR))
+			g.setColor((Color) prefs.get(PGroupe.COMMENTAIRE, PCle.COLOR));
+		else{
+			Graphics2D g2 = (Graphics2D) g;
+			GradientPaint paint=null;
+
+			paint = new GradientPaint(p.x, 0, 
+			(Color)prefs.get(PGroupe.COMMENTAIRE, PCle.COLOR), 
+			p.x+dim.width, 0, 
+			(Color)prefs.get(PGroupe.COMMENTAIRE, PCle.COLOR_2));
+			g2.setPaint(paint);
+		}
+
 		g.fillRect(p.x, p.y, dim.width, dim.height);
-		g.setColor(Color.BLACK);
+		g.setColor((Color)prefs.get(PGroupe.COMMENTAIRE, PCle.COLOR_CONTOUR));
 		g.drawRect(p.x, p.y, dim.width, dim.height);
 		p.x += 5;
 		
 		int j = 1, old = p.y;
 		lg = "";
+		g.setFont(prefs.getFont(PGroupe.COMMENTAIRE, PCle.FONT));
+		g.setColor((Color)prefs.get(PGroupe.COMMENTAIRE, PCle.FONT_COLOR));
 		for (int i=0; i<s.toCharArray().length; ++i)
 			if (s.toCharArray()[i] == '\n'){
 				p.y = old+(font.getHeight()*j);

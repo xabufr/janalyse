@@ -37,6 +37,7 @@ import java.awt.GridBagConstraints;
 import javax.swing.JTextArea;
 import java.awt.Insets;
 import java.awt.GridLayout;
+import javax.swing.border.BevelBorder;
 
 @SuppressWarnings("serial")
 public class FenetrePreferences extends JDialog {
@@ -95,6 +96,12 @@ public class FenetrePreferences extends JDialog {
 					JPanel panelHeritage = new JPanel();
 					tabbedPaneMcd.addTab("Héritages", null, panelHeritage, null);
 					initializeWithoutProperties(panelHeritage, PGroupe.HERITAGE);
+				}
+				{
+					JPanel panelCommentaire = new JPanel();
+					tabbedPaneMcd.addTab("Commentaire", null, panelCommentaire, null);
+					panelCommentaire.setLayout(new MigLayout("", "[grow][]", "[][grow]"));
+					initializeCommentaire(panelCommentaire);
 				}
 			}
 			{
@@ -228,6 +235,122 @@ public class FenetrePreferences extends JDialog {
 	}
 	private void initButtonColor(JButton b, PGroupe g, PCle c){
 		b.setBackground((Color)McdPreferencesManager.getInstance().get(g, c));
+	}
+	private void initializeCommentaire(JPanel parentPanel){
+		final McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+
+		JLabel lblCommentaire = new JLabel("Commentaire:");
+		parentPanel.add(lblCommentaire, "flowx,cell 0 0");
+		
+		final JCheckBox checkBox_com = new JCheckBox("");
+		checkBox_com.setSelected((Boolean)prefs.get(PGroupe.COMMENTAIRE, PCle.SHOW));
+		checkBox_com.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				prefs.set(PGroupe.COMMENTAIRE, PCle.SHOW, checkBox_com.isSelected());
+			}
+		});
+		parentPanel.add(checkBox_com, "cell 0 0");
+
+		final JPanel panel = new JPanel();
+		panel.setVisible(checkBox_com.isSelected());
+		checkBox_com.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panel.setVisible(checkBox_com.isSelected());
+			}
+		});
+		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		parentPanel.add(panel, "cell 0 1,grow");
+		panel.setLayout(new MigLayout("", "[][][][][]", "[][][][]"));
+		{
+			JLabel lblOmbre_1 = new JLabel("Ombre:");
+			panel.add(lblOmbre_1, "flowx,cell 0 0");
+
+			final JCheckBox checkBox_1 = new JCheckBox("");
+			checkBox_1.setSelected((Boolean)prefs.get(PGroupe.COMMENTAIRE, PCle.OMBRE));
+			panel.add(checkBox_1, "cell 0 0");
+			
+			final JButton btnCouleur = new JButton("Couleur");
+			btnCouleur.setEnabled(checkBox_1.isSelected());
+			initButtonColor(btnCouleur, PGroupe.COMMENTAIRE, PCle.OMBRE_COLOR);
+			checkBox_1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					prefs.set(PGroupe.COMMENTAIRE, PCle.OMBRE, checkBox_1.isSelected());
+					btnCouleur.setEnabled(checkBox_1.isSelected());
+				}
+			});
+			btnCouleur.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					changeColor(PGroupe.COMMENTAIRE, PCle.OMBRE_COLOR, "Ombre", btnCouleur);
+				}
+			});
+			panel.add(btnCouleur, "cell 1 0");
+
+			JLabel lblDgrad = new JLabel("Dégradé:");
+			panel.add(lblDgrad, "flowx,cell 2 0");
+			
+
+			final JCheckBox checkBox_2 = new JCheckBox("");
+			checkBox_2.setSelected((Boolean)prefs.get(PGroupe.COMMENTAIRE, PCle.GRADIANT_COLOR));
+			checkBox_2.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					prefs.set(PGroupe.COMMENTAIRE, PCle.GRADIANT_COLOR, checkBox_2.isSelected());
+				}
+			});
+			panel.add(checkBox_2, "cell 2 0");
+
+			JLabel lblPoliceNom_2 = new JLabel("Police nom");
+			panel.add(lblPoliceNom_2, "cell 0 1");
+
+			JButton btnChoisir = new JButton("Choisir");
+			btnChoisir.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					changeFont(PGroupe.COMMENTAIRE, PCle.FONT);
+				}
+			});
+			panel.add(btnChoisir, "cell 1 1");
+
+			final JButton btnCouleur_1 = new JButton("Couleur");
+			initButtonColor(btnCouleur_1, PGroupe.COMMENTAIRE, PCle.FONT_COLOR);
+			btnCouleur_1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					changeColor(PGroupe.COMMENTAIRE, PCle.FONT_COLOR, "Font", btnCouleur_1);
+				}
+			});
+			panel.add(btnCouleur_1, "cell 2 1");
+
+			JLabel lblCouleurFond_3 = new JLabel("Couleur fond");
+			panel.add(lblCouleurFond_3, "cell 0 2");
+
+			final JButton btnChoisir_1 = new JButton("Choisir");
+			initButtonColor(btnChoisir_1, PGroupe.COMMENTAIRE, PCle.COLOR);
+			btnChoisir_1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					changeColor(PGroupe.COMMENTAIRE, PCle.COLOR, "Ombre", btnChoisir_1);
+				}
+			});
+			panel.add(btnChoisir_1, "cell 1 2");
+
+			final JButton btnChoisir_2 = new JButton("Choisir");
+			initButtonColor(btnChoisir_2, PGroupe.COMMENTAIRE, PCle.COLOR_2);
+			btnChoisir_2.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					changeColor(PGroupe.COMMENTAIRE, PCle.COLOR_2, "Ombre", btnChoisir_2);
+				}
+			});
+			panel.add(btnChoisir_2, "cell 2 2");
+
+			JLabel lblCouleurContour_1 = new JLabel("Couleur contour");
+			panel.add(lblCouleurContour_1, "cell 0 3");
+
+			final JButton btnChoisir_3 = new JButton("Choisir");
+			initButtonColor(btnChoisir_3, PGroupe.COMMENTAIRE, PCle.COLOR_CONTOUR);
+			btnChoisir_3.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					changeColor(PGroupe.COMMENTAIRE, PCle.COLOR_CONTOUR, "Ombre", btnChoisir_3);
+				}
+			});
+			panel.add(btnChoisir_3, "cell 1 3");
+		}
 	}
 	private void initializeWithoutProperties(JPanel parentPanel, final PGroupe g){
 		final McdPreferencesManager prefs = McdPreferencesManager.getInstance();

@@ -269,6 +269,16 @@ public class McdPreferencesManager {
 		set(PGroupe.ETAT, PCle.SAVE, new ArrayList<String>());
 
 		set(PGroupe.HTML, PCle.CSS, "h1, div {\ntext-align: center;\n}\ndiv {\n border: 1px solid black;\n    margin-bottom: -1px;\n    padding: 1px;\n}\ndiv.entite p \n{\n    background-color: black;\n    margin: 0;\n    color: white;\n}\n.mld. cleEtrangere \n{\n    border-bottom: 1px black dashed;\n}\ndiv.entite \n{\n    margin-bottom: 5px;\n    background-color: silver;\n}\n .mld. clePrimaire{\n text-decoration: underline; \n}");
+	
+		set(PGroupe.COMMENTAIRE, PCle.SHOW, true);
+		setFont(PGroupe.COMMENTAIRE, PCle.FONT, "Serif", Font.PLAIN, 10);
+		set(PGroupe.COMMENTAIRE,  PCle.COLOR, Color.CYAN);
+		set(PGroupe.COMMENTAIRE,  PCle.COLOR_2, Color.LIGHT_GRAY);
+		set(PGroupe.COMMENTAIRE, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.COMMENTAIRE, PCle.FONT_COLOR, Color.BLACK);
+		set(PGroupe.COMMENTAIRE, PCle.OMBRE, true);
+		set(PGroupe.COMMENTAIRE, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
+		set(PGroupe.COMMENTAIRE, PCle.GRADIANT_COLOR, true);
 	}
 }
 
