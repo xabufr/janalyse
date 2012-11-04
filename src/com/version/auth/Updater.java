@@ -109,7 +109,10 @@ public class Updater {
 	static public String getJarPath(){
 		String path = new File("").getAbsolutePath();
 		path +=File.separator+System.getProperty("java.class.path");
-		if(System.getProperty("java.class.path").startsWith("/"))
+		if(System.getProperty("java.class.path").startsWith("/"))	//Systèmes linux
+			return System.getProperty("java.class.path");
+		if(System.getProperty("java.class.path").length()>3&&	//Windows
+				System.getProperty("java.class.path").startsWith(":\\", 1))
 			return System.getProperty("java.class.path");
 		return path;
 	}
