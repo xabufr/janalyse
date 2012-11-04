@@ -115,9 +115,11 @@ public class Updater {
 		}
 		System.exit(0);
 	}
-	static private String getJarPath(){
+	static public String getJarPath(){
 		String path = new File("").getAbsolutePath();
 		path +=File.separator+System.getProperty("java.class.path");
+		if(System.getProperty("java.class.path").startsWith("/"))
+			return System.getProperty("java.class.path");
 		return path;
 	}
 	static public void replace(String to){
@@ -151,7 +153,7 @@ public class Updater {
 		p.getErrorStream().close();
  
 	}
-	static private int m_currentVersion = 3;
+	static private int m_currentVersion = 1;
 	//static private String m_urlVersion="https://www.assembla.com/code/janalyse/git/nodes/master/src/com/version/auth/version.xml";
 	static private String m_urlVersion="file:///home/thomas/workspace/janalyse/src/com/version/auth/version.xml";
 
