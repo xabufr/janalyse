@@ -43,13 +43,13 @@ public class FenetreEditionEntite extends JDialog{
 	private JTextField m_commentairePropriete;
 	private McdGraph m_mcd;
 	private Entite m_entite;
-	private DefaultListModel<Propriete> m_model;
-	private JComboBox<String> m_type;
+	private DefaultListModel m_model;
+	private JComboBox m_type;
 	private JSpinner m_taille[];
 	private JCheckBox m_isCle;
 	private JCheckBox m_isNull;
 	private JCheckBox m_isAutoIncremente;
-	private JList<Propriete> m_lstPropriete;
+	private JList m_lstPropriete;
 	private JButton m_boutonCreer;
 	private JButton m_boutonModifier;
 	private JPanel m_panel;
@@ -97,7 +97,7 @@ public class FenetreEditionEntite extends JDialog{
 			content.add(m_panel, "cell 0 1,grow");
 			m_panel.setLayout(new MigLayout("", "[][137.00,grow,center]", "[][][][grow][][][][][][]"));
 			{
-				m_type = new JComboBox<String>();
+				m_type = new JComboBox();
 				
 				JLabel lblProprit = new JLabel("Propriété");
 				m_panel.add(lblProprit, "cell 0 0 2 1,alignx center");
@@ -239,11 +239,11 @@ public class FenetreEditionEntite extends JDialog{
 				});
 				panel_3.add(button_1, "cell 1 3");
 				
-				m_model = new DefaultListModel<Propriete>();
+				m_model = new DefaultListModel();
 				for (Propriete p : m_entite.getProprietes())
 					m_model.addElement(p);
 				
-				m_lstPropriete = new JList<Propriete>();
+				m_lstPropriete = new JList();
 				JScrollPane scrollPane = new JScrollPane(m_lstPropriete);
 				scrollPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 				m_lstPropriete.setModel(m_model);

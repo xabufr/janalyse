@@ -33,15 +33,15 @@ public class FenetreEditionContrainte extends JDialog{
 	private McdGraph m_mcd;
 	private ContrainteGraph m_contrainteGraph;
 	private Contrainte m_contrainte;
-	private JList<Cloneable> m_lstRelation;
-	private JList<Cloneable> m_lstEntite;
+	private JList m_lstRelation;
+	private JList m_lstEntite;
 	private JButton m_ajouterEntite;
 	private JButton m_supprimerEntite;
 	private JButton m_ajouterRelation;
 	private JButton m_supprimerRelation;
-	private JComboBox<ContrainteType> m_type;
-	private DefaultListModel<Cloneable> m_modelEntite;
-	private DefaultListModel<Cloneable> m_modelRelation;
+	private JComboBox m_type;
+	private DefaultListModel m_modelEntite;
+	private DefaultListModel m_modelRelation;
 
 	public FenetreEditionContrainte(McdGraph mcd,ContrainteGraph cont) {
 		m_mcd = mcd;
@@ -64,7 +64,7 @@ public class FenetreEditionContrainte extends JDialog{
 		JLabel lblType = new JLabel("Type:");
 		panel.add(lblType, "cell 0 0,alignx trailing");
 		
-		m_type = new JComboBox<ContrainteType>();
+		m_type = new JComboBox();
 		for (ContrainteType t : ContrainteType.values()){
 			m_type.addItem(t);
 			if (m_contrainte.getType().equals(t))
@@ -90,10 +90,10 @@ public class FenetreEditionContrainte extends JDialog{
 		JLabel lblEntits = new JLabel("Entités:");
 		panel_1.add(lblEntits, "cell 0 0");
 		
-		m_modelEntite = new DefaultListModel<Cloneable>();
+		m_modelEntite = new DefaultListModel();
 		for (Entite e : m_contrainte.getEntites())
 			m_modelEntite.addElement(e);
-		m_lstEntite = new JList<Cloneable>();
+		m_lstEntite = new JList();
 		m_lstEntite.setModel(m_modelEntite);
 		m_lstEntite.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel_1.add(m_lstEntite, "cell 0 1,grow");
@@ -128,10 +128,10 @@ public class FenetreEditionContrainte extends JDialog{
 		panel_2.add(lblRelations, "cell 0 0");
 		
 		
-		m_modelRelation = new DefaultListModel<Cloneable>();
+		m_modelRelation = new DefaultListModel();
 		for (Relation r : m_contrainte.getRelations())
 			m_modelRelation.addElement(r);
-		m_lstRelation = new JList<Cloneable>();
+		m_lstRelation = new JList();
 		m_lstRelation.setModel(m_modelRelation);
 		m_lstRelation.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel_2.add(m_lstRelation, "cell 0 1,grow");

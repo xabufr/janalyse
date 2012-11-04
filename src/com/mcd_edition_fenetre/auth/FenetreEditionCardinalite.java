@@ -38,7 +38,7 @@ public class FenetreEditionCardinalite extends JDialog {
 	private McdGraph m_mcd;
 	private CardinaliteGraph m_cardinaliteGraph;
 	private Cardinalite m_cardinalite;
-	private JComboBox<CardinaliteGraphType> m_selectStyle;
+	private JComboBox m_selectStyle;
 
 	/**
 	 * Create the dialog.
@@ -122,7 +122,7 @@ public class FenetreEditionCardinalite extends JDialog {
 			contentPanel.add(lblStyle, "cell 0 3");
 		}
 		{
-			m_selectStyle = new JComboBox<CardinaliteGraphType>();
+			m_selectStyle = new JComboBox();
 			for(CardinaliteGraphType s: CardinaliteGraphType.values()){
 				m_selectStyle.addItem(s);
 			}
