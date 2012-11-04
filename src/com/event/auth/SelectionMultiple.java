@@ -62,7 +62,7 @@ public class SelectionMultiple {
 			drawRect(g, prefs, m_depart.x, m_posCurseur.y, dim.width, dim.height);
 		}
 		
-		List<McdComposentGraphique> tmp = new ArrayList();
+		List<McdComposentGraphique> tmp = new ArrayList<McdComposentGraphique>();
 		for (McdComposentGraphique c : m_composents)
 			tmp.add(c);
 		

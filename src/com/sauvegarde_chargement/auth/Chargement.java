@@ -1,9 +1,7 @@
 package com.sauvegarde_chargement.auth;
 
-import java.awt.Dimension;
 import java.awt.Point;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -17,8 +15,6 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
 
 import com.mcd_composent_graph.auth.CardinaliteGraph;
 import com.mcd_composent_graph.auth.CardinaliteGraphType;
@@ -106,7 +102,7 @@ public class Chargement{
 		List<Element> cardinalites = racine.getChild("All-cardinalite").getChildren("Cardinalite");
 		List<Element> heritages = racine.getChild("All-héritage").getChildren("Héritage");
 		List<Element> contraintes = racine.getChild("All-contrainte").getChildren("Contrainte");
-		Hashtable <Integer, McdComposentGraphique> ids = new Hashtable();
+		Hashtable <Integer, McdComposentGraphique> ids = new Hashtable<Integer, McdComposentGraphique>();
 		int i=0;
 
 		mcd.setName(racine.getAttributeValue("nom"));
@@ -114,7 +110,7 @@ public class Chargement{
 		for (Element courant : entites){
 			EntiteGraph eg = new EntiteGraph();
 			Entite e = new Entite(null);
-			List<Propriete> props = new ArrayList();
+			List<Propriete> props = new ArrayList<Propriete>();
 			Point pos = new Point();
 			
 			pos.x = Integer.parseInt(courant.getAttributeValue("x"));

@@ -6,13 +6,17 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import com.mcd_log.auth.Propriete;
 
-public class ProprieteGraph {
-
+public class ProprieteGraph implements FormeGeometrique{
+	private Propriete m_propriete;
+	private Point m_position;
+	private FormeGeometriqueRectangle m_geometrie;
 	public ProprieteGraph() {
-
+		m_geometrie = new FormeGeometriqueRectangle(new Rectangle());
+		m_position = new Point();
 	}
 	
 	public Propriete getPropriete() {
@@ -37,8 +41,28 @@ public class ProprieteGraph {
 		if(m_propriete.isClePrimaire()){
 			g.drawLine(p.x, p.y + 2, p.x + getDimension(g,f, proprietaire).width, p.y + 2);
 		}
+		setPosition(p);
+		m_geometrie.setRectangle(new Rectangle(p.x, p.y-getDimension(g, f, proprietaire).height, getDimension(g, f, proprietaire).width, getDimension(g, f, proprietaire).height));
 	}
 
-	private Propriete m_propriete;
+	public Boolean contient(Point p) {
+		return m_geometrie.getRectangle().contains(p);
+	}
+
+	public void setPosition(Point p) {
+		m_position = p;
+	}
+
+	public Point getPosition() {
+		return m_position;
+	}
+	
+	public void setRectangle(Rectangle r) {
+		m_geometrie.setRectangle(r);
+	}
+
+	public Rectangle getRectangle() {
+		return m_geometrie.getRectangle();
+	}
 
 }

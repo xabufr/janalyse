@@ -2,18 +2,14 @@ package com.export.auth;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import org.jdom2.Document;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
-
-import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Propriete;
@@ -86,15 +82,18 @@ public class ExportSql {
 		}
 	}
 	
-	private String ajoutCleEtrangere(Entite e, ProprieteCleEtrangere p){
+	private String ajoutCleEtrangere(Entite e, List<ProprieteCleEtrangere> fk){
 		String sql = "";
 		String cle = "";
-		for (Propriete id : p.getEntite().getProprietes())
-			if (id.isClePrimaire())
-				cle = id.getVirtualName(p.getEntite().getName());
-		sql += "ALTER TABLE "+e.getName()+"\n";
-		sql += "\tADD CONSTRAINT FK_"+e.getName().toUpperCase()+"_"+p.getEntite().getName().toUpperCase()+" FOREIGN KEY("+p.getVirtualName(e.getName())+") REFERENCES "+p.getEntite().getName()+"("+cle+");";
 		
+		for (ProprieteCleEtrangere p : fk){
+			for (Propriete id : p.getEntite().getProprietes())
+				if (id.isClePrimaire())
+					cle = id.getVirtualName(p.getEntite().getName());
+			
+			sql += "ALTER TABLE "+e.getName()+"\n";
+			sql += "\tADD CONSTRAINT FK_"+e.getName().toUpperCase()+"_"+p.getEntite().getName().toUpperCase()+" FOREIGN KEY("+p.getVirtualName(e.getName())+") REFERENCES "+p.getEntite().getName()+"("+cle+");\n";
+		}
 		return sql;
 	}
 	
@@ -136,7 +135,7 @@ public class ExportSql {
 				sql += " NOT NULL";
 			
 			if (p.isAutoIncrement())
-				sql += " INDENTITY(1, 1)";
+				sql += " IDENTITY(1, 1)";
 			
 			if (p.isClePrimaire())
 				clePrimaire = p;
@@ -162,13 +161,14 @@ public class ExportSql {
 		return false;
 	}
 	
-	private ProprieteCleEtrangere getCleEtrangere(Entite e){
+	private List<ProprieteCleEtrangere> getCleEtrangere(Entite e){
+		List<ProprieteCleEtrangere> fk = new ArrayList<ProprieteCleEtrangere>();
 		for (Propriete p : e.getProprietes()){
 			if (p instanceof ProprieteCleEtrangere){
-				return (ProprieteCleEtrangere)p;
+				fk.add((ProprieteCleEtrangere)p);
 			}
 		}
-		return null;
+		return fk;
 	}
 	
 	private String getExtension(File f){

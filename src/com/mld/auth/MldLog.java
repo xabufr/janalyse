@@ -10,9 +10,6 @@ import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
-import com.preferences_mcd_logique.auth.McdPreferencesManager;
-import com.preferences_mcd_logique.auth.PCle;
-import com.preferences_mcd_logique.auth.PGroupe;
 
 public class MldLog {
 	private McdGraph m_mcd;

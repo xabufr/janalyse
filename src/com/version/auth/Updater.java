@@ -6,23 +6,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLDecoder;
-import java.security.CodeSource;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-
-import sun.misc.IOUtils;
-
-import com.export.auth.Base64.InputStream;
-import com.mcd_graph.auth.FenetrePrincipale;
 
 public class Updater {
 	static private Document getVersionDocument(){

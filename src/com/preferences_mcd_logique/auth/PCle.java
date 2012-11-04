@@ -24,5 +24,6 @@ public enum PCle{
 	LIGNE_CONTINUE,
 	SAVE,
 	CIF,
+	SHOW,
 	CSS
 }

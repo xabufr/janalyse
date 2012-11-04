@@ -3,9 +3,8 @@ package com.export.auth;
 import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 
-import com.Dico.auth.DicoLog;
+import com.dico.auth.DicoLog;
 import com.export.auth.ExportSql;
-import com.export.auth.Base64.InputStream;
 import com.mcd_graph.auth.McdGraph;
 import com.mld.auth.MldLog;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
@@ -31,6 +30,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 public class ExporterHTML extends JDialog {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	McdGraph m_mcd;
 	public ExporterHTML(McdGraph mcd) {
 

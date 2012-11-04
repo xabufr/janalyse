@@ -1,6 +1,5 @@
 package com.mcd_graph.auth;
 
-import java.awt.EventQueue;
 import java.awt.Point;
 
 import javax.swing.JFrame;
@@ -29,7 +28,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import com.Dico.auth.DicoPanel;
+import com.dico.auth.DicoPanel;
 import com.event.auth.QuitListener;
 import com.export.auth.ExportSql;
 import com.export.auth.ExportPng;
@@ -149,6 +148,8 @@ public class FenetrePrincipale {
 					break;
 				case INSERT_RELATION:
 					setEnabledButton(m_boutonInsertionRelation);
+					break;
+				default:
 					break;
 				}
 			}
@@ -382,6 +383,7 @@ public class FenetrePrincipale {
 		m_boutonInsertionEntite.setMaximumSize(new Dimension(32, 32));
 		m_boutonInsertionEntite.setMargin(new Insets(0, 0, 0, 0));
 		m_boutonInsertionEntite.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/objet.png")));
+		m_boutonInsertionEntite.setToolTipText("Insertion d'entité");
 		m_stateButtons.add(m_boutonInsertionEntite);
 		toolBar.add(m_boutonInsertionEntite);
 		
@@ -391,6 +393,7 @@ public class FenetrePrincipale {
 		m_boutonInsertionRelation.setMaximumSize(new Dimension(32, 32));
 		m_boutonInsertionRelation.setPreferredSize(new Dimension(32, 32));
 		m_boutonInsertionRelation.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/relation.png")));
+		m_boutonInsertionRelation.setToolTipText("Insertion de relation");
 		m_stateButtons.add(m_boutonInsertionRelation);
 		toolBar.add(m_boutonInsertionRelation);
 		
@@ -400,6 +403,7 @@ public class FenetrePrincipale {
 		m_boutonInsertionLien.setMinimumSize(new Dimension(32, 32));
 		m_boutonInsertionLien.setMaximumSize(new Dimension(32, 32));
 		m_boutonInsertionLien.setMargin(new Insets(0, 0, 0, 0));
+		m_boutonInsertionLien.setToolTipText("Insertion de lien");
 		m_stateButtons.add(m_boutonInsertionLien);
 		toolBar.add(m_boutonInsertionLien);
 		
@@ -409,6 +413,7 @@ public class FenetrePrincipale {
 		m_boutonInsertionContrainte.setMinimumSize(new Dimension(32, 32));
 		m_boutonInsertionContrainte.setMaximumSize(new Dimension(32, 32));
 		m_boutonInsertionContrainte.setMargin(new Insets(0, 0, 0, 0));
+		m_boutonInsertionContrainte.setToolTipText("Insertion de contrainte");
 		m_stateButtons.add(m_boutonInsertionContrainte);
 		toolBar.add(m_boutonInsertionContrainte);
 		
@@ -418,6 +423,7 @@ public class FenetrePrincipale {
 		m_boutonInsertionHeritage.setMinimumSize(new Dimension(32, 32));
 		m_boutonInsertionHeritage.setMaximumSize(new Dimension(32, 32));
 		m_boutonInsertionHeritage.setMargin(new Insets(0, 0, 0, 0));
+		m_boutonInsertionHeritage.setToolTipText("Insertion d'héritage");
 		m_stateButtons.add(m_boutonInsertionHeritage);
 		toolBar.add(m_boutonInsertionHeritage);
 		
@@ -428,6 +434,7 @@ public class FenetrePrincipale {
 		m_boutonEdition.setMinimumSize(new Dimension(32, 32));
 		m_boutonEdition.setMaximumSize(new Dimension(32, 32));
 		m_boutonEdition.setMargin(new Insets(0, 0, 0, 0));
+		m_boutonEdition.setToolTipText("Mode d'édition");
 		m_stateButtons.add(m_boutonEdition);
 		toolBar.add(m_boutonEdition);
 		
@@ -518,31 +525,20 @@ public class FenetrePrincipale {
 					new Chargement(getMcd(), s);
 				}
 			}
-			public void windowIconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			public void windowDeiconified(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			public void windowDeactivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowIconified(WindowEvent arg0) {}
+			
+			public void windowDeiconified(WindowEvent arg0) {}
+			
+			public void windowDeactivated(WindowEvent arg0) {}
 			
 			public void windowClosing(WindowEvent arg0) {
 				quitter();
 				
 			}
-			public void windowClosed(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			public void windowActivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			
+			public void windowClosed(WindowEvent arg0) {}
+			
+			public void windowActivated(WindowEvent arg0) {}
 		});
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
@@ -558,7 +554,7 @@ public class FenetrePrincipale {
 	public void quitter() {
 		ArrayList<McdGraph> mcds = new ArrayList<McdGraph>();
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
-		ArrayList<String> lst = new ArrayList();
+		ArrayList<String> lst = new ArrayList<String>();
 		int nb = m_mcdContener.getTabCount();
 		for(int i=0;i<nb;++i){
 			mcds.add((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView());
@@ -639,17 +635,6 @@ public class FenetrePrincipale {
 				return;
 			super.show(m_mcdContener, p.x, p.y);
 		}
-	}
-	private String getExtension(File f){
-		String ext=f.getName();
-		
-		int index = ext.lastIndexOf(".");
-		String ret = null;
-		if(index>0&&index<ext.length()-1){
-			ret = ext.substring(index+1).toLowerCase();
-		}
-		
-		return ret;
 	}
 	private Boolean fermerMcd(McdGraph mcd){
 		if(mcd==null)

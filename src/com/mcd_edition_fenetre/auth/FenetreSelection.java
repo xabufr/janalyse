@@ -1,7 +1,6 @@
 package com.mcd_edition_fenetre.auth;
 
 import java.awt.Dimension;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -22,11 +21,15 @@ import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Relation;
 
 public class FenetreSelection extends JDialog{
-	private DefaultListModel m_model;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private DefaultListModel<Cloneable> m_model;
 	private String m_objet;
-	private JList m_list;
+	private JList<Cloneable> m_list;
 	
-	public FenetreSelection(List<McdComposentGraphique> lstComp, String s, DefaultListModel m) {
+	public FenetreSelection(List<McdComposentGraphique> lstComp, String s, DefaultListModel<Cloneable> m) {
 		m_model = m;
 		m_objet = s;
 		
@@ -36,7 +39,7 @@ public class FenetreSelection extends JDialog{
 		setModal(true);
 		
 		getContentPane().setLayout(new MigLayout("", "[grow]", "[][grow][]"));
-		DefaultListModel model = new DefaultListModel();
+		DefaultListModel<Cloneable> model = new DefaultListModel<Cloneable>();
 		JLabel lblNewLabel = new JLabel("");
 		if (m_objet.equals("Entite")){
 			setTitle("Selecteur d'Entite");
@@ -59,7 +62,7 @@ public class FenetreSelection extends JDialog{
 		
 		getContentPane().add(lblNewLabel, "cell 0 0,alignx center");
 		
-		m_list = new JList();
+		m_list = new JList<Cloneable>();
 		
 		m_list.setModel(model);
 		m_list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
