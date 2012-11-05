@@ -1232,6 +1232,8 @@ public class McdGraph extends JPanel{
 		return false;
 	}
 	private void showCommentaire(Graphics g, Point c, String com){
+		if(com.trim().isEmpty())
+			return;
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		FontMetrics font = g.getFontMetrics();
 		Dimension dim = new Dimension();
