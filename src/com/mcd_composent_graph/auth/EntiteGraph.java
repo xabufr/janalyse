@@ -187,7 +187,9 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 	public Boolean isLinkable() {
 		return true;
 	}
-
+	public String getName(){
+		return m_entite.getName();
+	}
 	public void prepareDelete() {
 		m_mcd.removeLogic(m_entite);
 	}

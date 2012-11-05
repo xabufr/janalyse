@@ -229,7 +229,9 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 	public void setPropriete(ArrayList<ProprieteGraph> prop){
 		m_proprietes = prop;
 	}
-
+	public String getName(){
+		return m_relation.getNom();
+	}
 	public void dessinerOmbre(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		if ((Boolean)prefs.get(PGroupe.RELATION, PCle.OMBRE)){

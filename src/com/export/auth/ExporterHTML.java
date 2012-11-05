@@ -74,6 +74,10 @@ public class ExporterHTML extends JDialog {
 				ExporterHTML.this.setVisible(false);
 			}
 		});
+		
+		final JCheckBox chckbxCommentaires = new JCheckBox("Commentaires");
+		chckbxCommentaires.setSelected(true);
+		getContentPane().add(chckbxCommentaires, "cell 0 3");
 		getContentPane().add(btnAnnuler, "cell 0 4");
 
 		JButton btnExporter = new JButton("Exporter");
@@ -117,7 +121,7 @@ public class ExporterHTML extends JDialog {
 					}
 					if(chckbxDictionnaireDesProprits.isSelected()){
 						fileWriter.write("<div class='dico'>\n<h1>Dictionnaire des propriétés</h1>\n"+
-								new DicoLog(m_mcd).toHTML()+"\n</div>");
+								new DicoLog(m_mcd).toHTML(chckbxCommentaires.isSelected())+"\n</div>");
 					}
 					if(chckbxMld.isSelected()){
 						fileWriter.write("<div class='mld'>\n<h1>Troisième forme normale</h1>\n"+
