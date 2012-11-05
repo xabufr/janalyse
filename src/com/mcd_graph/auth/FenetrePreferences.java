@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
@@ -103,7 +104,7 @@ public class FenetrePreferences extends JDialog {
 				}
 				{
 					JPanel panelCommentaire = new JPanel();
-					tabbedPaneMcd.addTab("Commentaire", null, panelCommentaire, null);
+					tabbedPaneMcd.addTab("Commentaires", null, panelCommentaire, null);
 					panelCommentaire.setLayout(new MigLayout("", "[grow][]", "[][grow]"));
 					initializeCommentaire(panelCommentaire);
 				}
@@ -185,6 +186,8 @@ public class FenetrePreferences extends JDialog {
 							} catch (UnsupportedLookAndFeelException e) {
 								e.printStackTrace();
 							}
+							selectionTheme.hidePopup();
+							JOptionPane.showMessageDialog(selectionTheme, "Il est nécessaire de redémarer l'application pour changer de thème");
 						}
 					});
 				}

@@ -14,7 +14,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
-import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -544,6 +543,7 @@ public class FenetrePrincipale {
 					
 					new Chargement(getMcd(), s);
 				}
+				updateMcdNames();
 			}
 			public void windowIconified(WindowEvent arg0) {}
 			
