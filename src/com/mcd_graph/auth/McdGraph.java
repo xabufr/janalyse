@@ -95,7 +95,6 @@ public class McdGraph extends JPanel{
 		this.setFocusable(true);
 		saveAnnulerModification();
 	}
-	
 	public void paintComponent(Graphics g){
 		CardinaliteGraph.resetCompteurLettre();
 		g.setColor(Color.WHITE);
@@ -221,12 +220,13 @@ public class McdGraph extends JPanel{
 						&& getMousePosition() != null
 						&& ((EntiteGraph)c).contient(getMousePosition())
 						&& ((EntiteGraph)c).getEntite().getCommentaire() != ""){
-					for (ProprieteGraph p : ((EntiteGraph)c).getLstPropGraph())
+					for (ProprieteGraph p : ((EntiteGraph)c).getLstPropGraph()){
 						if (p.contient(getMousePosition())
-						&& (p.getPropriete().getCommentaire() != "")){
+						&& (!p.getPropriete().getCommentaire().isEmpty())){
 							showCommentaire(g, getMousePosition(), p.getPropriete().getCommentaire());
 							show = false;
 						}
+					}
 					if (show)
 						showCommentaire(g, getMousePosition(), ((EntiteGraph)c).getEntite().getCommentaire());
 				}
@@ -250,7 +250,6 @@ public class McdGraph extends JPanel{
 			m_selectMulti.dessiner(g, m_components);
 		
 	}
-	
 	public void registerLogic(Object o, McdComposentGraphique g){
 		m_logicObjects.put(o, g);
 	}
