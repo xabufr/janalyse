@@ -92,7 +92,7 @@ public class McdGraph extends JPanel{
 		setFile(null);
 		
 		this.setSize(new Dimension(80, 80));
-		this.setState(McdGraphStateE.INSERT_ENTITE);
+		this.setState(McdGraphStateE.EDIT);
 		this.setFocusable(true);
 		saveAnnulerModification();
 	}

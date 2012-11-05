@@ -142,14 +142,14 @@ public class FenetrePrincipale {
 					return;
 				/*On remmet les boutons de mode d'édition en place en fonction du nouveau MCD*/
 				switch(m_mcd.getState()){
+				case INVALID:
+					m_mcd.setState(McdGraphStateE.EDIT);
 				case EDIT:
 					setEnabledButton(m_boutonEdition);
 					break;
 				case INSERT_CONTRAINTE:
 					setEnabledButton(m_boutonInsertionContrainte);
 					break;
-				case INVALID:
-					m_mcd.setState(McdGraphStateE.INSERT_ENTITE);
 				case INSERT_ENTITE:
 					setEnabledButton(m_boutonInsertionEntite);
 					break;
@@ -562,15 +562,12 @@ public class FenetrePrincipale {
 		});
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
-	
 	public McdGraph getMcd(){
 		return m_mcd;
 	}
-	
 	public JTabbedPane getTabs(){
 		return m_mcdContener;
 	}
-
 	public void quitter() {
 		ArrayList<McdGraph> mcds = new ArrayList<McdGraph>();
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
@@ -598,7 +595,6 @@ public class FenetrePrincipale {
 	}
 	public void createNewMcd(){
 		McdGraph mcd = new McdGraph(this);
-		mcd.setState(McdGraphStateE.INSERT_ENTITE);
 		mcd.setName("Nouveau MCD");
 		m_mcdContener.addTab("", new JScrollPane(mcd));
 		updateMcdNames();
