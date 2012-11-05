@@ -334,6 +334,7 @@ public class FenetrePrincipale {
 		mnEdition.add(separator_3);
 		
 		JMenuItem mntmRorganiser = new JMenuItem("Réorganiser");
+		mntmRorganiser.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK));
 		mntmRorganiser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(m_mcd!=null)
