@@ -157,6 +157,6 @@ public class Updater {
 	public static String getVersionString(){
 		return String.valueOf(getVersionMajor())+"."+String.valueOf(getVersionMinor());
 	}
-	static private int m_currentVersion = 1;
+	static private int m_currentVersion = 2;
 	static private String m_urlVersion="https://www.assembla.com/code/janalyse/git/node/blob/master/src/com/version/auth/version.xml";
 }
