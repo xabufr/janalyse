@@ -148,6 +148,15 @@ public class Updater {
 		p.getErrorStream().close();
  
 	}
+	public static int getVersionMinor(){
+		return m_currentVersion%10;
+	}
+	public static int getVersionMajor(){
+		return (int) m_currentVersion/10;
+	}
+	public static String getVersionString(){
+		return String.valueOf(getVersionMajor())+"."+String.valueOf(getVersionMinor());
+	}
 	static private int m_currentVersion = 1;
 	static private String m_urlVersion="https://www.assembla.com/code/janalyse/git/nodes/master/src/com/version/auth/version.xml";
 	//static private String m_urlVersion="file:///home/thomas/workspace/janalyse/src/com/version/auth/version.xml";
