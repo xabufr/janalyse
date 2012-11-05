@@ -18,6 +18,7 @@ import com.mcd_log.auth.Cardinalite;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
+import com.utils.auth.Utils;
 
 public class CardinaliteGraph extends McdComposentGraphique implements FormeGeometrique {
 	private Cardinalite m_cardinalite;
@@ -166,7 +167,7 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		Point centreLettre = new Point(getPointA());
 		Point posRelation = new Point(getPointB());
 		
-		double angle = angle(centreLettre, posRelation, new Point(posRelation.x+100, posRelation.y));
+		double angle = Utils.angle(centreLettre, posRelation, new Point(posRelation.x+100, posRelation.y));
 		Point posLettre = new Point();
 		
 		
@@ -223,15 +224,7 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 					m_geometreCoupe[i].getPosition().y-m_geometreCoupe[i].getDimension().height/2));
 		}
 	}
-	private double angle(Point p1, Point p2, Point p3){
-		double a, a1, a2;
-		
-		a1 = Math.atan2(p1.y-p3.y, p1.x-p3.x);
-		a2 = Math.atan2(p2.y-p3.y, p2.x-p3.x);
-		a = a2 - a1;
-		
-		return a;
-	}
+	
 	private Dimension drawLetter(Graphics g, Point centre, String letter){
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		int height = g.getFontMetrics().getHeight()+4;

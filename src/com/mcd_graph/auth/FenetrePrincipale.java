@@ -564,8 +564,10 @@ public class FenetrePrincipale {
 		int nb = m_mcdContener.getTabCount();
 		for(int i=0;i<nb;++i){
 			mcds.add((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView());
-			String s = ((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()).getFile().getAbsolutePath();
-			lst.add(s);
+			if(((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()).getFile()!=null){
+				String s = ((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()).getFile().getAbsolutePath();
+				lst.add(s);
+			}
 		}
 		
 		prefs.set(PGroupe.ETAT, PCle.SAVE, lst);

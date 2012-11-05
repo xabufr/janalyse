@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-
 import org.jdom2.DataConversionException;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -33,48 +30,28 @@ import com.mcd_log.auth.ProprieteTypeE;
 import com.mcd_log.auth.Relation;
 import com.mcd_log.auth.HeritageType;
 import com.mcd_log.auth.ContrainteType;
+import com.utils.auth.Utils;
 
 public class Chargement{
 
 	public Chargement(McdGraph mcd) {
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileFilter(){
-			public boolean accept(File arg0) {
-				if(arg0.isDirectory())
-					return true;
-				String ext = getExtension(arg0);
-				if(ext==null)
-					return false;
-				if(ext.equals("xml"))
-					return true;
-				return false;
+	
+		File file = Utils.getFile4Load("xml");
+		
+		SAXBuilder sax = new SAXBuilder();
+		try {
+			Document doc = sax.build(file);
+			if (mcd != null && doc != null){
+				charger(mcd, doc);
+				mcd.setFile(file);
+			    mcd.setSaved(true);
 			}
-
-			public String getDescription() {
-				return "XML Only";
-			}
-			
-		});
-		if(chooser.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
-			File file = chooser.getSelectedFile();
-			if(getExtension(file)==null||!getExtension(file).equals("xml"))
-				file = new File(file.getAbsolutePath()+".xml");
-			
-			SAXBuilder sax = new SAXBuilder();
-			try {
-				Document doc = sax.build(file);
-				if (mcd != null && doc != null){
-					charger(mcd, doc);
-					mcd.setFile(file);
-				    mcd.setSaved(true);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JDOMException e) {
-				e.printStackTrace();
-			}
-			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
 		}
+		
 	}
 	
 	public Chargement(McdGraph mcd, String f) {	
@@ -271,17 +248,4 @@ public class Chargement{
 			mcd.addMcdComponents(eg);
 		}
 	}
-	
-	private String getExtension(File f){
-		String ext=f.getName();
-		
-		int index = ext.lastIndexOf(".");
-		String ret = null;
-		if(index>0&&index<ext.length()-1){
-			ret = ext.substring(index+1).toLowerCase();
-		}
-		
-		return ret;
-	}
-
 }

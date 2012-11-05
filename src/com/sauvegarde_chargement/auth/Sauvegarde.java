@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -28,6 +25,7 @@ import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
+import com.utils.auth.Utils;
 
 public class Sauvegarde {
 	private ArrayList<McdComposentGraphique> m_components;
@@ -39,37 +37,17 @@ public class Sauvegarde {
 		
 		if(mcd.getFile() == null){
 			if (m_components != null){
-				JFileChooser chooser = new JFileChooser();
-				chooser.setFileFilter(new FileFilter(){
-					public boolean accept(File arg0) {
-						if(arg0.isDirectory())
-							return true;
-						String ext = getExtension(arg0);
-						if(ext==null)
-							return false;
-						if(ext.equals("xml"))
-							return true;
-						return false;
-					}
-	
-					public String getDescription() {
-						return "XML Only";
-					}
-					
-				});
-				if(chooser.showSaveDialog(null)==JFileChooser.APPROVE_OPTION){
-					File file = chooser.getSelectedFile();
-					if(getExtension(file)==null||!getExtension(file).equals("xml"))
-						file = new File(file.getAbsolutePath()+".xml");
-						try {
-							Document doc = arborescence(m_mcdNom);
-							XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
-						    sortie.output(doc, new FileOutputStream(file));
-						    mcd.setFile(file);
-						    mcd.setSaved(true);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+				File file = Utils.getFile4Save("xml");
+				if(file==null)
+					return;
+				try {
+					Document doc = arborescence(m_mcdNom);
+					XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
+				    sortie.output(doc, new FileOutputStream(file));
+				    mcd.setFile(file);
+				    mcd.setSaved(true);
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 		}
@@ -360,17 +338,5 @@ public class Sauvegarde {
 		mcd.addContent(allContrainte);
 		
 		return document;
-	}
-	
-	private String getExtension(File f){
-		String ext=f.getName();
-		
-		int index = ext.lastIndexOf(".");
-		String ret = null;
-		if(index>0&&index<ext.length()-1){
-			ret = ext.substring(index+1).toLowerCase();
-		}
-		
-		return ret;
 	}
 }

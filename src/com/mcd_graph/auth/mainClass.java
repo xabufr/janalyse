@@ -1,10 +1,8 @@
 package com.mcd_graph.auth;
 
-import javax.swing.JOptionPane;
-
 import com.version.auth.Updater;
 
-public class main {
+public class mainClass {
 	private static FenetrePrincipale m_fenetre;
 
 	public static void main(String[] args) {
@@ -21,6 +19,6 @@ public class main {
 	}
 
 	public static void setFenetre(FenetrePrincipale m_fenetre) {
-		main.m_fenetre = m_fenetre;
+		mainClass.m_fenetre = m_fenetre;
 	}
 }

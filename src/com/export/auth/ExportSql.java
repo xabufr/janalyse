@@ -7,14 +7,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Propriete;
 import com.mld.auth.MldLog;
 import com.mld.auth.ProprieteCleEtrangere;
+import com.utils.auth.Utils;
 
 public class ExportSql {
 	private String m_dataBase;
@@ -30,37 +28,17 @@ public class ExportSql {
 	}
 	
 	public void save(){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileFilter(){
-			public boolean accept(File arg0) {
-				if(arg0.isDirectory())
-					return true;
-				String ext = getExtension(arg0);
-				if(ext==null)
-					return false;
-				if(ext.equals("sql"))
-					return true;
-				return false;
-			}
-
-			public String getDescription() {
-				return "SQL Only";
-			}
-			
-		});
-		if(chooser.showSaveDialog(null)==JFileChooser.APPROVE_OPTION){
-			File file = chooser.getSelectedFile();
-			if(getExtension(file)==null||!getExtension(file).equals("sql"))
-				file = new File(file.getAbsolutePath()+".sql");
-				try {
-					FileWriter writer = new FileWriter(file);
-					BufferedWriter output = new BufferedWriter(writer);
-					output.write(m_sql);
-					output.flush();
-					output.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+		File file = Utils.getFile4Save("sql");
+		if(file==null)
+			return;
+		try {
+			FileWriter writer = new FileWriter(file);
+			BufferedWriter output = new BufferedWriter(writer);
+			output.write(m_sql);
+			output.flush();
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	public String getSql(){
@@ -170,17 +148,4 @@ public class ExportSql {
 		}
 		return fk;
 	}
-	
-	private String getExtension(File f){
-		String ext=f.getName();
-		
-		int index = ext.lastIndexOf(".");
-		String ret = null;
-		if(index>0&&index<ext.length()-1){
-			ret = ext.substring(index+1).toLowerCase();
-		}
-		
-		return ret;
-	}
-
 }
