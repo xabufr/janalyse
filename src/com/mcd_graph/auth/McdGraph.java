@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 
 import com.event.auth.SelectionMultiple;
 import com.mcd_composent_graph.auth.CardinaliteGraph;
+import com.mcd_composent_graph.auth.CommentableComponent;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
@@ -213,35 +214,27 @@ public class McdGraph extends JPanel{
 		}			
 		
 		//affichage commentaire
-		boolean show = true;
 		if ((Boolean)McdPreferencesManager.getInstance().get(PGroupe.COMMENTAIRE, PCle.SHOW)){
 			for (McdComposentGraphique c : m_componentsSecond){
-				if (c instanceof EntiteGraph 
-						&& getMousePosition() != null
-						&& ((EntiteGraph)c).contient(getMousePosition())
-						&& ((EntiteGraph)c).getEntite().getCommentaire() != ""){
-					for (ProprieteGraph p : ((EntiteGraph)c).getLstPropGraph()){
-						if (p.contient(getMousePosition())
-						&& (!p.getPropriete().getCommentaire().isEmpty())){
-							showCommentaire(g, getMousePosition(), p.getPropriete().getCommentaire());
-							show = false;
+				if(c instanceof CommentableComponent){
+					FormeGeometrique forme = (FormeGeometrique) c;
+					CommentableComponent com = (CommentableComponent) c;
+					if(getMousePosition() != null&&
+							forme.contient(getMousePosition())){
+						boolean show = true;
+						for(ProprieteGraph p: com.getProprietesGraphList()){
+							if(p.contient(getMousePosition())&&
+									!p.getPropriete().getCommentaire().trim().isEmpty()){
+								showCommentaire(g, getMousePosition(), p.getPropriete().getCommentaire());
+								show=false;
+								break;
+							}
 						}
+						if (show){
+							showCommentaire(g, getMousePosition(), com.getCommentaire());
+						}
+						break;
 					}
-					if (show)
-						showCommentaire(g, getMousePosition(), ((EntiteGraph)c).getEntite().getCommentaire());
-				}
-				else if (c instanceof RelationGraph 
-					&& getMousePosition() != null
-					&& ((RelationGraph)c).contient(getMousePosition())
-					&& ((RelationGraph)c).getRelation().getCommentaire() != ""){
-					for (ProprieteGraph p : ((RelationGraph)c).getPropriete())
-						if (p.contient(getMousePosition())
-						&& (p.getPropriete().getCommentaire() != "")){
-							showCommentaire(g, getMousePosition(), p.getPropriete().getCommentaire());
-							show = false;
-						}
-					if (show)
-						showCommentaire(g, getMousePosition(), ((RelationGraph)c).getRelation().getCommentaire());
 				}
 			}
 		}

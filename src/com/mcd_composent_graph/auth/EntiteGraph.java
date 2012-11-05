@@ -24,7 +24,7 @@ import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
 
-public class EntiteGraph extends McdComposentGraphique implements FormeGeometrique{
+public class EntiteGraph extends McdComposentGraphique implements FormeGeometrique, CommentableComponent{
 	private Entite m_entite;
 	private FormeGeometriqueRectangle m_geometrie;
 	private Hashtable<Face, ArrayList<McdComposentGraphique>> m_liens;
@@ -323,10 +323,13 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 			g.fillRect(this.getPosition().x+5, this.getPosition().y+5, this.getDimension().width, this.getDimension().height);
 		}
 	}
-	public List<ProprieteGraph> getLstPropGraph() {
+	public List<ProprieteGraph> getProprietesGraphList() {
 		return m_lstPropGraph;
 	}
 	public void setLstPropGraph(List<ProprieteGraph> lstPropGraph) {
 		this.m_lstPropGraph = lstPropGraph;
+	}
+	public String getCommentaire(){
+		return m_entite.getCommentaire();
 	}
 }
