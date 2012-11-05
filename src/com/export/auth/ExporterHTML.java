@@ -20,7 +20,6 @@ import javax.swing.filechooser.FileFilter;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -81,7 +80,6 @@ public class ExporterHTML extends JDialog {
 		JButton btnExporter = new JButton("Exporter");
 		btnExporter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				BufferedImage image = ExportPng.getImage(m_mcd);
 				ExporterHTML.this.setVisible(false);
 				
 				JFileChooser chooser = new JFileChooser();

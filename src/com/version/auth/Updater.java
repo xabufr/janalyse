@@ -82,6 +82,7 @@ public class Updater {
 			FileOutputStream destinationFile = new FileOutputStream(fichier);
 			destinationFile.write(data);
 			destinationFile.flush();
+			destinationFile.close();
 			return fichier;
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

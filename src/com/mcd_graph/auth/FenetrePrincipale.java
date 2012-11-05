@@ -362,6 +362,11 @@ public class FenetrePrincipale {
 			public void actionPerformed(ActionEvent arg0) {
 				if(Updater.hasNewVersion()){
 					String fichier = null;
+					if(JOptionPane.OK_OPTION!=
+							JOptionPane.showConfirmDialog(null, 
+									"Nouvelle version disponnible, mettre à jours ?"))
+						return;
+					
 					if((fichier=Updater.downloadUpdate())!=null)
 						Updater.restart(fichier);
 				}
@@ -510,6 +515,7 @@ public class FenetrePrincipale {
 		frame.addWindowListener(new WindowListener() {
 			public void windowOpened(WindowEvent arg0) {
 				McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+				@SuppressWarnings("unchecked")
 				ArrayList<String> lst = (ArrayList<String>)prefs.get(PGroupe.ETAT, PCle.SAVE);
 				if (lst == null)
 					return;
