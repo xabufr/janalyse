@@ -14,6 +14,9 @@ import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.LookAndFeel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import java.awt.BorderLayout;
 import javax.swing.JButton;
@@ -72,6 +75,17 @@ public class FenetrePrincipale {
 	private JButton m_btnDico;
 	
 	public FenetrePrincipale() {
+		try {
+			UIManager.setLookAndFeel((String)McdPreferencesManager.getInstance().get(PGroupe.GUI, PCle.LOOK));
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 		m_stateButtons = new ArrayList<JButton>();
 		initialize();
 		m_splitPane.setRightComponent(m_mcdContener);

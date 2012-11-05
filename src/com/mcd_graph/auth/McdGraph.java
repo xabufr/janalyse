@@ -60,7 +60,7 @@ public class McdGraph extends JPanel{
 	private FenetrePrincipale m_fenetrePrincipale;
 	private ArrayList<McdComposentGraphique> m_components, m_componentsFirst, m_componentsSecond;
 	private Stack<Hashtable<Object, McdComposentGraphique>> m_listeAnnuler, m_listeRefaire;
-	private Boolean m_isMoving, m_isSaved;
+	private boolean m_isMoving, m_isSaved;
 	private File m_file;
 	private SelectionMultiple m_selectMulti;
 	

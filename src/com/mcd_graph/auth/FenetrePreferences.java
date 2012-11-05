@@ -8,6 +8,9 @@ import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -38,6 +41,7 @@ import javax.swing.JTextArea;
 import java.awt.Insets;
 import java.awt.GridLayout;
 import javax.swing.border.BevelBorder;
+import javax.swing.JComboBox;
 
 @SuppressWarnings("serial")
 public class FenetrePreferences extends JDialog {
@@ -107,7 +111,7 @@ public class FenetrePreferences extends JDialog {
 			{
 				JPanel panel = new JPanel();
 				tabbedPaneGeneral.addTab("Général", null, panel, null);
-				panel.setLayout(new MigLayout("", "[149px,grow][grow]", "[19px][][grow]"));
+				panel.setLayout(new MigLayout("", "[149px,grow][grow]", "[19px][][grow][]"));
 				{
 					JLabel lblNommageProprits = new JLabel("Nommage propriétés");
 					panel.add(lblNommageProprits, "cell 0 0,alignx left,aligny center");
@@ -135,6 +139,54 @@ public class FenetrePreferences extends JDialog {
 					txtpnpProprit.setEditable(false);
 					txtpnpProprit.setText("%p : propriété\n%P: PROPRIÉTÉ\n%q : Propriété\n%e: Entité\n%E: ENTITÉ\n%r: entité\n%[0E3] : Ent");
 					panel.add(txtpnpProprit, "cell 0 2 2 1,grow");
+				}
+				{
+					JLabel lblThme = new JLabel("Thème");
+					panel.add(lblThme, "cell 0 3,alignx trailing");
+				}
+				{
+					final JComboBox selectionTheme = new JComboBox();
+					panel.add(selectionTheme, "cell 1 3,growx");
+					for(LookAndFeelInfo theme : UIManager.getInstalledLookAndFeels()){
+						selectionTheme.addItem(theme.getName());
+					}
+					
+					String classNameSaved = (String) McdPreferencesManager.getInstance().get(PGroupe.GUI, PCle.LOOK);
+					String curName="";
+					for(int i=0;i<selectionTheme.getItemCount();++i){
+						for(LookAndFeelInfo l : UIManager.getInstalledLookAndFeels()){
+							if(l.getClassName().equals(classNameSaved)){
+								curName = l.getName();
+							}
+						}
+					}
+					selectionTheme.setSelectedItem(curName);
+					selectionTheme.addActionListener(new ActionListener() {						
+						public void actionPerformed(ActionEvent arg0) {
+							String theme = (String) selectionTheme.getSelectedItem();
+							LookAndFeelInfo l = null;
+							for(LookAndFeelInfo lf : UIManager.getInstalledLookAndFeels()){
+								if(lf.getName().equals(theme)){
+									l = lf;
+									break;
+								}
+							}
+							if(l==null)
+								return;
+							McdPreferencesManager.getInstance().set(PGroupe.GUI, PCle.LOOK, l.getClassName());
+							try {
+								UIManager.setLookAndFeel(l.getClassName());
+							} catch (ClassNotFoundException e) {
+								e.printStackTrace();
+							} catch (InstantiationException e) {
+								e.printStackTrace();
+							} catch (IllegalAccessException e) {
+								e.printStackTrace();
+							} catch (UnsupportedLookAndFeelException e) {
+								e.printStackTrace();
+							}
+						}
+					});
 				}
 			}
 			{

@@ -13,6 +13,8 @@ import java.util.Hashtable;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import javax.swing.UIManager;
+
 public class McdPreferencesManager {
 
 	private McdPreferencesManager() {
@@ -277,6 +279,8 @@ public class McdPreferencesManager {
 		set(PGroupe.COMMENTAIRE, PCle.OMBRE, true);
 		set(PGroupe.COMMENTAIRE, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
 		set(PGroupe.COMMENTAIRE, PCle.GRADIANT_COLOR, true);
+		
+		set(PGroupe.GUI, PCle.LOOK, UIManager.getSystemLookAndFeelClassName());
 	}
 }
 
