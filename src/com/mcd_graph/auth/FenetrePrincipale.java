@@ -621,7 +621,7 @@ public class FenetrePrincipale {
 							 "Renommer un MCD", 
 							 JOptionPane.PLAIN_MESSAGE, 
 							 null, null, 
-							 m_mcd.getName());
+							 m_mcd.getLogicName());
 					if(newName!=null&&!newName.trim().isEmpty()){
 						m_mcd.setName(newName);
 						updateMcdNames();
