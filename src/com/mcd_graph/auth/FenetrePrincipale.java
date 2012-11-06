@@ -33,6 +33,11 @@ import com.event.auth.QuitListener;
 import com.export.auth.ExportSql;
 import com.export.auth.ExportPng;
 import com.export.auth.ExporterHTML;
+import com.mcd_composent_graph.auth.ContrainteGraph;
+import com.mcd_composent_graph.auth.EntiteGraph;
+import com.mcd_composent_graph.auth.HeritageGraph;
+import com.mcd_composent_graph.auth.McdComposentGraphique;
+import com.mcd_composent_graph.auth.RelationGraph;
 import com.mld.auth.MLDPanel;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
@@ -343,6 +348,30 @@ public class FenetrePrincipale {
 			}
 		});
 		mnEdition.add(mntmRorganiser);
+		
+		JMenuItem mntmStatsMcd = new JMenuItem("Stats MCD");
+		mntmStatsMcd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null) return;
+				int nbRel=0, nbEnt=0, nbHer=0, nbCont=0;
+				for(McdComposentGraphique c : m_mcd.getMcdComponents()){
+					if(c instanceof RelationGraph)
+						++nbRel;
+					else if(c instanceof HeritageGraph)
+						++nbHer;
+					else if(c instanceof EntiteGraph)
+						++nbEnt;
+					else if(c instanceof ContrainteGraph)
+						++nbCont;
+				}
+				JOptionPane.showMessageDialog(frame, "Le MCD '"+m_mcd.getLogicName()+"' contient:\n"+
+						nbEnt+" entités, \n"+
+						nbRel+" relations, \n"+
+						nbHer+" héritages, \n"+
+						nbCont+" contraintes.");
+			}
+		});
+		mnEdition.add(mntmStatsMcd);
 		
 		JSeparator separator_4 = new JSeparator();
 		mnEdition.add(separator_4);
