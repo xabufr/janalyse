@@ -21,6 +21,7 @@ public class DicoPanel extends JScrollPane{
 		p.setContentType("text/html");
 		p.setText(m_dico.toString());
 		getViewport().setView(p);
+		p.setEditable(false);
 
 		System.setErr(null);
 		
