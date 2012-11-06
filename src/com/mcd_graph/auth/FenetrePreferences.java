@@ -104,9 +104,14 @@ public class FenetrePreferences extends JDialog {
 				}
 				{
 					JPanel panelCommentaire = new JPanel();
-					tabbedPaneMcd.addTab("Commentaires", null, panelCommentaire, null);
+					tabbedPaneMcd.addTab("Commentaires survol", null, panelCommentaire, null);
 					panelCommentaire.setLayout(new MigLayout("", "[grow][]", "[][grow]"));
 					initializeCommentaire(panelCommentaire);
+				}
+				{
+					JPanel panelCommentaireComponent = new JPanel();
+					tabbedPaneMcd.addTab("Commenaires", null, panelCommentaireComponent, null);
+					initializeWithoutProperties(panelCommentaireComponent, PGroupe.COMMENTAIRE_COMPONENT);
 				}
 			}
 			{

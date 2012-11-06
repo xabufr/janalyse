@@ -13,6 +13,7 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import com.mcd_composent_graph.auth.CardinaliteGraph;
+import com.mcd_composent_graph.auth.CommentaireGraph;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
@@ -70,6 +71,7 @@ public class Sauvegarde {
 		List<CardinaliteGraph> cardinaliteGraph = new ArrayList<CardinaliteGraph>();
 		List<ContrainteGraph> contrainteGraph = new ArrayList<ContrainteGraph>();
 		List<HeritageGraph> heritageGraph = new ArrayList<HeritageGraph>();
+		List<CommentaireGraph> commentaireGraph = new ArrayList<CommentaireGraph>();
 		
 		Element mcd = new Element("Mcd");
 		Attribute mcdNom = new Attribute("nom", nom);
@@ -91,6 +93,9 @@ public class Sauvegarde {
 			}
 			else if (mcg instanceof CardinaliteGraph){
 				cardinaliteGraph.add((CardinaliteGraph) mcg);
+			}
+			else if(mcg instanceof CommentaireGraph){
+				commentaireGraph.add((CommentaireGraph) mcg);
 			}
 		}
 		
@@ -336,6 +341,15 @@ public class Sauvegarde {
 			allContrainte.addContent(contrainte);
 		}
 		mcd.addContent(allContrainte);
+		Element allCommentaire = new Element("All-commentaire");
+		for(CommentaireGraph com : commentaireGraph){
+			Element commentaire = new Element("Commentaire");
+			commentaire.setAttribute("x", String.valueOf(com.getPosition().x));
+			commentaire.setAttribute("y", String.valueOf(com.getPosition().y));
+			commentaire.setText(com.getCommentaire());
+			allCommentaire.addContent(commentaire);
+		}
+		mcd.addContent(allCommentaire);
 		
 		return document;
 	}

@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import com.event.auth.SelectionMultiple;
 import com.mcd_composent_graph.auth.CardinaliteGraph;
 import com.mcd_composent_graph.auth.CommentableComponent;
+import com.mcd_composent_graph.auth.CommentaireGraph;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
@@ -32,6 +33,7 @@ import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.ProprieteGraph;
 import com.mcd_composent_graph.auth.RelationGraph;
 import com.mcd_composent_graph.auth.FormeGeometrique;
+import com.mcd_edition_fenetre.auth.FenetreEditionCommentaire;
 import com.mcd_edition_fenetre.auth.FenetreEditionContrainte;
 import com.mcd_edition_fenetre.auth.FenetreEditionEntite;
 import com.mcd_edition_fenetre.auth.FenetreEditionHeritage;
@@ -75,6 +77,7 @@ public class McdGraph extends JPanel{
 		m_states.put(McdGraphStateE.INSERT_CONTRAINTE, new McdGraphStateInsertContrainte());
 		m_states.put(McdGraphStateE.INSERT_HERITAGE, new McdGraphStateInsertHeritage());
 		m_states.put(McdGraphStateE.EDIT, new McdGraphStateEdit());
+		m_states.put(McdGraphStateE.INSERT_COMMENTAIRE, new McdGraphStateInsertCommentaire());
 		m_currentState = McdGraphStateE.INVALID;
 
 		m_components = new ArrayList<McdComposentGraphique>();
@@ -281,19 +284,15 @@ public class McdGraph extends JPanel{
 	}
 	
 	private class McdGraphStateInsertEntite extends McdGraphStateInsert{
-
 		public void mouseClicked(MouseEvent e) {
 			
 		}
-
 		public void mouseEntered(MouseEvent e) {
 			
 		}
-
 		public void mouseExited(MouseEvent e) {
 			
 		}
-
 		public void mousePressed(MouseEvent e) {
 			EntiteGraph eg = new EntiteGraph();
 			eg.setEntite(new Entite("Entite"+(m_last++)));
@@ -304,15 +303,12 @@ public class McdGraph extends JPanel{
 			repaint();
 			saveAnnulerModification();
 		}
-
 		public void mouseReleased(MouseEvent e) {
 			
 		}
-
 		public void mouseDragged(MouseEvent arg0) {
 			
 		}
-
 		public void mouseMoved(MouseEvent arg0) {
 			McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 			if (mouseInComponent() && (Boolean)prefs.get(PGroupe.COMMENTAIRE, PCle.SHOW))
@@ -326,6 +322,33 @@ public class McdGraph extends JPanel{
 		}
 		public void keyTyped(KeyEvent arg0) {
 			
+		}
+	}
+	private class McdGraphStateInsertCommentaire extends McdGraphStateInsert{
+		public void mouseClicked(MouseEvent arg0) {			
+		}
+		public void mouseEntered(MouseEvent arg0) {			
+		}
+		public void mouseExited(MouseEvent arg0) {			
+		}
+		public void mousePressed(MouseEvent arg0) {
+			CommentaireGraph com = new CommentaireGraph();
+			com.setMcd(McdGraph.this);
+			com.setPosition(arg0.getPoint());
+			m_components.add(com);
+			m_componentsFirst.add(com);
+		}
+		public void mouseReleased(MouseEvent arg0) {			
+		}
+		public void mouseDragged(MouseEvent arg0) {			
+		}
+		public void mouseMoved(MouseEvent arg0) {			
+		}
+		public void keyPressed(KeyEvent arg0) {			
+		}
+		public void keyReleased(KeyEvent arg0) {
+		}
+		public void keyTyped(KeyEvent arg0) {			
 		}
 	}
 	private class McdGraphStateInsertRelation extends McdGraphStateInsert{
@@ -719,6 +742,9 @@ public class McdGraph extends JPanel{
 					}
 					else if(composent instanceof CardinaliteGraph){
 						new FenetreEditionCardinalite(McdGraph.this, (CardinaliteGraph)composent).setVisible(true);
+					}
+					else if(composent instanceof CommentaireGraph){
+						new FenetreEditionCommentaire(McdGraph.this, (CommentaireGraph) composent).setVisible(true);
 					}
 				}
 				setMcdComposentGraphiquetFocus(null);

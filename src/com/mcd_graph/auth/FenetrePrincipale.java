@@ -75,6 +75,7 @@ public class FenetrePrincipale {
 	private JButton m_btnMcd;
 	private JButton m_btnMld;
 	private JButton m_btnDico;
+	private JButton m_boutonInsertionCommentaire;
 	
 	public FenetrePrincipale() {
 		m_stateButtons = new ArrayList<JButton>();
@@ -533,6 +534,19 @@ public class FenetrePrincipale {
 		m_stateButtons.add(m_boutonInsertionHeritage);
 		toolBar.add(m_boutonInsertionHeritage);
 		
+		m_boutonInsertionCommentaire = new JButton("");
+		m_boutonInsertionCommentaire.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		m_boutonInsertionCommentaire.setToolTipText("Insertion de commentaire");
+		m_boutonInsertionCommentaire.setPreferredSize(new Dimension(32, 32));
+		m_boutonInsertionCommentaire.setMinimumSize(new Dimension(32, 32));
+		m_boutonInsertionCommentaire.setMaximumSize(new Dimension(32, 32));
+		m_boutonInsertionCommentaire.setMargin(new Insets(0, 0, 0, 0));
+		m_stateButtons.add(m_boutonInsertionCommentaire);
+		toolBar.add(m_boutonInsertionCommentaire);
+		
 		m_boutonEdition = new JButton("");
 		m_boutonEdition.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/edit.png")));
 		m_boutonEdition.setSize(new Dimension(32, 327));
@@ -591,6 +605,13 @@ public class FenetrePrincipale {
 					return;
 				m_mcd.setState(McdGraphStateE.EDIT);
 				setEnabledButton(m_boutonEdition);
+			}
+		});
+		m_boutonInsertionCommentaire.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)return;
+				m_mcd.setState(McdGraphStateE.INSERT_COMMENTAIRE);
+				setEnabledButton(m_boutonInsertionCommentaire);
 			}
 		});
 		setEnabledButton(m_boutonInsertionEntite);

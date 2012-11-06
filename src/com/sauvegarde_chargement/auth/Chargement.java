@@ -15,6 +15,7 @@ import org.jdom2.input.SAXBuilder;
 
 import com.mcd_composent_graph.auth.CardinaliteGraph;
 import com.mcd_composent_graph.auth.CardinaliteGraphType;
+import com.mcd_composent_graph.auth.CommentaireGraph;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
@@ -79,6 +80,7 @@ public class Chargement{
 		List<Element> cardinalites = racine.getChild("All-cardinalite").getChildren("Cardinalite");
 		List<Element> heritages = racine.getChild("All-héritage").getChildren("Héritage");
 		List<Element> contraintes = racine.getChild("All-contrainte").getChildren("Contrainte");
+		List<Element> commentaires = racine.getChild("All-commentaire").getChildren("Commentaire");
 		Hashtable <Integer, McdComposentGraphique> ids = new Hashtable<Integer, McdComposentGraphique>();
 		int i=0;
 
@@ -246,6 +248,16 @@ public class Chargement{
 			eg.setContrainte(e);
 			eg.setMcd(mcd);
 			mcd.addMcdComponents(eg);
+		}
+		for(Element commentaire : commentaires){
+			CommentaireGraph com = new CommentaireGraph();
+			com.setCommentaire(commentaire.getText());
+			Point pos = new Point();
+			pos.x = Integer.parseInt(commentaire.getAttributeValue("x"));
+			pos.y = Integer.parseInt(commentaire.getAttributeValue("y"));
+			com.setPosition(pos);
+			com.setMcd(mcd);
+			mcd.addMcdComponents(com);
 		}
 	}
 }

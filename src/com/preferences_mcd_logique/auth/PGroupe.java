@@ -11,5 +11,6 @@ public enum PGroupe{
 	SELECTEUR,
 	ETAT,
 	HTML,
-	GUI
+	GUI,
+	COMMENTAIRE_COMPONENT
 }
