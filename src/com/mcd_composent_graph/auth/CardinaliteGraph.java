@@ -170,7 +170,7 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		double angle = Utils.angle(centreLettre, posRelation, new Point(posRelation.x+100, posRelation.y));
 		Point posLettre = new Point();
 		
-		
+		//Dessin coté entité
 		Graphics2D g2 = (Graphics2D) g;
 		g2.translate(getPointA().x, getPointA().y);
 		g2.rotate(-angle);
@@ -193,9 +193,14 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		g2.rotate(angle);
 		g2.translate(-getPointA().x, -getPointA().y);
 		
-		distance+=m_relationGraph.getDimension().width/2;
-		
-		g2.translate(getPointB().x, getPointB().y);
+		//distance+=m_relationGraph.getDimension().width/2;
+		//Dessin coté relation
+		Point pos = new Point();
+		pos.x = (int)((m_relationGraph.getRectangle().getWidth()/2)*Math.cos(-angle+3.14));
+		pos.y = (int)((m_relationGraph.getRectangle().getHeight()/2)*Math.sin(-angle+3.14));
+		pos.x += getPointB().x;
+		pos.y += getPointB().y;
+		g2.translate(pos.x, pos.y);
 		g2.rotate(-angle+3.14);
 		if(!m_focus)
 			g.setColor((Color) prefs.get(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR));
@@ -215,7 +220,7 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		g2.rotate(-angle+3.14);
 		g2.translate(-distance,0);
 		g2.rotate(angle-3.14);
-		g2.translate(-getPointB().x, -getPointB().y);
+		g2.translate(-pos.x, -pos.y);
 		incermenterCompteurLettre();
 		
 		for(int i=0;i<2;++i){
