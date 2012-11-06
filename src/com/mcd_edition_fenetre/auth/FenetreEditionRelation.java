@@ -19,6 +19,8 @@ import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.JTextPane;
 import javax.swing.JComboBox;
 
@@ -56,6 +58,7 @@ public class FenetreEditionRelation extends JDialog {
 	private JCheckBox m_autoIncrement;
 	private JButton m_btnCreer;
 	private JPanel m_panel, m_panelTaille;
+	private JButton m_okButton;
 	/**
 	 * Create the dialog.
 	 */
@@ -85,10 +88,23 @@ public class FenetreEditionRelation extends JDialog {
 				panel.add(lblNom, "cell 0 0,alignx trailing");
 			}
 			{
+				m_okButton = new JButton("OK");
 				m_nom = new JTextField();
 				panel.add(m_nom, "cell 1 0,growx");
 				m_nom.setColumns(10);
 				m_nom.setText(m_relationCopie.getNom());
+				m_nom.addKeyListener(new KeyListener() {
+					public void keyTyped(KeyEvent arg0) {						
+					}
+					public void keyReleased(KeyEvent arg0) {						
+					}
+					public void keyPressed(KeyEvent arg0) {
+						if(arg0.getKeyCode()==KeyEvent.VK_ENTER&&
+								!m_nom.getText().trim().isEmpty()){
+							m_okButton.doClick();
+						}
+					}
+				});
 			}
 			{
 				JLabel lblCommentaire = new JLabel("Commentaire");
@@ -261,10 +277,9 @@ public class FenetreEditionRelation extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				okButton.addActionListener(new validerModifications());
-				buttonPane.add(okButton);
+				m_okButton.setActionCommand("OK");
+				m_okButton.addActionListener(new validerModifications());
+				buttonPane.add(m_okButton);
 			}
 			{
 				JButton cancelButton = new JButton("Annuler");

@@ -28,6 +28,7 @@ import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -82,6 +83,18 @@ public class FenetreEditionEntite extends JDialog{
 				m_nomEntite.setText(m_entite.getName());
 				panel.add(m_nomEntite, "cell 1 0,growx");
 				m_nomEntite.setColumns(10);
+				m_nomEntite.addKeyListener(new KeyListener() {
+					public void keyTyped(KeyEvent arg0) {						
+					}
+					public void keyReleased(KeyEvent arg0) {						
+					}
+					public void keyPressed(KeyEvent arg0) {
+						if(arg0.getKeyCode() == KeyEvent.VK_ENTER&&
+								!m_nomEntite.getText().trim().isEmpty()){
+							new BoutonOkListener().actionPerformed(null);
+						}
+					}
+				});
 				
 				JLabel lblCommentaire = new JLabel("Commentaire");
 				panel.add(lblCommentaire, "cell 0 1,alignx trailing");
