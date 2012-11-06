@@ -13,6 +13,8 @@ import java.util.Hashtable;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import javax.swing.UIManager;
+
 public class McdPreferencesManager {
 
 	private McdPreferencesManager() {
@@ -277,6 +279,22 @@ public class McdPreferencesManager {
 		set(PGroupe.COMMENTAIRE, PCle.OMBRE, true);
 		set(PGroupe.COMMENTAIRE, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
 		set(PGroupe.COMMENTAIRE, PCle.GRADIANT_COLOR, true);
+		
+		set(PGroupe.GUI, PCle.LOOK, UIManager.getSystemLookAndFeelClassName());
+		
+		setFont(PGroupe.COMMENTAIRE_COMPONENT, PCle.FONT, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.COMMENTAIRE_COMPONENT, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
+		set(PGroupe.COMMENTAIRE_COMPONENT,  PCle.COLOR, Color.WHITE);
+		set(PGroupe.COMMENTAIRE_COMPONENT,  PCle.COLOR_2, Color.LIGHT_GRAY);
+		set(PGroupe.COMMENTAIRE_COMPONENT,  PCle.COLOR_FOCUS, Color.WHITE);
+		set(PGroupe.COMMENTAIRE_COMPONENT,  PCle.COLOR_2_FOCUS, Color.LIGHT_GRAY);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.FONT_COLOR, Color.BLACK);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.FONT_COLOR_FOCUS, Color.BLACK);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.GRADIANT_COLOR, true);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.OMBRE, true);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
 	}
 }
 

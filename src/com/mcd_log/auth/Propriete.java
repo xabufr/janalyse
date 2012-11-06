@@ -75,9 +75,13 @@ public class Propriete implements Cloneable{
 	}
 
 	public void setTaille(int i,int m_taille) {
+		if(this.m_taille.length < i||i<0)
+			return;
 		this.m_taille[i] = m_taille;
 	}
 	public void setTaille(int taille[]) {
+		if(taille==null||taille.length<=0)
+			return;
 		m_taille = new int[taille.length];
 		System.arraycopy(taille, 0, m_taille, 0, taille.length);
 	}

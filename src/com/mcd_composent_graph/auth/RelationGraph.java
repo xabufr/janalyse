@@ -20,7 +20,7 @@ import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
 
-public class RelationGraph extends McdComposentGraphique implements FormeGeometrique{
+public class RelationGraph extends McdComposentGraphique implements FormeGeometrique, CommentableComponent{
 
 	private Relation m_relation;
 	private int m_lastPropsNumber, m_heightNom, m_widthNom;
@@ -220,14 +220,18 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 		m_calculerTaille=true;
 	}
 	
-	public ArrayList<ProprieteGraph> getPropriete(){
+	public List<ProprieteGraph> getProprietesGraphList(){
 		return m_proprietes;
 	}
-	
+	public String getCommentaire(){
+		return m_relation.getCommentaire();
+	}
 	public void setPropriete(ArrayList<ProprieteGraph> prop){
 		m_proprietes = prop;
 	}
-
+	public String getName(){
+		return m_relation.getNom();
+	}
 	public void dessinerOmbre(Graphics g) {
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		if ((Boolean)prefs.get(PGroupe.RELATION, PCle.OMBRE)){

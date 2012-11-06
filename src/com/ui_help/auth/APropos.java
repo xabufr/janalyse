@@ -8,6 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import com.version.auth.Updater;
+
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Font;
@@ -60,7 +62,15 @@ public class APropos extends JDialog {
 		JTextPane txtpnJanalyseCrateurDe = new JTextPane();
 		txtpnJanalyseCrateurDe.setEditable(false);
 		txtpnJanalyseCrateurDe.setContentType("text/html");
-		txtpnJanalyseCrateurDe.setText("JAnalyse, créateur de MCD Merise.\n<br />\nÉcrit par:<br />\n<ul>\n<li>Alexandre Ramel(<a href=\"mailto:aramel@epsi.fr\">aramel@epsi.fr</a>)</li>\n<li>Thomas Loubiou(<a href=\"mailto:tloubiou@epsi.fr\">tloubiou@epsi.fr</a>)</li>\n</ul>\nVous pouvez consulter l'avancement du projet sur:<br />\n<a href=\"https://www.assembla.com/code/janalyse/\">https://www.assembla.com/code/janalyse/</a>");
+		txtpnJanalyseCrateurDe.setText("JAnalyse version "+
+				Updater.getVersionString() +
+				", créateur de MCD Merise.\n" +
+				"<br />\nÉcrit par:<br />\n" +
+				"<ul>\n<li>Alexandre Ramel (<a href=\"mailto:aramel@epsi.fr\">aramel@epsi.fr</a>)</li>\n" +
+				"<li>Thomas Loubiou (<a href=\"mailto:tloubiou@epsi.fr\">tloubiou@epsi.fr</a>)</li>\n" +
+				"</ul>\nVous pouvez consulter l'avancement du projet sur:<br />\n" +
+				"<a href=\"https://www.assembla.com/code/janalyse/\">" +
+				"https://www.assembla.com/code/janalyse/</a>");
 		panel.add(txtpnJanalyseCrateurDe, "cell 0 0,grow");
 		
 		txtpnJanalyseCrateurDe.addHyperlinkListener(new HyperlinkListener() {

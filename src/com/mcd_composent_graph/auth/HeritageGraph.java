@@ -19,6 +19,7 @@ import com.mcd_log.auth.Heritage;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
+import com.utils.auth.Utils;
 
 public class HeritageGraph extends McdComposentGraphique implements FormeGeometrique{
 	private Heritage m_heritage;
@@ -115,7 +116,7 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 			
 			e1.x = e.x+20;
 			e1.y = e.y;
-			a = angle(m_centre, e1, e)*-1;
+			a = Utils.angle(m_centre, e1, e)*-1;
 			
 			p[0].x = 10;
 			p[0].y = -8;
@@ -187,16 +188,6 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		int widthType = metric.stringWidth(m_heritage.getType().toString());
 
 		g.drawString(m_heritage.getType().toString(), pos.x+dim.width/2-widthType/2, pos.y+dim.height-2);
-	}
-	
-	private double angle(Point p1, Point p2, Point p3){
-		double a, a1, a2;
-		
-		a1 = Math.atan2(p1.y-p3.y, p1.x-p3.x);
-		a2 = Math.atan2(p2.y-p3.y, p2.x-p3.x);
-		a = a2 - a1;
-		
-		return a;
 	}
 
 	private void reloadGraph(){

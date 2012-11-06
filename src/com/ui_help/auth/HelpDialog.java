@@ -14,7 +14,7 @@ public class HelpDialog {
 		
 	}
 	public void show(ActionEvent e){
-		HelpSet hs = getHelpSet("JanalyseHelp");
+		HelpSet hs = getHelpSet("help/JanalyseHelp.hs");
 		HelpBroker hb = hs.createHelpBroker();
 		new CSH.DisplayHelpFromSource(hb).actionPerformed(e);
 	}

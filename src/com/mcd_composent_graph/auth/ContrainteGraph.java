@@ -21,6 +21,7 @@ import com.mcd_log.auth.Relation;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
+import com.utils.auth.Utils;
 
 public class ContrainteGraph extends McdComposentGraphique implements FormeGeometrique{
 	private Contrainte m_contrainte;
@@ -123,7 +124,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 			
 			e1.x = centreObjet.x+20;
 			e1.y = centreObjet.y;
-			a = angle(m_centre, e1, centreObjet)*-1;
+			a = Utils.angle(m_centre, e1, centreObjet)*-1;
 			t /= (int)Math.sqrt((Math.pow(c, 2)*Math.pow(Math.cos(a), 2))+(Math.pow(b, 2)*Math.pow(Math.sin(a), 2)));
 			
 			p.x = (int)((t*Math.cos(a))+centreObjet.x);
@@ -142,7 +143,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 				
 				e1.x = centreObjet.x+20;
 				e1.y = centreObjet.y;
-				a = angle(m_centre, e1, centreObjet)*-1;
+				a = Utils.angle(m_centre, e1, centreObjet)*-1;
 				t /= (int)Math.sqrt((Math.pow(c, 2)*Math.pow(Math.cos(a), 2))+(Math.pow(b, 2)*Math.pow(Math.sin(a), 2)));
 				
 				p1[0].x = 10;
@@ -179,7 +180,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 				
 				e1.x = p.x+20;
 				e1.y = p.y;
-				a = angle(m_centre, e1, p)*-1;
+				a = Utils.angle(m_centre, e1, p)*-1;
 				
 				p1[0].x = 10;
 				p1[0].y = -8;
@@ -239,16 +240,6 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 		}
 		
 		g.drawString(m_contrainte.getNom(), pos.x, pos.y);
-	}
-	
-	private double angle(Point p1, Point p2, Point p3){
-		double a, a1, a2;
-		
-		a1 = Math.atan2(p1.y-p3.y, p1.x-p3.x);
-		a2 = Math.atan2(p2.y-p3.y, p2.x-p3.x);
-		a = a2 - a1;
-		
-		return a;
 	}
 
 	public void setMcd(McdGraph mcd) {

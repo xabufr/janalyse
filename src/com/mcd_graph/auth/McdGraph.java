@@ -24,6 +24,8 @@ import javax.swing.JPanel;
 
 import com.event.auth.SelectionMultiple;
 import com.mcd_composent_graph.auth.CardinaliteGraph;
+import com.mcd_composent_graph.auth.CommentableComponent;
+import com.mcd_composent_graph.auth.CommentaireGraph;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
@@ -31,6 +33,7 @@ import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.ProprieteGraph;
 import com.mcd_composent_graph.auth.RelationGraph;
 import com.mcd_composent_graph.auth.FormeGeometrique;
+import com.mcd_edition_fenetre.auth.FenetreEditionCommentaire;
 import com.mcd_edition_fenetre.auth.FenetreEditionContrainte;
 import com.mcd_edition_fenetre.auth.FenetreEditionEntite;
 import com.mcd_edition_fenetre.auth.FenetreEditionHeritage;
@@ -59,7 +62,7 @@ public class McdGraph extends JPanel{
 	private FenetrePrincipale m_fenetrePrincipale;
 	private ArrayList<McdComposentGraphique> m_components, m_componentsFirst, m_componentsSecond;
 	private Stack<Hashtable<Object, McdComposentGraphique>> m_listeAnnuler, m_listeRefaire;
-	private Boolean m_isMoving, m_isSaved;
+	private boolean m_isMoving, m_isSaved;
 	private File m_file;
 	private SelectionMultiple m_selectMulti;
 	
@@ -74,6 +77,7 @@ public class McdGraph extends JPanel{
 		m_states.put(McdGraphStateE.INSERT_CONTRAINTE, new McdGraphStateInsertContrainte());
 		m_states.put(McdGraphStateE.INSERT_HERITAGE, new McdGraphStateInsertHeritage());
 		m_states.put(McdGraphStateE.EDIT, new McdGraphStateEdit());
+		m_states.put(McdGraphStateE.INSERT_COMMENTAIRE, new McdGraphStateInsertCommentaire());
 		m_currentState = McdGraphStateE.INVALID;
 
 		m_components = new ArrayList<McdComposentGraphique>();
@@ -91,11 +95,10 @@ public class McdGraph extends JPanel{
 		setFile(null);
 		
 		this.setSize(new Dimension(80, 80));
-		this.setState(McdGraphStateE.INSERT_ENTITE);
+		this.setState(McdGraphStateE.EDIT);
 		this.setFocusable(true);
 		saveAnnulerModification();
 	}
-	
 	public void paintComponent(Graphics g){
 		CardinaliteGraph.resetCompteurLettre();
 		g.setColor(Color.WHITE);
@@ -214,34 +217,27 @@ public class McdGraph extends JPanel{
 		}			
 		
 		//affichage commentaire
-		boolean show = true;
 		if ((Boolean)McdPreferencesManager.getInstance().get(PGroupe.COMMENTAIRE, PCle.SHOW)){
 			for (McdComposentGraphique c : m_componentsSecond){
-				if (c instanceof EntiteGraph 
-						&& getMousePosition() != null
-						&& ((EntiteGraph)c).contient(getMousePosition())
-						&& ((EntiteGraph)c).getEntite().getCommentaire() != ""){
-					for (ProprieteGraph p : ((EntiteGraph)c).getLstPropGraph())
-						if (p.contient(getMousePosition())
-						&& (p.getPropriete().getCommentaire() != "")){
-							showCommentaire(g, getMousePosition(), p.getPropriete().getCommentaire());
-							show = false;
+				if(c instanceof CommentableComponent){
+					FormeGeometrique forme = (FormeGeometrique) c;
+					CommentableComponent com = (CommentableComponent) c;
+					if(getMousePosition() != null&&
+							forme.contient(getMousePosition())){
+						boolean show = true;
+						for(ProprieteGraph p: com.getProprietesGraphList()){
+							if(p.contient(getMousePosition())&&
+									!p.getPropriete().getCommentaire().trim().isEmpty()){
+								showCommentaire(g, getMousePosition(), p.getPropriete().getCommentaire());
+								show=false;
+								break;
+							}
 						}
-					if (show)
-						showCommentaire(g, getMousePosition(), ((EntiteGraph)c).getEntite().getCommentaire());
-				}
-				else if (c instanceof RelationGraph 
-					&& getMousePosition() != null
-					&& ((RelationGraph)c).contient(getMousePosition())
-					&& ((RelationGraph)c).getRelation().getCommentaire() != ""){
-					for (ProprieteGraph p : ((RelationGraph)c).getPropriete())
-						if (p.contient(getMousePosition())
-						&& (p.getPropriete().getCommentaire() != "")){
-							showCommentaire(g, getMousePosition(), p.getPropriete().getCommentaire());
-							show = false;
+						if (show){
+							showCommentaire(g, getMousePosition(), com.getCommentaire());
 						}
-					if (show)
-						showCommentaire(g, getMousePosition(), ((RelationGraph)c).getRelation().getCommentaire());
+						break;
+					}
 				}
 			}
 		}
@@ -250,7 +246,6 @@ public class McdGraph extends JPanel{
 			m_selectMulti.dessiner(g, m_components);
 		
 	}
-	
 	public void registerLogic(Object o, McdComposentGraphique g){
 		m_logicObjects.put(o, g);
 	}
@@ -289,19 +284,15 @@ public class McdGraph extends JPanel{
 	}
 	
 	private class McdGraphStateInsertEntite extends McdGraphStateInsert{
-
 		public void mouseClicked(MouseEvent e) {
 			
 		}
-
 		public void mouseEntered(MouseEvent e) {
 			
 		}
-
 		public void mouseExited(MouseEvent e) {
 			
 		}
-
 		public void mousePressed(MouseEvent e) {
 			EntiteGraph eg = new EntiteGraph();
 			eg.setEntite(new Entite("Entite"+(m_last++)));
@@ -312,15 +303,12 @@ public class McdGraph extends JPanel{
 			repaint();
 			saveAnnulerModification();
 		}
-
 		public void mouseReleased(MouseEvent e) {
 			
 		}
-
 		public void mouseDragged(MouseEvent arg0) {
 			
 		}
-
 		public void mouseMoved(MouseEvent arg0) {
 			McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 			if (mouseInComponent() && (Boolean)prefs.get(PGroupe.COMMENTAIRE, PCle.SHOW))
@@ -334,6 +322,33 @@ public class McdGraph extends JPanel{
 		}
 		public void keyTyped(KeyEvent arg0) {
 			
+		}
+	}
+	private class McdGraphStateInsertCommentaire extends McdGraphStateInsert{
+		public void mouseClicked(MouseEvent arg0) {			
+		}
+		public void mouseEntered(MouseEvent arg0) {			
+		}
+		public void mouseExited(MouseEvent arg0) {			
+		}
+		public void mousePressed(MouseEvent arg0) {
+			CommentaireGraph com = new CommentaireGraph();
+			com.setMcd(McdGraph.this);
+			com.setPosition(arg0.getPoint());
+			m_components.add(com);
+			m_componentsFirst.add(com);
+		}
+		public void mouseReleased(MouseEvent arg0) {			
+		}
+		public void mouseDragged(MouseEvent arg0) {			
+		}
+		public void mouseMoved(MouseEvent arg0) {			
+		}
+		public void keyPressed(KeyEvent arg0) {			
+		}
+		public void keyReleased(KeyEvent arg0) {
+		}
+		public void keyTyped(KeyEvent arg0) {			
 		}
 	}
 	private class McdGraphStateInsertRelation extends McdGraphStateInsert{
@@ -728,6 +743,9 @@ public class McdGraph extends JPanel{
 					else if(composent instanceof CardinaliteGraph){
 						new FenetreEditionCardinalite(McdGraph.this, (CardinaliteGraph)composent).setVisible(true);
 					}
+					else if(composent instanceof CommentaireGraph){
+						new FenetreEditionCommentaire(McdGraph.this, (CommentaireGraph) composent).setVisible(true);
+					}
 				}
 				setMcdComposentGraphiquetFocus(null);
 			}
@@ -1017,8 +1035,8 @@ public class McdGraph extends JPanel{
 		m_components.add(c);
 	}
 	
-	public void saveMcdComposent(){
-		new Sauvegarde(this);
+	public void saveMcdComposent(boolean saveAs){
+		new Sauvegarde(this, saveAs);
 	}
 	private void setMcdComposentGraphiquetFocus(McdComposentGraphique comp){
 		if(m_focus.size()!=0){
@@ -1233,6 +1251,8 @@ public class McdGraph extends JPanel{
 		return false;
 	}
 	private void showCommentaire(Graphics g, Point c, String com){
+		if(com.trim().isEmpty())
+			return;
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		FontMetrics font = g.getFontMetrics();
 		Dimension dim = new Dimension();

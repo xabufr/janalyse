@@ -24,7 +24,7 @@ import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
 
-public class EntiteGraph extends McdComposentGraphique implements FormeGeometrique{
+public class EntiteGraph extends McdComposentGraphique implements FormeGeometrique, CommentableComponent{
 	private Entite m_entite;
 	private FormeGeometriqueRectangle m_geometrie;
 	private Hashtable<Face, ArrayList<McdComposentGraphique>> m_liens;
@@ -79,7 +79,6 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 		else
 			g.setFont(prefs.getFont(PGroupe.ENTITE, PCle.FONT_FOCUS));
 		FontMetrics font = g.getFontMetrics();
-		ProprieteGraph dessinPropriete = new ProprieteGraph();
 		
 		for (Propriete propriete : m_entite.getProprietes()){
 			if (font.stringWidth(propriete.getVirtualName(m_entite.getName())) > widthMax)
@@ -157,14 +156,15 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 		font = g.getFontMetrics(ffont);
 		x = pos.x+5;
 		y += font.getHeight()+10;
+		
 		for (Propriete propriete : m_entite.getProprietes()){
+			ProprieteGraph dessinPropriete = new ProprieteGraph();
 			dessinPropriete.setPropriete(propriete);
 			dessinPropriete.dessiner(g,
 					ffont,
 					col,
 					new Point(x, y),
 					m_entite.getName());
-			
 			m_lstPropGraph.add(dessinPropriete);
 			y += font.getHeight() + 4;
 		}
@@ -187,7 +187,9 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 	public Boolean isLinkable() {
 		return true;
 	}
-
+	public String getName(){
+		return m_entite.getName();
+	}
 	public void prepareDelete() {
 		m_mcd.removeLogic(m_entite);
 	}
@@ -323,10 +325,13 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 			g.fillRect(this.getPosition().x+5, this.getPosition().y+5, this.getDimension().width, this.getDimension().height);
 		}
 	}
-	public List<ProprieteGraph> getLstPropGraph() {
+	public List<ProprieteGraph> getProprietesGraphList() {
 		return m_lstPropGraph;
 	}
 	public void setLstPropGraph(List<ProprieteGraph> lstPropGraph) {
 		this.m_lstPropGraph = lstPropGraph;
+	}
+	public String getCommentaire(){
+		return m_entite.getCommentaire();
 	}
 }

@@ -25,5 +25,6 @@ public enum PCle{
 	SAVE,
 	CIF,
 	SHOW,
-	CSS
+	CSS,
+	LOOK
 }

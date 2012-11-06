@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -16,6 +13,7 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import com.mcd_composent_graph.auth.CardinaliteGraph;
+import com.mcd_composent_graph.auth.CommentaireGraph;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
@@ -28,48 +26,29 @@ import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.Relation;
+import com.utils.auth.Utils;
 
 public class Sauvegarde {
 	private ArrayList<McdComposentGraphique> m_components;
 	private String m_mcdNom;
 	
-	public Sauvegarde(McdGraph mcd) {
+	public Sauvegarde(McdGraph mcd, boolean saveAs) {
 		m_components = mcd.getMcdComponents();
 		m_mcdNom = mcd.getLogicName();
 		
-		if(mcd.getFile() == null){
+		if(mcd.getFile() == null||saveAs){
 			if (m_components != null){
-				JFileChooser chooser = new JFileChooser();
-				chooser.setFileFilter(new FileFilter(){
-					public boolean accept(File arg0) {
-						if(arg0.isDirectory())
-							return true;
-						String ext = getExtension(arg0);
-						if(ext==null)
-							return false;
-						if(ext.equals("xml"))
-							return true;
-						return false;
-					}
-	
-					public String getDescription() {
-						return "XML Only";
-					}
-					
-				});
-				if(chooser.showSaveDialog(null)==JFileChooser.APPROVE_OPTION){
-					File file = chooser.getSelectedFile();
-					if(getExtension(file)==null||!getExtension(file).equals("xml"))
-						file = new File(file.getAbsolutePath()+".xml");
-						try {
-							Document doc = arborescence(m_mcdNom);
-							XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
-						    sortie.output(doc, new FileOutputStream(file));
-						    mcd.setFile(file);
-						    mcd.setSaved(true);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+				File file = Utils.getFile4Save("xml");
+				if(file==null)
+					return;
+				try {
+					Document doc = arborescence(m_mcdNom);
+					XMLOutputter sortie = new XMLOutputter(Format.getPrettyFormat());
+				    sortie.output(doc, new FileOutputStream(file));
+				    mcd.setFile(file);
+				    mcd.setSaved(true);
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 		}
@@ -92,6 +71,7 @@ public class Sauvegarde {
 		List<CardinaliteGraph> cardinaliteGraph = new ArrayList<CardinaliteGraph>();
 		List<ContrainteGraph> contrainteGraph = new ArrayList<ContrainteGraph>();
 		List<HeritageGraph> heritageGraph = new ArrayList<HeritageGraph>();
+		List<CommentaireGraph> commentaireGraph = new ArrayList<CommentaireGraph>();
 		
 		Element mcd = new Element("Mcd");
 		Attribute mcdNom = new Attribute("nom", nom);
@@ -113,6 +93,9 @@ public class Sauvegarde {
 			}
 			else if (mcg instanceof CardinaliteGraph){
 				cardinaliteGraph.add((CardinaliteGraph) mcg);
+			}
+			else if(mcg instanceof CommentaireGraph){
+				commentaireGraph.add((CommentaireGraph) mcg);
 			}
 		}
 		
@@ -357,19 +340,16 @@ public class Sauvegarde {
 			allContrainte.addContent(contrainte);
 		}
 		mcd.addContent(allContrainte);
+		Element allCommentaire = new Element("All-commentaire");
+		for(CommentaireGraph com : commentaireGraph){
+			Element commentaire = new Element("Commentaire");
+			commentaire.setAttribute("x", String.valueOf(com.getPosition().x));
+			commentaire.setAttribute("y", String.valueOf(com.getPosition().y));
+			commentaire.setText(com.getCommentaire());
+			allCommentaire.addContent(commentaire);
+		}
+		mcd.addContent(allCommentaire);
 		
 		return document;
-	}
-	
-	private String getExtension(File f){
-		String ext=f.getName();
-		
-		int index = ext.lastIndexOf(".");
-		String ret = null;
-		if(index>0&&index<ext.length()-1){
-			ret = ext.substring(index+1).toLowerCase();
-		}
-		
-		return ret;
 	}
 }

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mcd_composent_graph.auth.CardinaliteGraph;
+import com.mcd_composent_graph.auth.CommentaireGraph;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
@@ -122,6 +123,10 @@ public class SelectionMultiple {
 		}
 		else if (c instanceof HeritageGraph){
 			if (m_rect.contains(((HeritageGraph)c).getRectangle()))
+				in = true;
+		}
+		else if (c instanceof CommentaireGraph){
+			if (m_rect.contains(((CommentaireGraph)c).getRectangle()))
 				in = true;
 		}
 		return in;

@@ -1,44 +1,20 @@
 package com.dico.auth;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
 
-import com.mcd_composent_graph.auth.EntiteGraph;
+import com.mcd_composent_graph.auth.CommentableComponent;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
-import com.mcd_composent_graph.auth.RelationGraph;
+import com.mcd_composent_graph.auth.ProprieteGraph;
 import com.mcd_graph.auth.McdGraph;
-import com.mcd_log.auth.Entite;
-import com.mcd_log.auth.Propriete;
-import com.mcd_log.auth.Relation;
 
 public class DicoLog {
-	private Hashtable<String, List<String>> m_lstRelationPropriete;
-	private Hashtable<String, List<String>> m_lstEntitePropriete;
+	private ArrayList<CommentableComponent> m_components;
 	
 	public DicoLog(McdGraph mcd) {
-		m_lstEntitePropriete = new Hashtable<String, List<String>>();
-		m_lstRelationPropriete = new Hashtable<String, List<String>>();
-		
+		m_components = new ArrayList<CommentableComponent>();
 		for (McdComposentGraphique c : mcd.getMcdComponents()){
-			if (c instanceof EntiteGraph){
-				Entite e = ((EntiteGraph)c).getEntite();
-				
-				List<String> props = new ArrayList<String>();
-				for (Propriete p : e.getProprietes()){
-					props.add(p.getVirtualName(e.getName()));
-				}
-				m_lstEntitePropriete.put(e.getName(), props);
-			}
-			else if (c instanceof RelationGraph){
-				Relation r = ((RelationGraph)c).getRelation();
-				
-				List<String> props = new ArrayList<String>();
-				for (Propriete p : r.getProprietes()){
-					props.add(p.getVirtualName(r.getNom()));
-				}
-				m_lstRelationPropriete.put(r.getNom(), props);
+			if (c instanceof CommentableComponent){
+				m_components.add((CommentableComponent) c);				
 			}
 		}
 	}
@@ -46,83 +22,37 @@ public class DicoLog {
 	public String toString(){
 		String dico = "";
 		
-		Enumeration<String> key = m_lstEntitePropriete.keys();
-		while (key.hasMoreElements()){
-			String s = key.nextElement();
-			if(m_lstEntitePropriete.get(s).isEmpty())
+		for(CommentableComponent c : m_components){
+			if(c.getProprietesGraphList().isEmpty())
 				continue;
-			dico += "<p class='entite'><span class='nom'>"+s;
+			dico += "<p class='entite'><span class='nom'>"+c.getName();
 			dico += "</span><hr/>";
 			
-			for (String p : m_lstEntitePropriete.get(s)){
-				dico += "<span class='propriete'>"+p+"</span><br />";
+			for (ProprieteGraph p : c.getProprietesGraphList()){
+				dico += "<span class='propriete'>"+p.getPropriete().getName()+"</span><br />";
 			}
 			dico += "</p>";
 		}
-		
-		key = m_lstRelationPropriete.keys();
-		while (key.hasMoreElements()){
-			String s = key.nextElement();
-			if(m_lstRelationPropriete.get(s).isEmpty())
-				continue;
-			dico += "<p class='entite'><span class='nom'>"+s;
-			dico += "</span><hr/>";
-			
-			for (String p : m_lstRelationPropriete.get(s)){
-				dico += "<span class='propriete'>"+p+"</span><br />";
-			}
-			dico += "</p>";
-		}
-		
 		return dico;
 	}
-	public String toHTML(){
+	public String toHTML(boolean commentaires){
 		String dico = "";
-		
-		Enumeration<String> key = m_lstEntitePropriete.keys();
-		while (key.hasMoreElements()){
-			String s = key.nextElement();
-			if(m_lstEntitePropriete.get(s).isEmpty())
+		for(CommentableComponent c : m_components){
+			if(c.getProprietesGraphList().isEmpty())
 				continue;
-			dico += "<div class='entite'><p class='nom'>"+s;
+			dico += "<div class='entite'><p class='nom'>"+c.getName();
+			if(!c.getCommentaire().trim().isEmpty())
+				dico+="<span class='commentaire'> ("+c.getCommentaire()+")</span>";
 			dico += "</p>";
 			
-			for (String p : m_lstEntitePropriete.get(s)){
-				dico += "<span class='propriete'>"+p+"</span><br />";
+			for (ProprieteGraph p : c.getProprietesGraphList()){
+				dico += "<span class='propriete'>"+p.getPropriete().getName()+"</span>";
+				if(!p.getPropriete().getCommentaire().trim().isEmpty())
+					dico+="<span class='commentaire'> ("+p.getPropriete().getCommentaire()+")</span>";
+				dico+="<br />";
 			}
 			dico += "</div>";
 		}
-		
-		key = m_lstRelationPropriete.keys();
-		while (key.hasMoreElements()){
-			String s = key.nextElement();
-			if(m_lstRelationPropriete.get(s).isEmpty())
-				continue;
-			dico += "<div class='entite'><p class='nom'>"+s;
-			dico += "</p>";
-			
-			for (String p : m_lstRelationPropriete.get(s)){
-				dico += "<span class='propriete'>"+p+"</span><br />";
-			}
-			dico += "</div>";
-		}
-		
 		return dico;
 	}
-	public Hashtable<String, List<String>> getLstRelationPropriete() {
-		return m_lstRelationPropriete;
-	}
-
-	public void setLstRelationPropriete(Hashtable<String, List<String>> lstRelationPropriete) {
-		m_lstRelationPropriete = lstRelationPropriete;
-	}
-
-	public Hashtable<String, List<String>> getLstEntitePropriete() {
-		return m_lstEntitePropriete;
-	}
-
-	public void setLstEntitePropriete(Hashtable<String, List<String>> lstEntitePropriete) {
-		m_lstEntitePropriete = lstEntitePropriete;
-	}
-
 }

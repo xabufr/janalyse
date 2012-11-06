@@ -33,6 +33,11 @@ import com.event.auth.QuitListener;
 import com.export.auth.ExportSql;
 import com.export.auth.ExportPng;
 import com.export.auth.ExporterHTML;
+import com.mcd_composent_graph.auth.ContrainteGraph;
+import com.mcd_composent_graph.auth.EntiteGraph;
+import com.mcd_composent_graph.auth.HeritageGraph;
+import com.mcd_composent_graph.auth.McdComposentGraphique;
+import com.mcd_composent_graph.auth.RelationGraph;
 import com.mld.auth.MLDPanel;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
@@ -70,6 +75,7 @@ public class FenetrePrincipale {
 	private JButton m_btnMcd;
 	private JButton m_btnMld;
 	private JButton m_btnDico;
+	private JButton m_boutonInsertionCommentaire;
 	
 	public FenetrePrincipale() {
 		m_stateButtons = new ArrayList<JButton>();
@@ -129,14 +135,14 @@ public class FenetrePrincipale {
 					return;
 				/*On remmet les boutons de mode d'édition en place en fonction du nouveau MCD*/
 				switch(m_mcd.getState()){
+				case INVALID:
+					m_mcd.setState(McdGraphStateE.EDIT);
 				case EDIT:
 					setEnabledButton(m_boutonEdition);
 					break;
 				case INSERT_CONTRAINTE:
 					setEnabledButton(m_boutonInsertionContrainte);
 					break;
-				case INVALID:
-					m_mcd.setState(McdGraphStateE.INSERT_ENTITE);
 				case INSERT_ENTITE:
 					setEnabledButton(m_boutonInsertionEntite);
 					break;
@@ -203,12 +209,12 @@ public class FenetrePrincipale {
 		JSeparator separator = new JSeparator();
 		mnFichier.add(separator);
 		
-		JMenuItem mntmSauvegarder = new JMenuItem("Sauvegarder");
+		JMenuItem mntmSauvegarder = new JMenuItem("Enregistrer");
 		mntmSauvegarder.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
 		mntmSauvegarder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (m_mcd!=null){
-					m_mcd.saveMcdComposent();
+					m_mcd.saveMcdComposent(false);
 					updateMcdNames();
 				}
 			}
@@ -224,6 +230,20 @@ public class FenetrePrincipale {
 				ExportPng.ExporterMcd(m_mcd);
 			}
 		});
+		
+		JMenuItem mntmEnregistrerSous = new JMenuItem("Enregistrer sous...");
+		mntmEnregistrerSous.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (m_mcd!=null){
+					m_mcd.saveMcdComposent(true);
+					updateMcdNames();
+				}
+			}
+		});
+		mnFichier.add(mntmEnregistrerSous);
+		
+		JSeparator separator_6 = new JSeparator();
+		mnFichier.add(separator_6);
 		mnFichier.add(mntmExporterEnPng);
 		
 		JMenuItem mntmExporterEnHtml = new JMenuItem("Exporter en HTML");
@@ -321,13 +341,95 @@ public class FenetrePrincipale {
 		mnEdition.add(separator_3);
 		
 		JMenuItem mntmRorganiser = new JMenuItem("Réorganiser");
+		mntmRorganiser.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK));
 		mntmRorganiser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(m_mcd!=null)
 					m_mcd.reorganiser();
 			}
 		});
+		
+		JMenu mnMode = new JMenu("Mode");
+		mnEdition.add(mnMode);
+		
+		JMenuItem mntmInsertionEntit = new JMenuItem("Insertion entité");
+		mntmInsertionEntit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD1, 0));
+		mntmInsertionEntit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				m_boutonInsertionEntite.doClick();
+			}
+		});
+		mnMode.add(mntmInsertionEntit);
+		
+		JMenuItem mntmInsertionRelation = new JMenuItem("Insertion relation");
+		mntmInsertionRelation.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD2, 0));
+		mntmInsertionRelation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				m_boutonInsertionRelation.doClick();
+			}
+		});
+		mnMode.add(mntmInsertionRelation);
+		
+		JMenuItem mntmCrationLien = new JMenuItem("Création lien");
+		mntmCrationLien.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD3, 0));
+		mntmCrationLien.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				m_boutonInsertionLien.doClick();
+			}
+		});
+		mnMode.add(mntmCrationLien);
+		
+		JMenuItem mntmInsertionContrainte = new JMenuItem("Insertion contrainte");
+		mntmInsertionContrainte.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD4, 0));
+		mntmInsertionContrainte.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				m_boutonInsertionContrainte.doClick();
+			}
+		});
+		mnMode.add(mntmInsertionContrainte);
+		
+		JMenuItem mntmInsertionHritage = new JMenuItem("Insertion héritage");
+		mntmInsertionHritage.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD5, 0));
+		mntmInsertionHritage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				m_boutonInsertionHeritage.doClick();
+			}
+		});
+		mnMode.add(mntmInsertionHritage);
+		
+		JMenuItem mntmdition = new JMenuItem("Édition");
+		mntmdition.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD6, 0));
+		mntmdition.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				m_boutonEdition.doClick();
+			}
+		});
+		mnMode.add(mntmdition);
 		mnEdition.add(mntmRorganiser);
+		
+		JMenuItem mntmStatsMcd = new JMenuItem("Stats MCD");
+		mntmStatsMcd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null) return;
+				int nbRel=0, nbEnt=0, nbHer=0, nbCont=0;
+				for(McdComposentGraphique c : m_mcd.getMcdComponents()){
+					if(c instanceof RelationGraph)
+						++nbRel;
+					else if(c instanceof HeritageGraph)
+						++nbHer;
+					else if(c instanceof EntiteGraph)
+						++nbEnt;
+					else if(c instanceof ContrainteGraph)
+						++nbCont;
+				}
+				JOptionPane.showMessageDialog(frame, "Le MCD '"+m_mcd.getLogicName()+"' contient:\n"+
+						nbEnt+" entités, \n"+
+						nbRel+" relations, \n"+
+						nbHer+" héritages, \n"+
+						nbCont+" contraintes.");
+			}
+		});
+		mnEdition.add(mntmStatsMcd);
 		
 		JSeparator separator_4 = new JSeparator();
 		mnEdition.add(separator_4);
@@ -362,6 +464,11 @@ public class FenetrePrincipale {
 			public void actionPerformed(ActionEvent arg0) {
 				if(Updater.hasNewVersion()){
 					String fichier = null;
+					if(JOptionPane.OK_OPTION!=
+							JOptionPane.showConfirmDialog(null, 
+									"Nouvelle version disponnible, mettre à jours ?"))
+						return;
+					
 					if((fichier=Updater.downloadUpdate())!=null)
 						Updater.restart(fichier);
 				}
@@ -427,6 +534,19 @@ public class FenetrePrincipale {
 		m_stateButtons.add(m_boutonInsertionHeritage);
 		toolBar.add(m_boutonInsertionHeritage);
 		
+		m_boutonInsertionCommentaire = new JButton("");
+		m_boutonInsertionCommentaire.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		m_boutonInsertionCommentaire.setToolTipText("Insertion de commentaire");
+		m_boutonInsertionCommentaire.setPreferredSize(new Dimension(32, 32));
+		m_boutonInsertionCommentaire.setMinimumSize(new Dimension(32, 32));
+		m_boutonInsertionCommentaire.setMaximumSize(new Dimension(32, 32));
+		m_boutonInsertionCommentaire.setMargin(new Insets(0, 0, 0, 0));
+		m_stateButtons.add(m_boutonInsertionCommentaire);
+		toolBar.add(m_boutonInsertionCommentaire);
+		
 		m_boutonEdition = new JButton("");
 		m_boutonEdition.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/edit.png")));
 		m_boutonEdition.setSize(new Dimension(32, 327));
@@ -487,6 +607,13 @@ public class FenetrePrincipale {
 				setEnabledButton(m_boutonEdition);
 			}
 		});
+		m_boutonInsertionCommentaire.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd==null)return;
+				m_mcd.setState(McdGraphStateE.INSERT_COMMENTAIRE);
+				setEnabledButton(m_boutonInsertionCommentaire);
+			}
+		});
 		setEnabledButton(m_boutonInsertionEntite);
 		
 		m_splitPane = new JSplitPane();
@@ -510,6 +637,7 @@ public class FenetrePrincipale {
 		frame.addWindowListener(new WindowListener() {
 			public void windowOpened(WindowEvent arg0) {
 				McdPreferencesManager prefs = McdPreferencesManager.getInstance();
+				@SuppressWarnings("unchecked")
 				ArrayList<String> lst = (ArrayList<String>)prefs.get(PGroupe.ETAT, PCle.SAVE);
 				if (lst == null)
 					return;
@@ -524,6 +652,7 @@ public class FenetrePrincipale {
 					
 					new Chargement(getMcd(), s);
 				}
+				updateMcdNames();
 			}
 			public void windowIconified(WindowEvent arg0) {}
 			
@@ -542,15 +671,12 @@ public class FenetrePrincipale {
 		});
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	}
-	
 	public McdGraph getMcd(){
 		return m_mcd;
 	}
-	
 	public JTabbedPane getTabs(){
 		return m_mcdContener;
 	}
-
 	public void quitter() {
 		ArrayList<McdGraph> mcds = new ArrayList<McdGraph>();
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
@@ -558,8 +684,10 @@ public class FenetrePrincipale {
 		int nb = m_mcdContener.getTabCount();
 		for(int i=0;i<nb;++i){
 			mcds.add((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView());
-			String s = ((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()).getFile().getAbsolutePath();
-			lst.add(s);
+			if(((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()).getFile()!=null){
+				String s = ((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView()).getFile().getAbsolutePath();
+				lst.add(s);
+			}
 		}
 		
 		prefs.set(PGroupe.ETAT, PCle.SAVE, lst);
@@ -576,7 +704,6 @@ public class FenetrePrincipale {
 	}
 	public void createNewMcd(){
 		McdGraph mcd = new McdGraph(this);
-		mcd.setState(McdGraphStateE.INSERT_ENTITE);
 		mcd.setName("Nouveau MCD");
 		m_mcdContener.addTab("", new JScrollPane(mcd));
 		updateMcdNames();
@@ -615,7 +742,7 @@ public class FenetrePrincipale {
 							 "Renommer un MCD", 
 							 JOptionPane.PLAIN_MESSAGE, 
 							 null, null, 
-							 m_mcd.getName());
+							 m_mcd.getLogicName());
 					if(newName!=null&&!newName.trim().isEmpty()){
 						m_mcd.setName(newName);
 						updateMcdNames();
@@ -652,7 +779,7 @@ public class FenetrePrincipale {
 				}
 			}
 			if(sauv==JOptionPane.OK_OPTION){
-				mcd.saveMcdComposent();
+				mcd.saveMcdComposent(false);
 			}
 		}
 		int index = -1;

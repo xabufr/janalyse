@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-
 import org.jdom2.DataConversionException;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -18,6 +15,7 @@ import org.jdom2.input.SAXBuilder;
 
 import com.mcd_composent_graph.auth.CardinaliteGraph;
 import com.mcd_composent_graph.auth.CardinaliteGraphType;
+import com.mcd_composent_graph.auth.CommentaireGraph;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
@@ -33,48 +31,28 @@ import com.mcd_log.auth.ProprieteTypeE;
 import com.mcd_log.auth.Relation;
 import com.mcd_log.auth.HeritageType;
 import com.mcd_log.auth.ContrainteType;
+import com.utils.auth.Utils;
 
 public class Chargement{
 
 	public Chargement(McdGraph mcd) {
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileFilter(new FileFilter(){
-			public boolean accept(File arg0) {
-				if(arg0.isDirectory())
-					return true;
-				String ext = getExtension(arg0);
-				if(ext==null)
-					return false;
-				if(ext.equals("xml"))
-					return true;
-				return false;
+	
+		File file = Utils.getFile4Load("xml");
+		
+		SAXBuilder sax = new SAXBuilder();
+		try {
+			Document doc = sax.build(file);
+			if (mcd != null && doc != null){
+				charger(mcd, doc);
+				mcd.setFile(file);
+			    mcd.setSaved(true);
 			}
-
-			public String getDescription() {
-				return "XML Only";
-			}
-			
-		});
-		if(chooser.showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
-			File file = chooser.getSelectedFile();
-			if(getExtension(file)==null||!getExtension(file).equals("xml"))
-				file = new File(file.getAbsolutePath()+".xml");
-			
-			SAXBuilder sax = new SAXBuilder();
-			try {
-				Document doc = sax.build(file);
-				if (mcd != null && doc != null){
-					charger(mcd, doc);
-					mcd.setFile(file);
-				    mcd.setSaved(true);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JDOMException e) {
-				e.printStackTrace();
-			}
-			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JDOMException e) {
+			e.printStackTrace();
 		}
+		
 	}
 	
 	public Chargement(McdGraph mcd, String f) {	
@@ -102,6 +80,7 @@ public class Chargement{
 		List<Element> cardinalites = racine.getChild("All-cardinalite").getChildren("Cardinalite");
 		List<Element> heritages = racine.getChild("All-héritage").getChildren("Héritage");
 		List<Element> contraintes = racine.getChild("All-contrainte").getChildren("Contrainte");
+		List<Element> commentaires = racine.getChild("All-commentaire").getChildren("Commentaire");
 		Hashtable <Integer, McdComposentGraphique> ids = new Hashtable<Integer, McdComposentGraphique>();
 		int i=0;
 
@@ -158,7 +137,7 @@ public class Chargement{
 			e.setCommentaire(courant.getAttributeValue("commentaire"));
 			
 			for (Element p : courant.getChildren("Propriete")){
-				Propriete prop = new Propriete(null, null);
+				Propriete prop = new Propriete(null, ProprieteTypeE.NONE);
 				
 				prop.setName(p.getAttributeValue("nom"));
 				prop.setCommentaire(p.getAttributeValue("commentaire"));
@@ -270,18 +249,15 @@ public class Chargement{
 			eg.setMcd(mcd);
 			mcd.addMcdComponents(eg);
 		}
-	}
-	
-	private String getExtension(File f){
-		String ext=f.getName();
-		
-		int index = ext.lastIndexOf(".");
-		String ret = null;
-		if(index>0&&index<ext.length()-1){
-			ret = ext.substring(index+1).toLowerCase();
+		for(Element commentaire : commentaires){
+			CommentaireGraph com = new CommentaireGraph();
+			com.setCommentaire(commentaire.getText());
+			Point pos = new Point();
+			pos.x = Integer.parseInt(commentaire.getAttributeValue("x"));
+			pos.y = Integer.parseInt(commentaire.getAttributeValue("y"));
+			com.setPosition(pos);
+			com.setMcd(mcd);
+			mcd.addMcdComponents(com);
 		}
-		
-		return ret;
 	}
-
 }

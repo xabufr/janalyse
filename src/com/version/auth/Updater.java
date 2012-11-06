@@ -82,6 +82,7 @@ public class Updater {
 			FileOutputStream destinationFile = new FileOutputStream(fichier);
 			destinationFile.write(data);
 			destinationFile.flush();
+			destinationFile.close();
 			return fichier;
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -106,9 +107,14 @@ public class Updater {
 		}
 		System.exit(0);
 	}
-	static private String getJarPath(){
+	static public String getJarPath(){
 		String path = new File("").getAbsolutePath();
 		path +=File.separator+System.getProperty("java.class.path");
+		if(System.getProperty("java.class.path").startsWith("/"))	//Systèmes linux
+			return System.getProperty("java.class.path");
+		if(System.getProperty("java.class.path").length()>3&&	//Windows
+				System.getProperty("java.class.path").startsWith(":\\", 1))
+			return System.getProperty("java.class.path");
 		return path;
 	}
 	static public void replace(String to){
@@ -142,8 +148,26 @@ public class Updater {
 		p.getErrorStream().close();
  
 	}
-	static private int m_currentVersion = 3;
-	//static private String m_urlVersion="https://www.assembla.com/code/janalyse/git/nodes/master/src/com/version/auth/version.xml";
-	static private String m_urlVersion="file:///home/zequiel/software/java/janalyse/src/com/version/auth/version.xml";
-
+	public static int getVersionMinor(){
+		return m_currentVersion%10;
+	}
+	public static int getVersionMajor(){
+		return (int) m_currentVersion/100;
+	}
+	public static int getVersionMedium(){
+		return (int) (m_currentVersion%100)/10;
+	}
+	public static String getVersionString(){
+		String version = String.valueOf(getVersionMajor());
+		if(getVersionMinor()!=0){
+			version += "."+getVersionMedium();
+			version += "."+getVersionMinor();
+		}
+		else if(getVersionMedium()!=0){
+			version += "."+getVersionMedium();
+		}
+		return version;
+	}
+	static private int m_currentVersion = 21;
+	static private String m_urlVersion="https://www.assembla.com/code/janalyse/git/node/blob/master/src/com/version/auth/version.xml";
 }

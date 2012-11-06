@@ -18,6 +18,7 @@ import com.mcd_log.auth.Cardinalite;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
+import com.utils.auth.Utils;
 
 public class CardinaliteGraph extends McdComposentGraphique implements FormeGeometrique {
 	private Cardinalite m_cardinalite;
@@ -166,10 +167,10 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		Point centreLettre = new Point(getPointA());
 		Point posRelation = new Point(getPointB());
 		
-		double angle = angle(centreLettre, posRelation, new Point(posRelation.x+100, posRelation.y));
+		double angle = Utils.angle(centreLettre, posRelation, new Point(posRelation.x+100, posRelation.y));
 		Point posLettre = new Point();
 		
-		
+		//Dessin coté entité
 		Graphics2D g2 = (Graphics2D) g;
 		g2.translate(getPointA().x, getPointA().y);
 		g2.rotate(-angle);
@@ -192,9 +193,14 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		g2.rotate(angle);
 		g2.translate(-getPointA().x, -getPointA().y);
 		
-		distance+=m_relationGraph.getDimension().width/2;
-		
-		g2.translate(getPointB().x, getPointB().y);
+		//distance+=m_relationGraph.getDimension().width/2;
+		//Dessin coté relation
+		Point pos = new Point();
+		pos.x = (int)((m_relationGraph.getRectangle().getWidth()/2)*Math.cos(-angle+3.14));
+		pos.y = (int)((m_relationGraph.getRectangle().getHeight()/2)*Math.sin(-angle+3.14));
+		pos.x += getPointB().x;
+		pos.y += getPointB().y;
+		g2.translate(pos.x, pos.y);
 		g2.rotate(-angle+3.14);
 		if(!m_focus)
 			g.setColor((Color) prefs.get(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR));
@@ -214,7 +220,7 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		g2.rotate(-angle+3.14);
 		g2.translate(-distance,0);
 		g2.rotate(angle-3.14);
-		g2.translate(-getPointB().x, -getPointB().y);
+		g2.translate(-pos.x, -pos.y);
 		incermenterCompteurLettre();
 		
 		for(int i=0;i<2;++i){
@@ -223,15 +229,7 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 					m_geometreCoupe[i].getPosition().y-m_geometreCoupe[i].getDimension().height/2));
 		}
 	}
-	private double angle(Point p1, Point p2, Point p3){
-		double a, a1, a2;
-		
-		a1 = Math.atan2(p1.y-p3.y, p1.x-p3.x);
-		a2 = Math.atan2(p2.y-p3.y, p2.x-p3.x);
-		a = a2 - a1;
-		
-		return a;
-	}
+	
 	private Dimension drawLetter(Graphics g, Point centre, String letter){
 		McdPreferencesManager prefs = McdPreferencesManager.getInstance();
 		int height = g.getFontMetrics().getHeight()+4;
