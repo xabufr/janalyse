@@ -43,7 +43,8 @@ public class ParserSql {
 				if (!tmp.contains("constraint") || !tmp.contains("constraint")){
 					while (tmp != ""){
 						tmp = showWord(debut, ligne, ',');
-						values.add(tmp);
+						if (tmp != "")
+							values.add(tmp);
 						debut += tmp.length()+1;
 					}
 					if (!m_entites.containsKey(entite))
@@ -52,12 +53,21 @@ public class ParserSql {
 					m_entites.get(entite).add(values);
 				}
 				else {
-					//if (nom != null)
-						//m_proprietes.get(nom).add("tutu");
+					if (tmp.contains("primary key"))
+						setPrimaryKey(m_entites.get(entite), nom);
 				}
 			}
 		}
 		System.out.println(m_entites);
+	}
+	private List<List<String>> setPrimaryKey(List<List<String>> props, String cle){
+		for (List<String> lst : props){
+			if (lst.contains(cle)){
+				lst.add("primary");
+				return props;
+			}
+		}
+		return props;
 	}
 	private int debutLigne(String ligne){
 		for (int i=0; i<ligne.toCharArray().length; ++i){
