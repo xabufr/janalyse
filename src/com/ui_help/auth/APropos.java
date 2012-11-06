@@ -60,7 +60,7 @@ public class APropos extends JDialog {
 		JTextPane txtpnJanalyseCrateurDe = new JTextPane();
 		txtpnJanalyseCrateurDe.setEditable(false);
 		txtpnJanalyseCrateurDe.setContentType("text/html");
-		txtpnJanalyseCrateurDe.setText("JAnalyse, créateur de MCD Merise.\n<br />\nÉcrit par:<br />\n<ul>\n<li>Alexandre Rame(<a href=\"mailto:aramel@epsi.fr\">aramel@epsi.fr</a>)</li>\n<li>Thomas Loubiou(<a href=\"mailto:tloubiou@epsi.fr\">tloubiou@epsi.fr</a>)</li>\n</ul>\nVous pouvez consulter l'avancement du projet sur:<br />\n<a href=\"https://www.assembla.com/code/janalyse/\">https://www.assembla.com/code/janalyse/</a>");
+		txtpnJanalyseCrateurDe.setText("JAnalyse, créateur de MCD Merise.\n<br />\nÉcrit par:<br />\n<ul>\n<li>Alexandre Ramel(<a href=\"mailto:aramel@epsi.fr\">aramel@epsi.fr</a>)</li>\n<li>Thomas Loubiou(<a href=\"mailto:tloubiou@epsi.fr\">tloubiou@epsi.fr</a>)</li>\n</ul>\nVous pouvez consulter l'avancement du projet sur:<br />\n<a href=\"https://www.assembla.com/code/janalyse/\">https://www.assembla.com/code/janalyse/</a>");
 		panel.add(txtpnJanalyseCrateurDe, "cell 0 0,grow");
 		
 		txtpnJanalyseCrateurDe.addHyperlinkListener(new HyperlinkListener() {

@@ -327,13 +327,12 @@ public class Sauvegarde {
 						
 						contrainte.addContent(entite);
 					}
-			
-					if (entiteGraph.get(j).getEntite().equals(c.getSens())){
-						Element entite = new Element("Sens");
-						entite.setAttribute(new Attribute("id", String.valueOf(j)));
-						
-						contrainte.addContent(entite);
-					}
+				}
+				if (entiteGraph.get(j).getEntite().equals(c.getSens())){
+					Element entite = new Element("Sens");
+					entite.setAttribute(new Attribute("id", String.valueOf(j)));
+					
+					contrainte.addContent(entite);
 				}
 			}
 			

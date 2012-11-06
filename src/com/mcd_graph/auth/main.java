@@ -1,5 +1,6 @@
 package com.mcd_graph.auth;
 
+import com.export.auth.ParserSql;
 import com.version.auth.Updater;
 
 public class main {
@@ -12,6 +13,7 @@ public class main {
 			}
 		}
 		setFenetre(new FenetrePrincipale());
+		ParserSql sql = new ParserSql("src/save/mcd_bdd.sql");
 	}
 
 	public static FenetrePrincipale getFenetre() {

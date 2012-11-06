@@ -144,6 +144,6 @@ public class Updater {
 	}
 	static private int m_currentVersion = 3;
 	//static private String m_urlVersion="https://www.assembla.com/code/janalyse/git/nodes/master/src/com/version/auth/version.xml";
-	static private String m_urlVersion="file:///home/thomas/workspace/janalyse/src/com/version/auth/version.xml";
+	static private String m_urlVersion="file:///home/zequiel/software/java/janalyse/src/com/version/auth/version.xml";
 
 }
