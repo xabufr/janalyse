@@ -31,11 +31,11 @@ public class Sauvegarde {
 	private ArrayList<McdComposentGraphique> m_components;
 	private String m_mcdNom;
 	
-	public Sauvegarde(McdGraph mcd) {
+	public Sauvegarde(McdGraph mcd, boolean saveAs) {
 		m_components = mcd.getMcdComponents();
 		m_mcdNom = mcd.getLogicName();
 		
-		if(mcd.getFile() == null){
+		if(mcd.getFile() == null||saveAs){
 			if (m_components != null){
 				File file = Utils.getFile4Save("xml");
 				if(file==null)

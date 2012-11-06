@@ -203,12 +203,12 @@ public class FenetrePrincipale {
 		JSeparator separator = new JSeparator();
 		mnFichier.add(separator);
 		
-		JMenuItem mntmSauvegarder = new JMenuItem("Sauvegarder");
+		JMenuItem mntmSauvegarder = new JMenuItem("Enregistrer");
 		mntmSauvegarder.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
 		mntmSauvegarder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (m_mcd!=null){
-					m_mcd.saveMcdComposent();
+					m_mcd.saveMcdComposent(false);
 					updateMcdNames();
 				}
 			}
@@ -224,6 +224,20 @@ public class FenetrePrincipale {
 				ExportPng.ExporterMcd(m_mcd);
 			}
 		});
+		
+		JMenuItem mntmEnregistrerSous = new JMenuItem("Enregistrer sous...");
+		mntmEnregistrerSous.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (m_mcd!=null){
+					m_mcd.saveMcdComposent(true);
+					updateMcdNames();
+				}
+			}
+		});
+		mnFichier.add(mntmEnregistrerSous);
+		
+		JSeparator separator_6 = new JSeparator();
+		mnFichier.add(separator_6);
 		mnFichier.add(mntmExporterEnPng);
 		
 		JMenuItem mntmExporterEnHtml = new JMenuItem("Exporter en HTML");
@@ -658,7 +672,7 @@ public class FenetrePrincipale {
 				}
 			}
 			if(sauv==JOptionPane.OK_OPTION){
-				mcd.saveMcdComposent();
+				mcd.saveMcdComposent(false);
 			}
 		}
 		int index = -1;

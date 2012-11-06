@@ -1009,8 +1009,8 @@ public class McdGraph extends JPanel{
 		m_components.add(c);
 	}
 	
-	public void saveMcdComposent(){
-		new Sauvegarde(this);
+	public void saveMcdComposent(boolean saveAs){
+		new Sauvegarde(this, saveAs);
 	}
 	private void setMcdComposentGraphiquetFocus(McdComposentGraphique comp){
 		if(m_focus.size()!=0){
