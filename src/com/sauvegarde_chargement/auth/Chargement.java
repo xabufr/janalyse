@@ -135,7 +135,7 @@ public class Chargement{
 			e.setCommentaire(courant.getAttributeValue("commentaire"));
 			
 			for (Element p : courant.getChildren("Propriete")){
-				Propriete prop = new Propriete(null, null);
+				Propriete prop = new Propriete(null, ProprieteTypeE.NONE);
 				
 				prop.setName(p.getAttributeValue("nom"));
 				prop.setCommentaire(p.getAttributeValue("commentaire"));
