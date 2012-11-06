@@ -347,6 +347,63 @@ public class FenetrePrincipale {
 					m_mcd.reorganiser();
 			}
 		});
+		
+		JMenu mnMode = new JMenu("Mode");
+		mnEdition.add(mnMode);
+		
+		JMenuItem mntmInsertionEntit = new JMenuItem("Insertion entité");
+		mntmInsertionEntit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD1, 0));
+		mntmInsertionEntit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				m_boutonInsertionEntite.doClick();
+			}
+		});
+		mnMode.add(mntmInsertionEntit);
+		
+		JMenuItem mntmInsertionRelation = new JMenuItem("Insertion relation");
+		mntmInsertionRelation.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD2, 0));
+		mntmInsertionRelation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				m_boutonInsertionRelation.doClick();
+			}
+		});
+		mnMode.add(mntmInsertionRelation);
+		
+		JMenuItem mntmCrationLien = new JMenuItem("Création lien");
+		mntmCrationLien.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD3, 0));
+		mntmCrationLien.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				m_boutonInsertionLien.doClick();
+			}
+		});
+		mnMode.add(mntmCrationLien);
+		
+		JMenuItem mntmInsertionContrainte = new JMenuItem("Insertion contrainte");
+		mntmInsertionContrainte.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD4, 0));
+		mntmInsertionContrainte.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				m_boutonInsertionContrainte.doClick();
+			}
+		});
+		mnMode.add(mntmInsertionContrainte);
+		
+		JMenuItem mntmInsertionHritage = new JMenuItem("Insertion héritage");
+		mntmInsertionHritage.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD5, 0));
+		mntmInsertionHritage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				m_boutonInsertionHeritage.doClick();
+			}
+		});
+		mnMode.add(mntmInsertionHritage);
+		
+		JMenuItem mntmdition = new JMenuItem("Édition");
+		mntmdition.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD6, 0));
+		mntmdition.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				m_boutonEdition.doClick();
+			}
+		});
+		mnMode.add(mntmdition);
 		mnEdition.add(mntmRorganiser);
 		
 		JMenuItem mntmStatsMcd = new JMenuItem("Stats MCD");
