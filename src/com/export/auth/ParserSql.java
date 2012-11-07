@@ -25,49 +25,66 @@ public class ParserSql {
 		}
 	}
 	public void seekEntites(BufferedReader b) throws IOException{
-		String ligne, tmp, entite="", prop;
+		String ligne, tmp, entite="", nom="";
 		int debut=0;
 		while ((ligne = b.readLine()) != null){
 			tmp = ligne.toLowerCase();
 			if (tmp.matches("create table.*")){
 				tmp = showWord(13, ligne, '(');
 				entite = tmp;
-			}
-			else if(tmp.matches("	.*")){
-				List<String> values = new ArrayList<String>();
-				String nom;
-				debut = debutLigne(tmp);
-				nom = showWord(debut, ligne, ',');
-				values.add(nom);
-				debut += nom.length()+1;
-				if (!tmp.contains("constraint") || !tmp.contains("constraint")){
-					while (tmp != ""){
-						tmp = showWord(debut, ligne, ',');
-						if (tmp != "")
-							values.add(tmp);
-						debut += tmp.length()+1;
+				while (!(ligne = b.readLine()).contains(");")){
+					List<String> values = new ArrayList<String>();
+					tmp = ligne.toLowerCase();
+					debut = debutLigne(tmp);
+					nom = showWord(debut, ligne, ',');
+					values.add(nom);
+					debut += nom.length()+1;
+					if (!tmp.contains("constraint")){
+						while (tmp != ""){
+							tmp = showWord(debut, ligne, ',');
+							if (tmp != "")
+								values.add(tmp);
+							debut += tmp.length()+1;
+						}
+						if (!m_entites.containsKey(entite))
+							m_entites.put(entite, new ArrayList());
+						
+						m_entites.get(entite).add(values);
 					}
-					if (!m_entites.containsKey(entite))
-						m_entites.put(entite, new ArrayList());
-					
-					m_entites.get(entite).add(values);
+					else {
+						if (tmp.contains("primary key"))
+							setPrimaryKey(m_entites.get(entite), nom);
+						else if (tmp.contains("foreign key"))
+							setForeignKey(ligne, nom);
+					}
 				}
-				else {
-					if (tmp.contains("primary key"))
-						setPrimaryKey(m_entites.get(entite), nom);
-				}
+			}
+			else if(tmp.matches("alter table.*")){
+				entite = showWord(12, ligne, ' ');
+				ligne = b.readLine();
+				tmp = ligne.toLowerCase();
+				if (tmp != null && tmp.contains("primary key"))
+					setPrimaryKey(m_entites.get(entite), showIndex(ligne));
+				else if (tmp != null && tmp.contains("foreign key"))
+					setForeignKey(ligne, entite);
 			}
 		}
 		System.out.println(m_entites);
 	}
-	private List<List<String>> setPrimaryKey(List<List<String>> props, String cle){
+	private void setPrimaryKey(List<List<String>> props, String cle){
 		for (List<String> lst : props){
 			if (lst.contains(cle)){
 				lst.add("primary");
-				return props;
 			}
 		}
-		return props;
+	}
+	private void setForeignKey(String ligne, String entite){
+		String cle = showIndex(ligne);
+		for (List<String> lst : m_entites.get(entite)){
+			if (lst.contains(cle)){
+				lst.add("foreign");
+			}
+		}
 	}
 	private int debutLigne(String ligne){
 		for (int i=0; i<ligne.toCharArray().length; ++i){
@@ -88,8 +105,8 @@ public class ParserSql {
 					resultat += " ";
 					++i;
 				}
-				if (resultat.toLowerCase().equals("constraint") || resultat.toLowerCase().equals("add"))
-					 return showIndex(debut, ligne);
+				if (resultat.toLowerCase().equals("constraint"))
+					 return showIndex(ligne);
 			}
 			else
 				return resultat;
@@ -97,13 +114,10 @@ public class ParserSql {
 		
 		return resultat;
 	}
-	private String showIndex(int debut, String ligne){
+	private String showIndex(String ligne){
 		String resultat="";
-		if (ligne.toLowerCase().contains("primary key")){
-			resultat = ligne.substring(ligne.indexOf("(")+1, ligne.indexOf(")"));
-		}
-			
-		
+		resultat = ligne.substring(ligne.indexOf("(")+1, ligne.indexOf(")"));
+
 		return resultat;
 	}
 	public Hashtable<String, List<List<String>>> getEntites() {
