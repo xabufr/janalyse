@@ -48,13 +48,11 @@ public class ExportSql {
 		m_sql += createDataBase(m_dataBase);
 		
 		for (Entite e : m_mld.getEntites()){
-			if (!containsCleEtrangere(e))
 				m_sql += createTable(e);
 		}
 		
 		for (Entite e : m_mld.getEntites()){
 			if (containsCleEtrangere(e)){
-				m_sql += createTable(e);
 				m_sql += ajoutCleEtrangere(e, getCleEtrangere(e));
 			}
 		}
@@ -78,7 +76,8 @@ public class ExportSql {
 	private String createDataBase(String s){
 		String sql = "";
 		
-		sql += "CREATE DATABASE \""+s+"\";\n";
+		sql += "CREATE DATABASE "+s+";\n";
+		sql += "USE "+s+";\n";
 		return sql;
 	}
 	
