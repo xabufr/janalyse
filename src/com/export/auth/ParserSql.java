@@ -2,7 +2,6 @@ package com.export.auth;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +11,7 @@ import java.util.List;
 public class ParserSql {
 	private File m_file;
 	private Hashtable<String, List<List<String>>> m_entites;
+	
 	public ParserSql(String f) {
 		m_file = new File(f);
 		setEntites(new Hashtable<String, List<List<String>>>());
@@ -24,7 +24,7 @@ public class ParserSql {
 			}
 		}
 	}
-	public void seekEntites(BufferedReader b) throws IOException{
+	private void seekEntites(BufferedReader b) throws IOException{
 		String ligne, tmp, entite="", nom="";
 		int debut=0;
 		while ((ligne = b.readLine()) != null){
@@ -47,7 +47,7 @@ public class ParserSql {
 							debut += tmp.length()+1;
 						}
 						if (!m_entites.containsKey(entite))
-							m_entites.put(entite, new ArrayList());
+							m_entites.put(entite, new ArrayList<List<String>>());
 						
 						m_entites.get(entite).add(values);
 					}
@@ -64,7 +64,8 @@ public class ParserSql {
 				ligne = b.readLine();
 				tmp = ligne.toLowerCase();
 				if (tmp != null && tmp.contains("primary key"))
-					setPrimaryKey(m_entites.get(entite), showIndex(ligne));
+					setPrimaryKey(m_entites.get(entite), 
+							ligne.substring(ligne.indexOf("(")+1, ligne.indexOf(")")));
 				else if (tmp != null && tmp.contains("foreign key"))
 					setForeignKey(ligne, entite);
 			}
@@ -79,7 +80,7 @@ public class ParserSql {
 		}
 	}
 	private void setForeignKey(String ligne, String entite){
-		String cle = showIndex(ligne);
+		String cle = ligne.substring(ligne.indexOf("(")+1, ligne.indexOf(")"));
 		for (List<String> lst : m_entites.get(entite)){
 			if (lst.contains(cle)){
 				lst.add("foreign");
@@ -106,18 +107,12 @@ public class ParserSql {
 					++i;
 				}
 				if (resultat.toLowerCase().equals("constraint"))
-					 return showIndex(ligne);
+					 return ligne.substring(ligne.indexOf("(")+1, ligne.indexOf(")"));;
 			}
 			else
 				return resultat;
 		}
 		
-		return resultat;
-	}
-	private String showIndex(String ligne){
-		String resultat="";
-		resultat = ligne.substring(ligne.indexOf("(")+1, ligne.indexOf(")"));
-
 		return resultat;
 	}
 	public Hashtable<String, List<List<String>>> getEntites() {
