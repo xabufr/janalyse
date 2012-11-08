@@ -65,6 +65,7 @@ public class McdGraph extends JPanel{
 	private boolean m_isMoving, m_isSaved;
 	private File m_file;
 	private SelectionMultiple m_selectMulti;
+	private double m_zoom;
 	
 	public McdGraph(FenetrePrincipale fenPrinc) {
 		m_fenetrePrincipale = fenPrinc;
@@ -91,6 +92,7 @@ public class McdGraph extends JPanel{
 		m_copie = new ArrayList<McdComposentGraphique>();
 		m_isMoving = false;
 		m_isSaved=false;
+		m_zoom=1.0;
 		m_deltaSelect = new ArrayList<Point>();
 		setFile(null);
 		
@@ -100,9 +102,10 @@ public class McdGraph extends JPanel{
 		saveAnnulerModification();
 	}
 	public void paintComponent(Graphics g){
+		((Graphics2D) g).scale(m_zoom, m_zoom);
 		CardinaliteGraph.resetCompteurLettre();
 		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		g.fillRect(0, 0, (int)(this.getWidth()/m_zoom), (int)(this.getHeight()/m_zoom));
 		
 		Point min = new Point(0,0), max = new Point(0,0);
 
@@ -213,7 +216,7 @@ public class McdGraph extends JPanel{
 				}
 			}
 			setPreferredSize(nouvelleDim);
-			m_fenetrePrincipale.updateScrollBar();
+			revalidate();
 		}			
 		
 		//affichage commentaire
@@ -299,7 +302,7 @@ public class McdGraph extends JPanel{
 				EntiteGraph eg = new EntiteGraph();
 				m_lastEg=eg;
 				eg.setEntite(new Entite("Entite"+(m_last++)));
-				eg.setPosition(e.getPoint());
+				eg.setPosition(transformToLocal(e.getPoint()));
 				eg.setMcd(McdGraph.this);
 				m_components.add(eg);
 				m_componentsSecond.add(eg);
@@ -332,6 +335,7 @@ public class McdGraph extends JPanel{
 		}
 	}
 	private class McdGraphStateInsertCommentaire extends McdGraphStateInsert{
+		private CommentaireGraph m_lastCom=null;
 		public void mouseClicked(MouseEvent arg0) {			
 		}
 		public void mouseEntered(MouseEvent arg0) {			
@@ -339,11 +343,18 @@ public class McdGraph extends JPanel{
 		public void mouseExited(MouseEvent arg0) {			
 		}
 		public void mousePressed(MouseEvent arg0) {
-			CommentaireGraph com = new CommentaireGraph();
-			com.setMcd(McdGraph.this);
-			com.setPosition(arg0.getPoint());
-			m_components.add(com);
-			m_componentsFirst.add(com);
+			if(arg0.getClickCount()==1){
+				CommentaireGraph com = new CommentaireGraph();
+				m_lastCom=com;
+				com.setMcd(McdGraph.this);
+				com.setPosition(transformToLocal(arg0.getPoint()));
+				m_components.add(com);
+				m_componentsFirst.add(com);
+			}
+			else
+				new FenetreEditionCommentaire(McdGraph.this, m_lastCom).setVisible(true);
+			repaint();
+			saveAnnulerModification();
 		}
 		public void mouseReleased(MouseEvent arg0) {			
 		}
@@ -377,7 +388,7 @@ public class McdGraph extends JPanel{
 				RelationGraph eg = new RelationGraph();
 				m_lastRg=eg;
 				eg.setRelation(new Relation("Relation"+(m_last++)));
-				eg.setPosition(e.getPoint());
+				eg.setPosition(transformToLocal(e.getPoint()));
 				eg.setMcd(McdGraph.this);
 				m_components.add(eg);
 				m_componentsSecond.add(eg);
@@ -443,8 +454,9 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
+			Point p = transformToLocal(e.getPoint());
 			for(McdComposentGraphique component : m_components){
-				if(((FormeGeometrique)component).contient(e.getPoint())){
+				if(((FormeGeometrique)component).contient(p)){
 					if(component.isLinkable()){
 						setMcdComposentGraphiquetFocus(component);
 						m_objects[m_current++] = component;
@@ -552,7 +564,7 @@ public class McdGraph extends JPanel{
 			Contrainte cont = new Contrainte(ContrainteType.X);
 			
 			contG.setContrainte(cont);
-			contG.setPosition(e.getPoint());
+			contG.setPosition(transformToLocal(e.getPoint()));
 			contG.setMcd(McdGraph.this);
 			
 			m_components.add(contG);
@@ -607,7 +619,7 @@ public class McdGraph extends JPanel{
 			Heritage her = new Heritage(HeritageType.XT);
 			
 			herG.setHeritage(her);
-			herG.setPosition(e.getPoint());
+			herG.setPosition(transformToLocal(e.getPoint()));
 			herG.setMcd(McdGraph.this);
 			
 			m_components.add(herG);
@@ -670,6 +682,7 @@ public class McdGraph extends JPanel{
 		public void mousePressed(MouseEvent e) {
 			requestFocusInWindow();
 			Boolean found=false;
+			Point pos = transformToLocal(e.getPoint());
 			if ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0){
 				for (McdComposentGraphique c : m_components){
 					if (!(c instanceof CardinaliteGraph) && ((FormeGeometrique)c).contient(e.getPoint())){
@@ -680,7 +693,7 @@ public class McdGraph extends JPanel{
 				}
 			}
 			for(McdComposentGraphique component : m_componentsSecond){
-				if(((FormeGeometrique)component).contient(e.getPoint())){
+				if(((FormeGeometrique)component).contient(pos)){
 					found=true;
 					if(!m_focus.contains(component)){
 						setMcdComposentGraphiquetFocus(null);
@@ -692,7 +705,7 @@ public class McdGraph extends JPanel{
 			}
 			if(!found){
 				for(McdComposentGraphique component : m_componentsFirst){
-					if(((FormeGeometrique)component).contient(e.getPoint())){
+					if(((FormeGeometrique)component).contient(pos)){
 						found=true;
 						if(!m_focus.contains(component)){
 							setMcdComposentGraphiquetFocus(null);
@@ -706,7 +719,7 @@ public class McdGraph extends JPanel{
 				if(!found){
 					m_selectMulti.resetList();
 					m_selectMulti.setTrace(true);
-					m_selectMulti.setDepart(e.getPoint());
+					m_selectMulti.setDepart(transformToLocal(e.getPoint()));
 				}
 			}
 			if(m_focus.size()!=0&&e.getClickCount()==1&&found){ // 1 click -> mode move
@@ -714,18 +727,18 @@ public class McdGraph extends JPanel{
 					if(!composent.isMovable())
 						return;
 					FormeGeometrique forme = (FormeGeometrique)composent;
-					if (forme.contient(e.getPoint())){
+					if (forme.contient(pos)){
 						for (McdComposentGraphique comp : m_focus){
 							if (comp instanceof CardinaliteGraph)
 								return;
 							FormeGeometrique f = (FormeGeometrique)comp;
 							setMcdComposentGraphiquetFocus(comp);
 							Point p = new Point();
-							p.x = e.getPoint().x - f.getPosition().x;
-							if (e.getPoint().y > f.getPosition().y)
-								p.y = e.getPoint().y - f.getPosition().y;
+							p.x = pos.x - f.getPosition().x;
+							if (pos.y > f.getPosition().y)
+								p.y = pos.y - f.getPosition().y;
 							else
-								p.y = e.getPoint().y - f.getPosition().y;
+								p.y = pos.y - f.getPosition().y;
 							m_deltaSelect.add(p);
 							m_isMoving=true;
 							saveAnnulerModification();
@@ -784,16 +797,16 @@ public class McdGraph extends JPanel{
 					if (composent instanceof CardinaliteGraph)
 						return;
 					FormeGeometrique forme = (FormeGeometrique)composent;
-					Point tmp = new Point();
-						tmp.x = e.getPoint().x - m_deltaSelect.get(i).x;
-						tmp.y = e.getPoint().y - m_deltaSelect.get(i).y;
+					Point tmp = new Point(transformToLocal(e.getPoint()));
+						tmp.x -= m_deltaSelect.get(i).x;
+						tmp.y -= m_deltaSelect.get(i).y;
 					forme.setPosition(tmp);
 					++i;
 				}
 			}
 			
 			if (m_selectMulti.isTrace()){
-				m_selectMulti.setPosCurseur(e.getPoint());
+				m_selectMulti.setPosCurseur(transformToLocal(e.getPoint()));
 				m_selectMulti.setDraw(true);
 			}
 			repaint();
@@ -1335,5 +1348,43 @@ public class McdGraph extends JPanel{
 		
 		p.y = old+(font.getHeight()*j);
 		g.drawString(lg, p.x, p.y);
+	}
+	public double getZoom() {
+		return m_zoom;
+	}
+	public void setZoom(double zoom) {
+		m_zoom = zoom;
+		repaint();
+	}
+	public void resetZoom(){
+		m_zoom=1.0;
+		repaint();
+	}
+	public void zoomer(){
+		m_zoom*=2;
+		repaint();
+		revalidate();
+	}
+	public void dezoomer(){
+		m_zoom/=2;
+		repaint();
+		revalidate();
+	}
+	private Point transformToLocal(Point p){
+		if(p==null)
+			return null;
+		Point ret = new Point(p);
+		ret.x/=m_zoom;
+		ret.y/=m_zoom;
+		return ret;
+	}
+	public Point getMousePosition(){
+		return transformToLocal(super.getMousePosition());
+	}
+	public Dimension getPreferredSize(){
+		Dimension ret = (Dimension) super.getPreferredSize().clone();
+		ret.width*=m_zoom;
+		ret.height*=m_zoom;
+		return ret;
 	}
 }

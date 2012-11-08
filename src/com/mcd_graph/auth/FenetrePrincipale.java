@@ -349,6 +349,31 @@ public class FenetrePrincipale {
 		m_mntmRefaire.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mnEdition.add(m_mntmRefaire);
 		
+		JMenuItem mntmZoomer = new JMenuItem("Zoomer");
+		mntmZoomer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd!=null){
+					m_mcd.zoomer();
+				}
+			}
+		});
+		
+		JSeparator separator_7 = new JSeparator();
+		mnEdition.add(separator_7);
+		mntmZoomer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK));
+		mnEdition.add(mntmZoomer);
+		
+		JMenuItem mntmDzoomer = new JMenuItem("Dézoomer");
+		mntmDzoomer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(m_mcd!=null){
+					m_mcd.dezoomer();
+				}
+			}
+		});
+		mntmDzoomer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK));
+		mnEdition.add(mntmDzoomer);
+		
 		JSeparator separator_3 = new JSeparator();
 		mnEdition.add(separator_3);
 		
@@ -722,15 +747,6 @@ public class FenetrePrincipale {
 	public void createNewMcd(McdGraph mcd){
 		m_mcdContener.addTab("", new JScrollPane(mcd));
 		updateMcdNames();
-	}
-	public void updateScrollBar(){
-		int nb = m_mcdContener.getTabCount();
-		for(int i=0;i<nb;++i){
-			JScrollPane sp = (JScrollPane) m_mcdContener.getComponentAt(i);
-			if(sp.getViewport().getView()==m_mcd){
-				sp.updateUI();
-			}
-		}
 	}
 	public void updateMcdNames(){
 		int nb = m_mcdContener.getTabCount();

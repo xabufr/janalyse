@@ -29,7 +29,10 @@ public class ExportPng {
 				mcd.getPreferredSize().width+1, mcd.getPreferredSize().height+1, BufferedImage.TYPE_INT_RGB);
 		
 		Graphics2D graphic = outImage.createGraphics();
+		double z = mcd.getZoom();
+		mcd.resetZoom();
 		mcd.paint(graphic);
+		mcd.setZoom(z);
 		return outImage;
 	}
 }
