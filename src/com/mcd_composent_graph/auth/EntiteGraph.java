@@ -36,7 +36,8 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 		return m_geometrie.getRectangle();
 	}
 	public void setRectangle(Rectangle r){
-		m_geometrie.setRectangle(r);
+		if(r!=null)
+			m_geometrie.setRectangle(r);
 	}
 	public Point getPosition(){
 		return m_geometrie.getPosition();

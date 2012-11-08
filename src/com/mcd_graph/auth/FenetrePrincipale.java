@@ -40,7 +40,6 @@ import com.mcd_composent_graph.auth.HeritageGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.RelationGraph;
 import com.mld.auth.MLDPanel;
-import com.mld.auth.MldLog;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
@@ -59,6 +58,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.JSplitPane;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JSlider;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class FenetrePrincipale {
 	private McdGraph m_mcd;
@@ -78,6 +80,7 @@ public class FenetrePrincipale {
 	private JButton m_btnMld;
 	private JButton m_btnDico;
 	private JButton m_boutonInsertionCommentaire;
+	private JSlider m_zoom;
 	
 	public FenetrePrincipale() {
 		m_stateButtons = new ArrayList<JButton>();
@@ -199,14 +202,26 @@ public class FenetrePrincipale {
 		mntmOuvrir.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
 		mntmOuvrir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				createNewMcd();
-				m_mcdContener.setSelectedIndex(m_mcdContener.getComponents().length-1);
-				new Chargement(m_mcd);
-				updateMcdNames();
-				m_mcd.repaint();
+				McdGraph newMcd = new McdGraph(FenetrePrincipale.this);
+				if(Chargement.charger(newMcd))
+				{
+					createNewMcd(newMcd);
+					m_mcdContener.setSelectedIndex(m_mcdContener.getComponents().length-1);
+					updateMcdNames();
+					//m_mcd.repaint();
+				}
 			}
 		});
 		mnFichier.add(mntmOuvrir);
+		
+		JMenuItem mntmFermer = new JMenuItem("Fermer");
+		mntmFermer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fermerMcd(m_mcd);
+			}
+		});
+		mntmFermer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK));
+		mnFichier.add(mntmFermer);
 		
 		JSeparator separator = new JSeparator();
 		mnFichier.add(separator);
@@ -352,6 +367,33 @@ public class FenetrePrincipale {
 		});
 		m_mntmRefaire.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 		mnEdition.add(m_mntmRefaire);
+		
+		JMenuItem mntmZoomer = new JMenuItem("Zoomer");
+		mntmZoomer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(m_mcd!=null){
+					m_mcd.zoomer();
+					m_zoom.setValue((int) (m_mcd.getZoom()*100));
+				}
+			}
+		});
+		
+		JSeparator separator_8 = new JSeparator();
+		mnEdition.add(separator_8);
+		mntmZoomer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK));
+		mnEdition.add(mntmZoomer);
+		
+		JMenuItem mntmDzoomer = new JMenuItem("Dézoomer");
+		mntmDzoomer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(m_mcd!=null){
+					m_mcd.dezoomer();
+					m_zoom.setValue((int) (m_mcd.getZoom()*100));
+				}
+			}
+		});
+		mntmDzoomer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK));
+		mnEdition.add(mntmDzoomer);
 		
 		JSeparator separator_3 = new JSeparator();
 		mnEdition.add(separator_3);
@@ -551,6 +593,7 @@ public class FenetrePrincipale {
 		toolBar.add(m_boutonInsertionHeritage);
 		
 		m_boutonInsertionCommentaire = new JButton("");
+		m_boutonInsertionCommentaire.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/commentaire.png")));
 		m_boutonInsertionCommentaire.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -632,6 +675,23 @@ public class FenetrePrincipale {
 		});
 		setEnabledButton(m_boutonInsertionEntite);
 		
+		m_zoom = new JSlider();
+		m_zoom.setValue(100);
+		m_zoom.setMaximumSize(new Dimension(32, 50));
+		m_zoom.setPaintLabels(true);
+		m_zoom.setMajorTickSpacing(25);
+		m_zoom.addChangeListener(new ChangeListener() {			
+			public void stateChanged(ChangeEvent arg0) {
+				if(m_mcd != null){
+					m_mcd.setZoom(m_zoom.getValue()/100.0);
+				}
+			}
+		});
+		toolBar.add(m_zoom);
+		
+		Component horizontalGlue = Box.createHorizontalGlue();
+		toolBar.add(horizontalGlue);
+		
 		m_splitPane = new JSplitPane();
 		frame.getContentPane().add(m_splitPane, BorderLayout.CENTER);
 		
@@ -666,7 +726,7 @@ public class FenetrePrincipale {
 					createNewMcd();
 					getTabs().setSelectedIndex(getTabs().getComponents().length-1);
 					
-					new Chargement(getMcd(), s);
+					Chargement.charger(getMcd(), f);
 				}
 				updateMcdNames();
 			}
@@ -721,17 +781,11 @@ public class FenetrePrincipale {
 	public void createNewMcd(){
 		McdGraph mcd = new McdGraph(this);
 		mcd.setName("Nouveau MCD");
+		createNewMcd(mcd);
+	}
+	public void createNewMcd(McdGraph mcd){
 		m_mcdContener.addTab("", new JScrollPane(mcd));
 		updateMcdNames();
-	}
-	public void updateScrollBar(){
-		int nb = m_mcdContener.getTabCount();
-		for(int i=0;i<nb;++i){
-			JScrollPane sp = (JScrollPane) m_mcdContener.getComponentAt(i);
-			if(sp.getViewport().getView()==m_mcd){
-				sp.updateUI();
-			}
-		}
 	}
 	public void updateMcdNames(){
 		int nb = m_mcdContener.getTabCount();

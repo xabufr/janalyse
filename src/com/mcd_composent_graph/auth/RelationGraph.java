@@ -32,7 +32,8 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 		return m_geometrie.getRectangle();
 	}
 	public void setRectangle(Rectangle r){
-		m_geometrie.setRectangle(r);
+		if(r!=null)
+			m_geometrie.setRectangle(r);
 	}
 	public Point getPosition(){
 		return m_geometrie.getPosition();

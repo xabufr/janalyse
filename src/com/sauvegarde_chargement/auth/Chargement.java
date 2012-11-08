@@ -33,12 +33,16 @@ import com.mcd_log.auth.HeritageType;
 import com.mcd_log.auth.ContrainteType;
 import com.utils.auth.Utils;
 
-public class Chargement{
-
-	public Chargement(McdGraph mcd) {
-	
+public class Chargement{	
+	public static boolean charger(McdGraph mcd){
 		File file = Utils.getFile4Load("xml");
-		
+		if(file==null)
+			return false;
+		charger(mcd, file);
+		return true;
+	}
+	
+	public static void charger(McdGraph mcd, File file){
 		SAXBuilder sax = new SAXBuilder();
 		try {
 			Document doc = sax.build(file);
@@ -52,35 +56,18 @@ public class Chargement{
 		} catch (JDOMException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
-	public Chargement(McdGraph mcd, String f) {	
-			File file = new File(f);
-			
-			SAXBuilder sax = new SAXBuilder();
-			try {
-				Document doc = sax.build(file);
-				if (mcd != null && doc != null){
-					charger(mcd, doc);
-					mcd.setFile(file);
-				    mcd.setSaved(true);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JDOMException e) {
-				e.printStackTrace();
-			}
-	}
-	
-	private void charger(McdGraph mcd, Document doc){
+	private static void charger(McdGraph mcd, Document doc){
 		Element racine = doc.getRootElement();
 		List<Element> entites = racine.getChild("All-entite").getChildren("Entite");
 		List<Element> relations = racine.getChild("All-relation").getChildren("Relation");
 		List<Element> cardinalites = racine.getChild("All-cardinalite").getChildren("Cardinalite");
 		List<Element> heritages = racine.getChild("All-héritage").getChildren("Héritage");
 		List<Element> contraintes = racine.getChild("All-contrainte").getChildren("Contrainte");
-		List<Element> commentaires = racine.getChild("All-commentaire").getChildren("Commentaire");
+		List<Element> commentaires = null;
+		if(racine.getChild("All-commentaire") != null)
+			commentaires = racine.getChild("All-commentaire").getChildren("Commentaire");
 		Hashtable <Integer, McdComposentGraphique> ids = new Hashtable<Integer, McdComposentGraphique>();
 		int i=0;
 
@@ -249,15 +236,17 @@ public class Chargement{
 			eg.setMcd(mcd);
 			mcd.addMcdComponents(eg);
 		}
-		for(Element commentaire : commentaires){
-			CommentaireGraph com = new CommentaireGraph();
-			com.setCommentaire(commentaire.getText());
-			Point pos = new Point();
-			pos.x = Integer.parseInt(commentaire.getAttributeValue("x"));
-			pos.y = Integer.parseInt(commentaire.getAttributeValue("y"));
-			com.setPosition(pos);
-			com.setMcd(mcd);
-			mcd.addMcdComponents(com);
+		if(commentaires!=null){
+			for(Element commentaire : commentaires){
+				CommentaireGraph com = new CommentaireGraph();
+				com.setCommentaire(commentaire.getText());
+				Point pos = new Point();
+				pos.x = Integer.parseInt(commentaire.getAttributeValue("x"));
+				pos.y = Integer.parseInt(commentaire.getAttributeValue("y"));
+				com.setPosition(pos);
+				com.setMcd(mcd);
+				mcd.addMcdComponents(com);
+			}
 		}
 	}
 }
