@@ -65,7 +65,9 @@ public class Chargement{
 		List<Element> cardinalites = racine.getChild("All-cardinalite").getChildren("Cardinalite");
 		List<Element> heritages = racine.getChild("All-héritage").getChildren("Héritage");
 		List<Element> contraintes = racine.getChild("All-contrainte").getChildren("Contrainte");
-		List<Element> commentaires = racine.getChild("All-commentaire").getChildren("Commentaire");
+		List<Element> commentaires = null;
+		if(racine.getChild("All-commentaire") != null)
+			commentaires = racine.getChild("All-commentaire").getChildren("Commentaire");
 		Hashtable <Integer, McdComposentGraphique> ids = new Hashtable<Integer, McdComposentGraphique>();
 		int i=0;
 
@@ -234,15 +236,17 @@ public class Chargement{
 			eg.setMcd(mcd);
 			mcd.addMcdComponents(eg);
 		}
-		for(Element commentaire : commentaires){
-			CommentaireGraph com = new CommentaireGraph();
-			com.setCommentaire(commentaire.getText());
-			Point pos = new Point();
-			pos.x = Integer.parseInt(commentaire.getAttributeValue("x"));
-			pos.y = Integer.parseInt(commentaire.getAttributeValue("y"));
-			com.setPosition(pos);
-			com.setMcd(mcd);
-			mcd.addMcdComponents(com);
+		if(commentaires!=null){
+			for(Element commentaire : commentaires){
+				CommentaireGraph com = new CommentaireGraph();
+				com.setCommentaire(commentaire.getText());
+				Point pos = new Point();
+				pos.x = Integer.parseInt(commentaire.getAttributeValue("x"));
+				pos.y = Integer.parseInt(commentaire.getAttributeValue("y"));
+				com.setPosition(pos);
+				com.setMcd(mcd);
+				mcd.addMcdComponents(com);
+			}
 		}
 	}
 }
