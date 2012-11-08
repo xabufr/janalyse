@@ -1361,6 +1361,7 @@ public class McdGraph extends JPanel{
 		RelationGraph relationGraph;
 		CardinaliteGraph cardinaliteGraph;
 		Point lastPoint = new Point();
+		Point posRelation = new Point();
 		int size = 0;
 		while(entites.hasMoreElements()){
 			entite = new Entite((String)entites.nextElement());
@@ -1391,8 +1392,8 @@ public class McdGraph extends JPanel{
 				size = ((EntiteGraph)m_components.get(m_components.size()-1)).getRectangle().width;
 				entiteGraph.setPosition(new Point(lastPoint.x+size+50,10));
 			}
-			m_components.add(entiteGraph);
-			m_componentsSecond.add(entiteGraph);
+			entiteGraph.setMcd(this);
+			addMcdComponents(entiteGraph);
 		}
 		entites = relations.keys();
 		while (entites.hasMoreElements()){
@@ -1400,6 +1401,8 @@ public class McdGraph extends JPanel{
 			relationGraph = new RelationGraph();
 			cardinaliteGraph = new CardinaliteGraph();
 			relationGraph.setRelation(new Relation(nom+"_"+relations.get(nom)));
+			relationGraph.setMcd(this);
+			addMcdComponents(relationGraph);
 			cardinaliteGraph.setCardinalite(new Cardinalite());
 			cardinaliteGraph.getCardinalite().setMax(1);
 			cardinaliteGraph.getCardinalite().setMin(1);
@@ -1409,8 +1412,7 @@ public class McdGraph extends JPanel{
 					if (((EntiteGraph)c).getEntite().getName().equals(nom))
 						cardinaliteGraph.getCardinalite().setEntite(((EntiteGraph)c).getEntite());
 			cardinaliteGraph.setMcd(this);
-			m_components.add(cardinaliteGraph);
-			m_componentsFirst.add(cardinaliteGraph);
+			addMcdComponents(cardinaliteGraph);
 			cardinaliteGraph = new CardinaliteGraph();
 			cardinaliteGraph.setCardinalite(new Cardinalite());
 			cardinaliteGraph.getCardinalite().setMax(-1);
@@ -1420,11 +1422,8 @@ public class McdGraph extends JPanel{
 				if (c instanceof EntiteGraph)
 					if (((EntiteGraph)c).getEntite().getName().equals(relations.get(nom)))
 						cardinaliteGraph.getCardinalite().setEntite(((EntiteGraph)c).getEntite());
-			m_components.add(cardinaliteGraph);
-			m_componentsFirst.add(cardinaliteGraph);
-			
-			m_components.add(relationGraph);
-			m_componentsSecond.add(relationGraph);
+			cardinaliteGraph.setMcd(this);
+			addMcdComponents(cardinaliteGraph);
 		}
 	}
 	public double getZoom() {
