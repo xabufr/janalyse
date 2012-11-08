@@ -1079,6 +1079,7 @@ public class McdGraph extends JPanel{
 				EntiteGraph eg = new EntiteGraph();
 				eg.setEntite(e);
 				eg.setPosition(((EntiteGraph)from.get(key)).getPosition());
+				eg.setDimension(((EntiteGraph) from.get(key)).getDimension());
 				tmp.put(e, eg);
 				correspondances.put(key, e);
 			}
@@ -1087,6 +1088,7 @@ public class McdGraph extends JPanel{
 				RelationGraph rg = new RelationGraph();
 				rg.setRelation(r);
 				rg.setPosition(((RelationGraph)from.get(key)).getPosition());
+				rg.setDimension(((RelationGraph)from.get(key)).getDimension());
 				tmp.put(r, rg);
 				correspondances.put(key, r);
 			}
