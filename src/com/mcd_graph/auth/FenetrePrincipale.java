@@ -206,6 +206,15 @@ public class FenetrePrincipale {
 		});
 		mnFichier.add(mntmOuvrir);
 		
+		JMenuItem mntmFermer = new JMenuItem("Fermer");
+		mntmFermer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fermerMcd(m_mcd);
+			}
+		});
+		mntmFermer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK));
+		mnFichier.add(mntmFermer);
+		
 		JSeparator separator = new JSeparator();
 		mnFichier.add(separator);
 		
