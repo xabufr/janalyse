@@ -197,11 +197,14 @@ public class FenetrePrincipale {
 		mntmOuvrir.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
 		mntmOuvrir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				createNewMcd();
-				m_mcdContener.setSelectedIndex(m_mcdContener.getComponents().length-1);
-				new Chargement(m_mcd);
-				updateMcdNames();
-				m_mcd.repaint();
+				McdGraph newMcd = new McdGraph(FenetrePrincipale.this);
+				if(Chargement.charger(newMcd))
+				{
+					createNewMcd(newMcd);
+					m_mcdContener.setSelectedIndex(m_mcdContener.getComponents().length-1);
+					updateMcdNames();
+					//m_mcd.repaint();
+				}
 			}
 		});
 		mnFichier.add(mntmOuvrir);
@@ -659,7 +662,7 @@ public class FenetrePrincipale {
 					createNewMcd();
 					getTabs().setSelectedIndex(getTabs().getComponents().length-1);
 					
-					new Chargement(getMcd(), s);
+					Chargement.charger(getMcd(), f);
 				}
 				updateMcdNames();
 			}
@@ -714,6 +717,9 @@ public class FenetrePrincipale {
 	public void createNewMcd(){
 		McdGraph mcd = new McdGraph(this);
 		mcd.setName("Nouveau MCD");
+		createNewMcd(mcd);
+	}
+	public void createNewMcd(McdGraph mcd){
 		m_mcdContener.addTab("", new JScrollPane(mcd));
 		updateMcdNames();
 	}
