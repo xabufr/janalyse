@@ -57,6 +57,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.JSplitPane;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class FenetrePrincipale {
 	private McdGraph m_mcd;
@@ -76,6 +80,7 @@ public class FenetrePrincipale {
 	private JButton m_btnMld;
 	private JButton m_btnDico;
 	private JButton m_boutonInsertionCommentaire;
+	private JSlider m_zoom;
 	
 	public FenetrePrincipale() {
 		m_stateButtons = new ArrayList<JButton>();
@@ -354,6 +359,7 @@ public class FenetrePrincipale {
 			public void actionPerformed(ActionEvent arg0) {
 				if(m_mcd!=null){
 					m_mcd.zoomer();
+					m_zoom.setValue((int) (m_mcd.getZoom()*100));
 				}
 			}
 		});
@@ -368,6 +374,7 @@ public class FenetrePrincipale {
 			public void actionPerformed(ActionEvent e) {
 				if(m_mcd!=null){
 					m_mcd.dezoomer();
+					m_zoom.setValue((int) (m_mcd.getZoom()*100));
 				}
 			}
 		});
@@ -572,6 +579,7 @@ public class FenetrePrincipale {
 		toolBar.add(m_boutonInsertionHeritage);
 		
 		m_boutonInsertionCommentaire = new JButton("");
+		m_boutonInsertionCommentaire.setIcon(new ImageIcon(FenetrePrincipale.class.getResource("/ressources/commentaire.png")));
 		m_boutonInsertionCommentaire.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -652,6 +660,23 @@ public class FenetrePrincipale {
 			}
 		});
 		setEnabledButton(m_boutonInsertionEntite);
+		
+		m_zoom = new JSlider();
+		m_zoom.setValue(100);
+		m_zoom.setMaximumSize(new Dimension(32, 50));
+		m_zoom.setPaintLabels(true);
+		m_zoom.setMajorTickSpacing(25);
+		m_zoom.addChangeListener(new ChangeListener() {			
+			public void stateChanged(ChangeEvent arg0) {
+				if(m_mcd != null){
+					m_mcd.setZoom(m_zoom.getValue()/100.0);
+				}
+			}
+		});
+		toolBar.add(m_zoom);
+		
+		Component horizontalGlue = Box.createHorizontalGlue();
+		toolBar.add(horizontalGlue);
 		
 		m_splitPane = new JSplitPane();
 		frame.getContentPane().add(m_splitPane, BorderLayout.CENTER);

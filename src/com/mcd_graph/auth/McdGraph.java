@@ -1353,6 +1353,12 @@ public class McdGraph extends JPanel{
 		return m_zoom;
 	}
 	public void setZoom(double zoom) {
+		if(m_zoom>1.0)
+			m_zoom=1.0;
+		if(m_zoom==0.0)
+			m_zoom = 0.05;
+		if(m_zoom<0)
+			m_zoom = 1.0;
 		m_zoom = zoom;
 		repaint();
 	}
@@ -1362,6 +1368,8 @@ public class McdGraph extends JPanel{
 	}
 	public void zoomer(){
 		m_zoom*=2;
+		if(m_zoom>1.0)
+			m_zoom=1.0;
 		repaint();
 		revalidate();
 	}
