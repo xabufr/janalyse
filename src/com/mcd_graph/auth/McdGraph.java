@@ -1126,6 +1126,10 @@ public class McdGraph extends JPanel{
 					Entite nouveau = (Entite) correspondances.get(e);
 					h.addEnfant(nouveau);
 				}
+				if(h.getMere()!=null){
+					Entite nmere = (Entite) correspondances.get(h.getMere());
+					h.setMere(nmere);
+				}
 				
 				HeritageGraph hg = new HeritageGraph();
 				hg.setPosition(((HeritageGraph)from.get(key)).getPosition());

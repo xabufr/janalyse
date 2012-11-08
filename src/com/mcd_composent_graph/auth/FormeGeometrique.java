@@ -37,6 +37,8 @@ class FormeGeometriqueRectangle implements FormeGeometrique{
 		return m_rect;
 	}
 	public Boolean contient(Point p) {
+		if(p==null)
+			return false;
 		return m_rect.contains(p);
 	}
 }
