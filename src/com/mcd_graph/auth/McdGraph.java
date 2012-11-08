@@ -44,6 +44,8 @@ import com.mcd_log.auth.Contrainte;
 import com.mcd_log.auth.ContrainteType;
 import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.HeritageType;
+import com.mcd_log.auth.Propriete;
+import com.mcd_log.auth.ProprieteTypeE;
 import com.mcd_log.auth.Relation;
 import com.mcd_log.auth.Entite;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
@@ -1316,5 +1318,81 @@ public class McdGraph extends JPanel{
 		
 		p.y = old+(font.getHeight()*j);
 		g.drawString(lg, p.x, p.y);
+	}
+	public void importSql(Hashtable<String, List<List<String>>> lst_entites){
+		Enumeration<String> entites = lst_entites.keys();
+		List<List<String>> props;
+		Hashtable<String, String> relations = new Hashtable<String, String>();
+		Propriete prop;
+		Entite entite;
+		EntiteGraph entiteGraph;
+		RelationGraph relationGraph;
+		CardinaliteGraph cardinaliteGraph;
+		Point lastPoint = new Point();
+		int size = 0;
+		while(entites.hasMoreElements()){
+			entite = new Entite((String)entites.nextElement());
+			props = lst_entites.get(entite.getName());
+			for (List<String> values : props){
+				if (values.get(values.size()-1).matches("foreign_.*")){
+					relations.put(entite.getName(), values.get(values.size()-1).substring(8));
+					continue;
+				}
+				prop = new Propriete(values.get(0), ProprieteTypeE.valueOf(values.get(1)));
+				if (values.contains("primary"))
+					prop.setClePrimaire(true);
+				if (values.get(2).toLowerCase().equals("null"))
+					prop.setNull(true);
+				if (values.size()>3){
+					if (values.get(3).toLowerCase().contains("identity")
+							|| values.get(3).toLowerCase().contains("auto_increment"))
+						prop.setAutoIncrement(true);
+				}
+				entite.addPropriete(prop);
+			}
+			entiteGraph = new EntiteGraph();
+			entiteGraph.setEntite(entite);
+			if (m_componentsSecond.size() == 0)
+				entiteGraph.setPosition(new Point(10,10));
+			else{
+				lastPoint = ((EntiteGraph)m_components.get(m_components.size()-1)).getPosition();
+				size = ((EntiteGraph)m_components.get(m_components.size()-1)).getRectangle().width;
+				entiteGraph.setPosition(new Point(lastPoint.x+size+50,10));
+			}
+			m_components.add(entiteGraph);
+			m_componentsSecond.add(entiteGraph);
+		}
+		entites = relations.keys();
+		while (entites.hasMoreElements()){
+			String nom = (String)entites.nextElement();
+			relationGraph = new RelationGraph();
+			cardinaliteGraph = new CardinaliteGraph();
+			relationGraph.setRelation(new Relation(nom+"_"+relations.get(nom)));
+			cardinaliteGraph.setCardinalite(new Cardinalite());
+			cardinaliteGraph.getCardinalite().setMax(1);
+			cardinaliteGraph.getCardinalite().setMin(1);
+			cardinaliteGraph.getCardinalite().setRelation(relationGraph.getRelation());
+			for (McdComposentGraphique c : m_componentsSecond)
+				if (c instanceof EntiteGraph)
+					if (((EntiteGraph)c).getEntite().getName().equals(nom))
+						cardinaliteGraph.getCardinalite().setEntite(((EntiteGraph)c).getEntite());
+			cardinaliteGraph.setMcd(this);
+			m_components.add(cardinaliteGraph);
+			m_componentsFirst.add(cardinaliteGraph);
+			cardinaliteGraph = new CardinaliteGraph();
+			cardinaliteGraph.setCardinalite(new Cardinalite());
+			cardinaliteGraph.getCardinalite().setMax(-1);
+			cardinaliteGraph.getCardinalite().setMin(0);
+			cardinaliteGraph.getCardinalite().setRelation(relationGraph.getRelation());
+			for (McdComposentGraphique c : m_componentsSecond)
+				if (c instanceof EntiteGraph)
+					if (((EntiteGraph)c).getEntite().getName().equals(relations.get(nom)))
+						cardinaliteGraph.getCardinalite().setEntite(((EntiteGraph)c).getEntite());
+			m_components.add(cardinaliteGraph);
+			m_componentsFirst.add(cardinaliteGraph);
+			
+			m_components.add(relationGraph);
+			m_componentsSecond.add(relationGraph);
+		}
 	}
 }

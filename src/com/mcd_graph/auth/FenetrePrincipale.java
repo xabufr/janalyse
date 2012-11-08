@@ -33,12 +33,14 @@ import com.event.auth.QuitListener;
 import com.export.auth.ExportSql;
 import com.export.auth.ExportPng;
 import com.export.auth.ExporterHTML;
+import com.export.auth.ParserSql;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
 import com.mcd_composent_graph.auth.HeritageGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
 import com.mcd_composent_graph.auth.RelationGraph;
 import com.mld.auth.MLDPanel;
+import com.mld.auth.MldLog;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
@@ -265,6 +267,20 @@ public class FenetrePrincipale {
 			}
 		});
 		mnFichier.add(mntmExporterEnSql);
+		
+		JSeparator separator_7 = new JSeparator();
+		mnFichier.add(separator_7);
+		
+		JMenuItem mntmImportationSql = new JMenuItem("Importation SQL");
+		mntmImportationSql.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ParserSql.parse();
+				createNewMcd();
+				m_mcd.importSql(ParserSql.getEntites());
+				m_mcd.repaint();
+			}
+		});
+		mnFichier.add(mntmImportationSql);
 		
 		JSeparator separator_1 = new JSeparator();
 		mnFichier.add(separator_1);

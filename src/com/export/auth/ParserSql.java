@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import com.utils.auth.Utils;
+
 public class ParserSql {
-	private File m_file;
-	private Hashtable<String, List<List<String>>> m_entites;
+	private static File m_file;
+	private static Hashtable<String, List<List<String>>> m_entites;
 	
-	public ParserSql(String f) {
-		m_file = new File(f);
+	public static void parse() {
+		m_file = Utils.getFile4Load("sql");
 		setEntites(new Hashtable<String, List<List<String>>>());
 		if (m_file.exists()){
 			try {
@@ -24,13 +26,13 @@ public class ParserSql {
 			}
 		}
 	}
-	private void seekEntites(BufferedReader b) throws IOException{
+	private static void seekEntites(BufferedReader b) throws IOException{
 		String ligne, tmp, entite="", nom="";
 		int debut=0;
 		while ((ligne = b.readLine()) != null){
 			tmp = ligne.toLowerCase();
 			if (tmp.matches("create table.*")){
-				tmp = showWord(13, ligne, '(');
+				tmp = showWord(13+debutLigne(tmp), ligne, '(');
 				entite = tmp;
 				while (!(ligne = b.readLine()).contains(");")){
 					List<String> values = new ArrayList<String>();
@@ -60,7 +62,7 @@ public class ParserSql {
 				}
 			}
 			else if(tmp.matches("alter table.*")){
-				entite = showWord(12, ligne, ' ');
+				entite = showWord(12+debutLigne(tmp), ligne, ' ');
 				ligne = b.readLine();
 				tmp = ligne.toLowerCase();
 				if (tmp != null && tmp.contains("primary key"))
@@ -70,37 +72,36 @@ public class ParserSql {
 					setForeignKey(ligne, entite);
 			}
 		}
-		System.out.println(m_entites);
 	}
-	private void setPrimaryKey(List<List<String>> props, String cle){
+	private static void setPrimaryKey(List<List<String>> props, String cle){
 		for (List<String> lst : props){
 			if (lst.contains(cle)){
 				lst.add("primary");
 			}
 		}
 	}
-	private void setForeignKey(String ligne, String entite){
-		String cle = ligne.substring(ligne.indexOf("(")+1, ligne.indexOf(")"));
+	private static void setForeignKey(String ligne, String entite){
 		for (List<String> lst : m_entites.get(entite)){
-			if (lst.contains(cle)){
-				lst.add("foreign");
+			if (lst.contains(ligne.substring(ligne.indexOf("(")+1, ligne.indexOf(")")))){
+				lst.add("foreign_"+showWord(ligne.indexOf(")")+13, ligne, '('));
 			}
 		}
 	}
-	private int debutLigne(String ligne){
+	private static int debutLigne(String ligne){
 		for (int i=0; i<ligne.toCharArray().length; ++i){
 			char c = ligne.toCharArray()[i];
-			if (c>='a' && c<='z'){
+			if (c>='a' && c<='z')
 				return i;
-			}
 		}
 		return 0;
 	}
-	private String showWord(int debut, String ligne, char fin){
+	private static String showWord(int debut, String ligne, char fin){
 		String resultat="";
 		for (int i=debut; i<ligne.toCharArray().length; ++i){
 			char c = ligne.toCharArray()[i];
-			if (c != ' ' && c != fin){
+			if (resultat.toLowerCase().equals("identity"))
+				return resultat += ligne.substring(i, ligne.lastIndexOf(")")+1);
+			else if (c != ' ' && c != fin){
 				resultat += c;
 				if (resultat.toLowerCase().equals("not")){
 					resultat += " ";
@@ -115,10 +116,10 @@ public class ParserSql {
 		
 		return resultat;
 	}
-	public Hashtable<String, List<List<String>>> getEntites() {
+	public static Hashtable<String, List<List<String>>> getEntites() {
 		return m_entites;
 	}
-	public void setEntites(Hashtable<String, List<List<String>>> hashtable) {
+	public static void setEntites(Hashtable<String, List<List<String>>> hashtable) {
 		m_entites = hashtable;
 	}
 

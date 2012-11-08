@@ -21,6 +21,7 @@ public class Propriete implements Cloneable{
 		setClePrimaire(false);
 		setAutoIncrement(false);
 		setNull(false);
+		setCommentaire("");
 	}
 	
 	public Propriete(String name, ProprieteTypeE proprieteType, int taille, boolean clePrimaire, boolean autoIncrement, boolean zero){
