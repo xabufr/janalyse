@@ -168,6 +168,6 @@ public class Updater {
 		}
 		return version;
 	}
-	static private int m_currentVersion = 21;
+	static private int m_currentVersion = 22;
 	static private String m_urlVersion="https://www.assembla.com/code/janalyse/git/node/blob/master/src/com/version/auth/version.xml";
 }
