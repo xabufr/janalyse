@@ -284,6 +284,7 @@ public class McdGraph extends JPanel{
 	}
 	
 	private class McdGraphStateInsertEntite extends McdGraphStateInsert{
+		private EntiteGraph m_lastEg=null;
 		public void mouseClicked(MouseEvent e) {
 			
 		}
@@ -294,13 +295,19 @@ public class McdGraph extends JPanel{
 			
 		}
 		public void mousePressed(MouseEvent e) {
-			EntiteGraph eg = new EntiteGraph();
-			eg.setEntite(new Entite("Entite"+(m_last++)));
-			eg.setPosition(e.getPoint());
-			eg.setMcd(McdGraph.this);
-			m_components.add(eg);
-			m_componentsSecond.add(eg);
-			repaint();
+			if(e.getClickCount()==1){
+				EntiteGraph eg = new EntiteGraph();
+				m_lastEg=eg;
+				eg.setEntite(new Entite("Entite"+(m_last++)));
+				eg.setPosition(e.getPoint());
+				eg.setMcd(McdGraph.this);
+				m_components.add(eg);
+				m_componentsSecond.add(eg);
+				repaint();
+			}
+			else{
+				new FenetreEditionEntite(McdGraph.this, m_lastEg).setVisible(true);
+			}
 			saveAnnulerModification();
 		}
 		public void mouseReleased(MouseEvent e) {
@@ -352,7 +359,7 @@ public class McdGraph extends JPanel{
 		}
 	}
 	private class McdGraphStateInsertRelation extends McdGraphStateInsert{
-		
+		private RelationGraph m_lastRg=null;
 		public void mouseClicked(MouseEvent e) {
 			
 		}
@@ -366,14 +373,20 @@ public class McdGraph extends JPanel{
 		}
 
 		public void mousePressed(MouseEvent e) {
-			RelationGraph eg = new RelationGraph();
-			eg.setRelation(new Relation("Relation"+(m_last++)));
-			eg.setPosition(e.getPoint());
-			eg.setMcd(McdGraph.this);
-			m_components.add(eg);
-			m_componentsSecond.add(eg);
+			if(e.getClickCount()==1){
+				RelationGraph eg = new RelationGraph();
+				m_lastRg=eg;
+				eg.setRelation(new Relation("Relation"+(m_last++)));
+				eg.setPosition(e.getPoint());
+				eg.setMcd(McdGraph.this);
+				m_components.add(eg);
+				m_componentsSecond.add(eg);
+			}
+			else
+				new FenetreEditionRelation(McdGraph.this, m_lastRg).setVisible(true);
 			repaint();
 			saveAnnulerModification();
+			
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
