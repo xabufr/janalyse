@@ -3,15 +3,12 @@ package com.mld.auth;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.List;
 
-import com.export.auth.ParserSql;
 import com.mcd_graph.auth.McdGraph;
 import com.mcd_log.auth.Cardinalite;
 import com.mcd_log.auth.Entite;
 import com.mcd_log.auth.Heritage;
 import com.mcd_log.auth.Propriete;
-import com.mcd_log.auth.ProprieteTypeE;
 import com.mcd_log.auth.Relation;
 
 public class MldLog {

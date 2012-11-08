@@ -3,11 +3,9 @@ package com.mcd_graph.auth;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.export.auth.ParserSql;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
-import com.utils.auth.Utils;
 import com.version.auth.Updater;
 
 public class mainClass {

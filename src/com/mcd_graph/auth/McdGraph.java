@@ -1361,7 +1361,6 @@ public class McdGraph extends JPanel{
 		RelationGraph relationGraph;
 		CardinaliteGraph cardinaliteGraph;
 		Point lastPoint = new Point();
-		Point posRelation = new Point();
 		int size = 0;
 		while(entites.hasMoreElements()){
 			entite = new Entite((String)entites.nextElement());
