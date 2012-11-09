@@ -23,7 +23,7 @@ import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
 import com.utils.auth.Utils;
 
-public class ContrainteGraph extends McdComposentGraphique implements FormeGeometrique{
+public class ContrainteGraph extends McdComposentGraphique implements FormeGeometrique, Collisable{
 	private Contrainte m_contrainte;
 	private List<EntiteGraph> m_entiteGraph;
 	private List<RelationGraph> m_relationGraph;
@@ -275,5 +275,27 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 	}
 	public ArrayList<Line2D> getLigneLiens(){
 		return m_lignesLiens;
+	}
+	public boolean collision() {
+		Rectangle rect1, rect2;
+		rect1 = this.getRectangle();
+		rect2 = new Rectangle();
+		int i=1;
+		for (McdComposentGraphique c : m_mcd.getMcdComponents()){
+			if (!(c instanceof Collisable))
+				continue;
+			
+			rect2 = ((Collisable)c).getRectangle();
+
+			if (rect1.x > rect2.x + rect2.width
+					|| rect1.x + rect1.width < rect2.x
+					|| rect1.y > rect2.y + rect2.height
+					|| rect1.y + rect1.height < rect2.y)
+				++i;
+		}
+		if (i == m_mcd.getMcdComponents().size())
+			return false;
+		else
+			return true;
 	}
 }

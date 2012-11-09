@@ -24,7 +24,7 @@ import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
 
-public class EntiteGraph extends McdComposentGraphique implements FormeGeometrique, CommentableComponent{
+public class EntiteGraph extends McdComposentGraphique implements FormeGeometrique, CommentableComponent, Collisable{
 	private Entite m_entite;
 	private FormeGeometriqueRectangle m_geometrie;
 	private Hashtable<Face, ArrayList<McdComposentGraphique>> m_liens;
@@ -334,5 +334,27 @@ public class EntiteGraph extends McdComposentGraphique implements FormeGeometriq
 	}
 	public String getCommentaire(){
 		return m_entite.getCommentaire();
+	}
+	public boolean collision() {
+		Rectangle rect1, rect2;
+		rect1 = this.getRectangle();
+		rect2 = new Rectangle();
+		int i=1;
+		for (McdComposentGraphique c : m_mcd.getMcdComponents()){
+			if (!(c instanceof Collisable))
+				continue;
+			
+			rect2 = ((Collisable)c).getRectangle();
+
+			if (rect1.x > rect2.x + rect2.width
+					|| rect1.x + rect1.width < rect2.x
+					|| rect1.y > rect2.y + rect2.height
+					|| rect1.y + rect1.height < rect2.y)
+				++i;
+		}
+		if (i == m_mcd.getMcdComponents().size())
+			return false;
+		else
+			return true;
 	}
 }

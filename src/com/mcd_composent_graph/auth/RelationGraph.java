@@ -20,7 +20,7 @@ import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
 
-public class RelationGraph extends McdComposentGraphique implements FormeGeometrique, CommentableComponent{
+public class RelationGraph extends McdComposentGraphique implements FormeGeometrique, CommentableComponent, Collisable{
 
 	private Relation m_relation;
 	private int m_lastPropsNumber, m_heightNom, m_widthNom;
@@ -267,5 +267,27 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 		}
 		else
 			m_relation.setCif(false);
+	}
+	public boolean collision() {
+		Rectangle rect1, rect2;
+		rect1 = this.getRectangle();
+		rect2 = new Rectangle();
+		int i=1;
+		for (McdComposentGraphique c : m_mcd.getMcdComponents()){
+			if (!(c instanceof Collisable))
+				continue;
+			
+			rect2 = ((Collisable)c).getRectangle();
+
+			if (rect1.x > rect2.x + rect2.width
+					|| rect1.x + rect1.width < rect2.x
+					|| rect1.y > rect2.y + rect2.height
+					|| rect1.y + rect1.height < rect2.y)
+				++i;
+		}
+		if (i == m_mcd.getMcdComponents().size())
+			return false;
+		else
+			return true;
 	}
 }

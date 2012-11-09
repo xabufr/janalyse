@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 
 import com.event.auth.SelectionMultiple;
 import com.mcd_composent_graph.auth.CardinaliteGraph;
+import com.mcd_composent_graph.auth.Collisable;
 import com.mcd_composent_graph.auth.CommentableComponent;
 import com.mcd_composent_graph.auth.CommentaireGraph;
 import com.mcd_composent_graph.auth.ContrainteGraph;
@@ -800,9 +801,15 @@ public class McdGraph extends JPanel{
 						return;
 					FormeGeometrique forme = (FormeGeometrique)composent;
 					Point tmp = new Point(transformToLocal(e.getPoint()));
-						tmp.x -= m_deltaSelect.get(i).x;
-						tmp.y -= m_deltaSelect.get(i).y;
+					
+					tmp.x -= m_deltaSelect.get(i).x;
+					tmp.y -= m_deltaSelect.get(i).y;
 					forme.setPosition(tmp);
+					
+					if (composent instanceof Collisable)
+						if (((Collisable)composent).collision())
+							return;
+
 					++i;
 				}
 			}
@@ -1361,7 +1368,6 @@ public class McdGraph extends JPanel{
 		RelationGraph relationGraph;
 		CardinaliteGraph cardinaliteGraph;
 		Point lastPoint = new Point();
-		Point posRelation = new Point();
 		int size = 0;
 		while(entites.hasMoreElements()){
 			entite = new Entite((String)entites.nextElement());
@@ -1425,6 +1431,9 @@ public class McdGraph extends JPanel{
 			cardinaliteGraph.setMcd(this);
 			addMcdComponents(cardinaliteGraph);
 		}
+		System.out.println(m_components);
+		System.out.println(m_componentsFirst);
+		System.out.println(m_componentsSecond);
 	}
 	public double getZoom() {
 		return m_zoom;
