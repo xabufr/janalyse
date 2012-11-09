@@ -53,6 +53,7 @@ public class Updater {
 	}
 	static public String downloadUpdate(){
 		Document xml = getVersionDocument();
+		start();
 		if(xml==null)
 			return null;
 		try {
@@ -70,26 +71,37 @@ public class Updater {
 			int currByte=0, deplacement = 0;
 			while(deplacement<length){
 				currByte = is.read(data, deplacement, data.length-deplacement);
-				if(currByte==-1)
+				if(currByte==-1||!isStarted())
 					break;
 				deplacement+=currByte;
+				setPercentComplete(deplacement*100/length);
 			}
-			if(deplacement!=length)
-				throw new IOException("Fichier non complet");
-			
-			String fichier = File.createTempFile("janalyse", null).getAbsolutePath();
 
-			FileOutputStream destinationFile = new FileOutputStream(fichier);
-			destinationFile.write(data);
-			destinationFile.flush();
-			destinationFile.close();
-			return fichier;
+			if(deplacement==length){
+				String fichier = File.createTempFile("janalyse", null).getAbsolutePath();
+	
+				FileOutputStream destinationFile = new FileOutputStream(fichier);
+				destinationFile.write(data);
+				destinationFile.flush();
+				destinationFile.close();
+			}
+			return null;
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
 		return null;
+	}
+	static public void setPercentComplete(int p){
+		synchronized (m_sync) {
+			m_avancement = p;
+		}
+	}
+	static public int getPercentComplete(){
+		synchronized (m_sync) {
+			return m_avancement;
+		}
 	}
 	static public void restart(String to){
 		restart(to, true);
@@ -168,6 +180,24 @@ public class Updater {
 		}
 		return version;
 	}
-	static private int m_currentVersion = 22;
+	public static void start(){
+		synchronized (m_sync) {
+			m_started=true;
+		}
+	}
+	public static void stop(){
+		synchronized (m_sync) {
+			m_started=false;
+		}
+	}
+	public static boolean isStarted(){
+		synchronized (m_sync) {
+			return m_started;
+		}
+	}
+	static private boolean m_started;
+	static private Object m_sync = new Object();
+	static private int m_avancement;
+	static private int m_currentVersion = 21;
 	static private String m_urlVersion="https://www.assembla.com/code/janalyse/git/node/blob/master/src/com/version/auth/version.xml";
 }
