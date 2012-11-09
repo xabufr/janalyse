@@ -46,6 +46,7 @@ import com.preferences_mcd_logique.auth.PGroupe;
 import com.sauvegarde_chargement.auth.Chargement;
 import com.ui_help.auth.APropos;
 import com.ui_help.auth.HelpDialog;
+import com.version.auth.FenetreMiseAJour;
 import com.version.auth.Updater;
 
 import java.awt.Insets;
@@ -522,14 +523,15 @@ public class FenetrePrincipale {
 		mntmMettreJours.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(Updater.hasNewVersion()){
-					String fichier = null;
+					//String fichier = null;
 					if(JOptionPane.OK_OPTION!=
 							JOptionPane.showConfirmDialog(null, 
 									"Nouvelle version disponnible, mettre à jours ?"))
 						return;
 					
-					if((fichier=Updater.downloadUpdate())!=null)
-						Updater.restart(fichier);
+					/*if((fichier=Updater.downloadUpdate())!=null)
+						Updater.restart(fichier);*/
+					new FenetreMiseAJour().setVisible(true);
 				}
 				else{
 					JOptionPane.showMessageDialog(FenetrePrincipale.this.frame, "Aucune mise à jours disponible");
