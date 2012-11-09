@@ -458,12 +458,21 @@ public class FenetrePrincipale {
 		mnMode.add(mntmInsertionHritage);
 		
 		JMenuItem mntmdition = new JMenuItem("Édition");
-		mntmdition.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD6, 0));
+		mntmdition.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD7, 0));
 		mntmdition.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				m_boutonEdition.doClick();
 			}
 		});
+		
+		JMenuItem mntmInsertionCommentaire = new JMenuItem("Insertion commentaire");
+		mntmInsertionCommentaire.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				m_boutonInsertionCommentaire.doClick();
+			}
+		});
+		mntmInsertionCommentaire.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD6, 0));
+		mnMode.add(mntmInsertionCommentaire);
 		mnMode.add(mntmdition);
 		mnEdition.add(mntmRorganiser);
 		
