@@ -208,7 +208,6 @@ public class FenetrePrincipale {
 					createNewMcd(newMcd);
 					m_mcdContener.setSelectedIndex(m_mcdContener.getComponents().length-1);
 					updateMcdNames();
-					//m_mcd.repaint();
 				}
 			}
 		});
@@ -291,8 +290,9 @@ public class FenetrePrincipale {
 			public void actionPerformed(ActionEvent arg0) {
 				ParserSql.parse();
 				createNewMcd();
+				m_mcdContener.setSelectedIndex(m_mcdContener.getComponents().length-1);
 				m_mcd.importSql(ParserSql.getEntites());
-				m_mcd.repaint();
+				updateMcdNames();
 			}
 		});
 		mnFichier.add(mntmImportationSql);

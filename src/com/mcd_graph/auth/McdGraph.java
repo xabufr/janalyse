@@ -1431,9 +1431,6 @@ public class McdGraph extends JPanel{
 			cardinaliteGraph.setMcd(this);
 			addMcdComponents(cardinaliteGraph);
 		}
-		System.out.println(m_components);
-		System.out.println(m_componentsFirst);
-		System.out.println(m_componentsSecond);
 	}
 	public double getZoom() {
 		return m_zoom;

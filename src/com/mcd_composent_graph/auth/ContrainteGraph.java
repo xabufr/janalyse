@@ -282,8 +282,10 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 		rect2 = new Rectangle();
 		int i=1;
 		for (McdComposentGraphique c : m_mcd.getMcdComponents()){
-			if (!(c instanceof Collisable))
+			if (!(c instanceof Collisable)){
+				++i;
 				continue;
+			}
 			
 			rect2 = ((Collisable)c).getRectangle();
 

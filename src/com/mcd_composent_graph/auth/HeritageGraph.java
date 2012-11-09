@@ -272,9 +272,11 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 		rect2 = new Rectangle();
 		int i=1;
 		for (McdComposentGraphique c : m_mcd.getMcdComponents()){
-			if (!(c instanceof Collisable))
+			if (!(c instanceof Collisable)){
+				++i;
 				continue;
-			
+			}
+		
 			rect2 = ((Collisable)c).getRectangle();
 
 			if (rect1.x > rect2.x + rect2.width
