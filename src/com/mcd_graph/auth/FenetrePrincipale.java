@@ -158,12 +158,15 @@ public class FenetrePrincipale {
 				case INSERT_LIEN:
 					setEnabledButton(m_boutonInsertionLien);
 					break;
+				case INSERT_COMMENTAIRE:
+					setEnabledButton(m_boutonInsertionCommentaire);
 				case INSERT_RELATION:
 					setEnabledButton(m_boutonInsertionRelation);
 					break;
 				default:
 					break;
 				}
+				m_zoom.setValue((int) (m_mcd.getZoom()*100));
 			}
 		});
 		frame.setVisible(true);
