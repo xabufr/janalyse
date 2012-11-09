@@ -194,6 +194,7 @@ public class FenetrePrincipale {
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				createNewMcd();
+				m_mcdContener.setSelectedIndex(m_mcdContener.getComponents().length-1);
 			}
 		});
 		mnFichier.add(menuItem);
