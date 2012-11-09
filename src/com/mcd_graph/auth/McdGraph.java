@@ -690,9 +690,13 @@ public class McdGraph extends JPanel{
 					if (!(c instanceof CardinaliteGraph) && ((FormeGeometrique)c).contient(e.getPoint())){
 						c.setFocus(true);
 						m_focus.add(c);
+						break;
 					}
-					
 				}
+				m_selectMulti.resetList();
+				m_selectMulti.setTrace(true);
+				m_selectMulti.setDepart(transformToLocal(e.getPoint()));
+				return;
 			}
 			for(McdComposentGraphique component : m_componentsSecond){
 				if(((FormeGeometrique)component).contient(pos)){
@@ -778,7 +782,8 @@ public class McdGraph extends JPanel{
 				setMcdComposentGraphiquetFocus(null);
 			}
 			else if(!found){//Click en dehors
-				setMcdComposentGraphiquetFocus(null);
+				if ((e.getModifiers() & KeyEvent.CTRL_MASK) == 0)
+					setMcdComposentGraphiquetFocus(null);
 			}
 			saveAnnulerModification();
 		}
@@ -787,7 +792,8 @@ public class McdGraph extends JPanel{
 			m_isMoving=false;
 			m_deltaSelect.clear();
 			if (m_selectMulti.getFocus().size() != 0)
-				m_focus = m_selectMulti.getFocus();
+				for (McdComposentGraphique c : m_selectMulti.getFocus())
+					m_focus.add(c);
 			m_selectMulti.reset();
 			repaint();
 		}
