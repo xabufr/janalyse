@@ -64,15 +64,15 @@ public class FenetreMiseAJour extends JDialog {
 				public void run() {
 					m_progressBar.setValue(Updater.getPercentComplete());
 					if(!Updater.isStarted()){
+						m_timer.cancel();
 						String fichier = downloadThread.toString();
 						if(fichier!=null){
-							Updater.restart(fichier);
 							FenetreMiseAJour.this.dispose();
 						}
-						else{
-							FenetreMiseAJour.this.dispose();
+						else{							
 							JOptionPane.showMessageDialog(FenetreMiseAJour.this, "Téléchargement interrompu", "Erreur de téléchargement", JOptionPane.ERROR_MESSAGE);
 						}
+						FenetreMiseAJour.this.dispose();
 					}
 				}
 			}, 1000, 1000);
