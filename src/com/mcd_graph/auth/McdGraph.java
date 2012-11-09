@@ -307,8 +307,7 @@ public class McdGraph extends JPanel{
 				eg.setEntite(new Entite("Entite"+(m_last++)));
 				eg.setPosition(transformToLocal(e.getPoint()));
 				eg.setMcd(McdGraph.this);
-				m_components.add(eg);
-				m_componentsSecond.add(eg);
+				addMcdComponents(eg);
 				repaint();
 			}
 			else{
@@ -317,7 +316,7 @@ public class McdGraph extends JPanel{
 			saveAnnulerModification();
 		}
 		public void mouseReleased(MouseEvent e) {
-			
+
 		}
 		public void mouseDragged(MouseEvent arg0) {
 			
@@ -832,6 +831,16 @@ public class McdGraph extends JPanel{
 					deleteMcdComposent(composent);
 				
 				m_focus.clear();
+				repaint();
+			}
+			if((e.getModifiers() & KeyEvent.CTRL_MASK) != 0&&e.getKeyCode() == KeyEvent.VK_A){
+				m_focus.clear();
+				for (McdComposentGraphique composent : m_components)
+					if (!(composent instanceof CardinaliteGraph)){
+						composent.setFocus(true);
+						m_focus.add(composent);
+					}
+				
 				repaint();
 			}
 		}
