@@ -54,8 +54,8 @@ public class Updater {
 		return iversion > m_currentVersion;
 	}
 	static public String downloadUpdate(){
-		Document xml = getVersionDocument();
 		start();
+		Document xml = getVersionDocument();
 		if(xml==null)
 			return null;
 		try {
@@ -86,16 +86,21 @@ public class Updater {
 				destinationFile.write(data);
 				destinationFile.flush();
 				destinationFile.close();
+				
 				String checksum = xml.getRootElement().getChildText("checksum");
-				if(checksum.toLowerCase().trim().equals(Utils.checksum(new File(fichier))))
+				if(checksum.equals(Utils.checksum(new File(fichier)))){
+					stop();
 					return fichier;
+				}
 			}
+			stop();
 			return null;
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
+		stop();
 		return null;
 	}
 	static public void setPercentComplete(int p){
@@ -203,6 +208,6 @@ public class Updater {
 	static private boolean m_started;
 	static private Object m_sync = new Object();
 	static private int m_avancement;
-	static private int m_currentVersion = 23;
+	static private int m_currentVersion = 22;
 	static private String m_urlVersion="https://www.assembla.com/code/janalyse/git/node/blob/master/version.xml";
 }
