@@ -15,6 +15,8 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
+import com.utils.auth.Utils;
+
 public class Updater {
 	static private Document getVersionDocument(){
 		try {
@@ -84,6 +86,9 @@ public class Updater {
 				destinationFile.write(data);
 				destinationFile.flush();
 				destinationFile.close();
+				String checksum = xml.getRootElement().getChildText("checksum");
+				if(checksum.toLowerCase().trim().equals(Utils.checksum(new File(fichier))))
+					return fichier;
 			}
 			return null;
 		} catch (MalformedURLException e) {
@@ -198,6 +203,6 @@ public class Updater {
 	static private boolean m_started;
 	static private Object m_sync = new Object();
 	static private int m_avancement;
-	static private int m_currentVersion = 21;
+	static private int m_currentVersion = 23;
 	static private String m_urlVersion="https://www.assembla.com/code/janalyse/git/node/blob/master/src/com/version/auth/version.xml";
 }

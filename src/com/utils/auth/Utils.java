@@ -1,7 +1,13 @@
 package com.utils.auth;
 
 import java.awt.Point;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
@@ -89,5 +95,38 @@ public class Utils {
 				return null;
 		}
 		return f;
+	}
+	static public String checksum(File f){
+		
+		try {
+			FileInputStream is = new FileInputStream(f);
+			MessageDigest digest = MessageDigest.getInstance("MD5");
+			
+			int length = (int) f.length();
+			byte[] bytes = new byte[length];
+			new BufferedInputStream(is).read(bytes, 0, length);
+			is.close();
+
+			byte[] bDigest = digest.digest(bytes);
+			String sDigest = "",
+					HEX_DIGIT="0123456789abcdef";
+			for(int i=0;i<bDigest.length;++i){
+				int b = (int) (bDigest[i] & 0xFF);
+				sDigest+=HEX_DIGIT.charAt(b>>>4);
+				sDigest+=HEX_DIGIT.charAt(b & 0xF);
+			}
+			return sDigest;
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
