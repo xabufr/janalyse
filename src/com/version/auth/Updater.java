@@ -204,5 +204,5 @@ public class Updater {
 	static private Object m_sync = new Object();
 	static private int m_avancement;
 	static private int m_currentVersion = 23;
-	static private String m_urlVersion="https://www.assembla.com/code/janalyse/git/node/blob/master/src/com/version/auth/version.xml";
+	static private String m_urlVersion="https://www.assembla.com/code/janalyse/git/node/blob/master/version.xml";
 }
