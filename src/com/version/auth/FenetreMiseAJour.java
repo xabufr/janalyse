@@ -67,6 +67,7 @@ public class FenetreMiseAJour extends JDialog {
 						m_timer.cancel();
 						String fichier = downloadThread.toString();
 						if(fichier!=null){
+							Updater.restart(fichier);
 							FenetreMiseAJour.this.dispose();
 						}
 						else{							
@@ -75,7 +76,7 @@ public class FenetreMiseAJour extends JDialog {
 						FenetreMiseAJour.this.dispose();
 					}
 				}
-			}, 1000, 1000);
+			}, 1000, 100);
 			contentPanel.add(m_progressBar, "cell 0 1");
 		}
 		{
