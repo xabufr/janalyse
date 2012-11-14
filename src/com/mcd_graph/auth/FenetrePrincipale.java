@@ -29,7 +29,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import com.dico.auth.DicoPanel;
-import com.event.auth.QuitListener;
 import com.export.auth.ExportSql;
 import com.export.auth.ExportPng;
 import com.export.auth.ExporterHTML;
@@ -303,7 +302,12 @@ public class FenetrePrincipale {
 		mnFichier.add(separator_1);
 		
 		JMenuItem mntmQuitter = new JMenuItem("Quitter");
-		mntmQuitter.addActionListener(new QuitListener(this));
+		mntmQuitter.addActionListener(new ActionListener() {
+	
+			public void actionPerformed(ActionEvent arg0) {
+				quitter();
+			}
+		});
 		mntmQuitter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_MASK));
 		mnFichier.add(mntmQuitter);
 		
