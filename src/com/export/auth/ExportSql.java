@@ -15,9 +15,8 @@ import com.mld.auth.ProprieteCleEtrangere;
 import com.utils.auth.Utils;
 
 public class ExportSql {
-	private String m_dataBase;
+	private String m_dataBase, m_sql;
 	private MldLog m_mld;
-	private String m_sql;
 	
 	public ExportSql(String dataBase, McdGraph mcd) {
 		m_dataBase = dataBase;
@@ -37,6 +36,7 @@ public class ExportSql {
 			output.write(m_sql);
 			output.flush();
 			output.close();
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -47,15 +47,12 @@ public class ExportSql {
 	private void createSQL(){
 		m_sql += createDataBase(m_dataBase);
 		
-		for (Entite e : m_mld.getEntites()){
+		for (Entite e : m_mld.getEntites())
 				m_sql += createTable(e);
-		}
 		
-		for (Entite e : m_mld.getEntites()){
-			if (containsCleEtrangere(e)){
+		for (Entite e : m_mld.getEntites())
+			if (containsCleEtrangere(e))
 				m_sql += ajoutCleEtrangere(e, getCleEtrangere(e));
-			}
-		}
 	}
 	
 	private String ajoutCleEtrangere(Entite e, List<ProprieteCleEtrangere> fk){

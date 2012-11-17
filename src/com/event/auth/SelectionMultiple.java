@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mcd_composent_graph.auth.CardinaliteGraph;
+import com.mcd_composent_graph.auth.Collisable;
 import com.mcd_composent_graph.auth.CommentaireGraph;
 import com.mcd_composent_graph.auth.ContrainteGraph;
 import com.mcd_composent_graph.auth.EntiteGraph;
@@ -105,28 +106,12 @@ public class SelectionMultiple {
 	
 	private boolean contains(McdComposentGraphique c){
 		boolean in = false;
-		if (c instanceof EntiteGraph){
-			if (m_rect.contains(((EntiteGraph)c).getRectangle()))
-				in = true;
-		}
-		else if (c instanceof RelationGraph){
-			if (m_rect.contains(((RelationGraph)c).getRectangle()))
-				in = true;
-		}
-		else if (c instanceof CardinaliteGraph){
-			if (m_rect.contains(((CardinaliteGraph)c).getPointA()))
+		if (c instanceof Collisable){
+			if (m_rect.contains(((Collisable)c).getRectangle()))
 				in = true;
 		}
 		else if (c instanceof ContrainteGraph){
 			if (m_rect.contains(((ContrainteGraph)c).getRectangle()))
-				in = true;
-		}
-		else if (c instanceof HeritageGraph){
-			if (m_rect.contains(((HeritageGraph)c).getRectangle()))
-				in = true;
-		}
-		else if (c instanceof CommentaireGraph){
-			if (m_rect.contains(((CommentaireGraph)c).getRectangle()))
 				in = true;
 		}
 		return in;

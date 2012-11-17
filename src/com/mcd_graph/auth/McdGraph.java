@@ -351,8 +351,7 @@ public class McdGraph extends JPanel{
 				m_lastCom=com;
 				com.setMcd(McdGraph.this);
 				com.setPosition(transformToLocal(arg0.getPoint()));
-				m_components.add(com);
-				m_componentsFirst.add(com);
+				addMcdComponents(com);
 			}
 			else
 				new FenetreEditionCommentaire(McdGraph.this, m_lastCom).setVisible(true);
@@ -393,8 +392,7 @@ public class McdGraph extends JPanel{
 				eg.setRelation(new Relation("Relation"+(m_last++)));
 				eg.setPosition(transformToLocal(e.getPoint()));
 				eg.setMcd(McdGraph.this);
-				m_components.add(eg);
-				m_componentsSecond.add(eg);
+				addMcdComponents(eg);
 			}
 			else
 				new FenetreEditionRelation(McdGraph.this, m_lastRg).setVisible(true);
@@ -491,8 +489,7 @@ public class McdGraph extends JPanel{
 					cardG.setCardinalite(card);
 					cardG.setMcd(McdGraph.this);
 					
-					m_components.add(cardG);
-					m_componentsFirst.add(cardG);
+					addMcdComponents(cardG);
 				}
 				else if(m_objects[0] instanceof ContrainteGraph || m_objects[1] instanceof ContrainteGraph){
 					ContrainteGraph contrainte = (ContrainteGraph) (m_objects[0] instanceof ContrainteGraph ?
@@ -570,8 +567,7 @@ public class McdGraph extends JPanel{
 			contG.setPosition(transformToLocal(e.getPoint()));
 			contG.setMcd(McdGraph.this);
 			
-			m_components.add(contG);
-			m_componentsFirst.add(contG);
+			addMcdComponents(contG);
 			repaint();
 			saveAnnulerModification();
 		}
@@ -625,8 +621,7 @@ public class McdGraph extends JPanel{
 			herG.setPosition(transformToLocal(e.getPoint()));
 			herG.setMcd(McdGraph.this);
 			
-			m_components.add(herG);
-			m_componentsFirst.add(herG);
+			addMcdComponents(herG);
 			repaint();
 			saveAnnulerModification();
 		}
@@ -691,9 +686,13 @@ public class McdGraph extends JPanel{
 					if (!(c instanceof CardinaliteGraph) && ((FormeGeometrique)c).contient(e.getPoint())){
 						c.setFocus(true);
 						m_focus.add(c);
+						break;
 					}
-					
 				}
+				m_selectMulti.resetList();
+				m_selectMulti.setTrace(true);
+				m_selectMulti.setDepart(transformToLocal(e.getPoint()));
+				return;
 			}
 			for(McdComposentGraphique component : m_componentsSecond){
 				if(((FormeGeometrique)component).contient(pos)){
@@ -779,7 +778,8 @@ public class McdGraph extends JPanel{
 				setMcdComposentGraphiquetFocus(null);
 			}
 			else if(!found){//Click en dehors
-				setMcdComposentGraphiquetFocus(null);
+				if ((e.getModifiers() & KeyEvent.CTRL_MASK) == 0)
+					setMcdComposentGraphiquetFocus(null);
 			}
 			saveAnnulerModification();
 		}
@@ -788,7 +788,8 @@ public class McdGraph extends JPanel{
 			m_isMoving=false;
 			m_deltaSelect.clear();
 			if (m_selectMulti.getFocus().size() != 0)
-				m_focus = m_selectMulti.getFocus();
+				for (McdComposentGraphique c : m_selectMulti.getFocus())
+					m_focus.add(c);
 			m_selectMulti.reset();
 			repaint();
 		}
