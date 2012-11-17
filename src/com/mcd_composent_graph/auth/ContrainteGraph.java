@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +73,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 		Point pos = getPosition();
 		
 		Graphics2D g2 = (Graphics2D) g;
+		AffineTransform transform = (AffineTransform) g2.getTransform().clone();
 		float style[] = {5.0f};
 		BasicStroke dashed = new BasicStroke(1.0f,
                 BasicStroke.CAP_BUTT,
@@ -156,6 +158,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 				int py[] = {0, p1[0].y, p1[1].y};
 				
 				g2.setStroke(new BasicStroke(1.0f));
+				
 				g2.translate((t*Math.cos(a))+centreObjet.x, (t*Math.sin(a))+centreObjet.y);
 				g2.rotate(a);
 				g.fillPolygon(px, py, 3);
@@ -240,6 +243,7 @@ public class ContrainteGraph extends McdComposentGraphique implements FormeGeome
 		}
 		
 		g.drawString(m_contrainte.getNom(), pos.x, pos.y);
+		g2.setTransform(transform);
 	}
 
 	public void setMcd(McdGraph mcd) {

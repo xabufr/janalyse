@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -173,6 +174,7 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		
 		//Dessin coté entité
 		Graphics2D g2 = (Graphics2D) g;
+		AffineTransform transform = (AffineTransform) g2.getTransform().clone();
 		g2.translate(getPointA().x, getPointA().y);
 		g2.rotate(-angle);
 		if(!m_focus)
@@ -225,10 +227,7 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		
 		m_geometreCoupe[1] = new FormeGeometriqueRectangle(new Rectangle(posLettre));
 		m_geometreCoupe[1].setDimension(drawLetter(g, new Point(0,0), m_lastCarac));
-		g2.rotate(-angle+3.14);
-		g2.translate(-distance,0);
-		g2.rotate(angle-3.14);
-		g2.translate(-pos.x, -pos.y);
+
 		incermenterCompteurLettre();
 		
 		for(int i=0;i<2;++i){
@@ -236,6 +235,8 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 					m_geometreCoupe[i].getPosition().x-m_geometreCoupe[i].getDimension().width/2,
 					m_geometreCoupe[i].getPosition().y-m_geometreCoupe[i].getDimension().height/2));
 		}
+		
+		g2.setTransform(transform);
 	}
 	
 	private Dimension drawLetter(Graphics g, Point centre, String letter){

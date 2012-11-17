@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,11 +130,11 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 			
 			g.drawLine(m_centre.x, m_centre.y, e.x, e.y);
 			m_lignesLiens.add(new Line2D.Double(m_centre.x, m_centre.y, e.x, e.y));
+			AffineTransform transform = (AffineTransform) g2.getTransform().clone();
 			g2.translate(e.x, e.y);
 			g2.rotate(a);
 			g.fillPolygon(px, py, 3);
-			g2.rotate(-a);
-			g2.translate(-e.x, -e.y);
+			g2.setTransform(transform);
 		}
 		
 		for (EntiteGraph eg : m_entitesGraph){
