@@ -183,6 +183,9 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		g2.translate(distance,0);
 		g2.rotate(angle);
 		g2.getTransform().transform(new Point(0,0), posLettre);
+		double zoom = m_mcd.getZoom();
+		posLettre.x /= zoom;
+		posLettre.y /= zoom;
 		if(!m_focus)
 			g.setColor((Color) prefs.get(PGroupe.CARDINALITE, PCle.FONT_COLOR));
 		else
@@ -216,6 +219,10 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		else
 			g.setColor((Color) prefs.get(PGroupe.CARDINALITE, PCle.FONT_COLOR_FOCUS));
 		g2.getTransform().transform(new Point(0,0), posLettre);
+		
+		posLettre.x /= zoom;
+		posLettre.y /= zoom;
+		
 		m_geometreCoupe[1] = new FormeGeometriqueRectangle(new Rectangle(posLettre));
 		m_geometreCoupe[1].setDimension(drawLetter(g, new Point(0,0), m_lastCarac));
 		g2.rotate(-angle+3.14);

@@ -12,12 +12,8 @@ import java.util.List;
 
 import com.mcd_composent_graph.auth.CardinaliteGraph;
 import com.mcd_composent_graph.auth.Collisable;
-import com.mcd_composent_graph.auth.CommentaireGraph;
 import com.mcd_composent_graph.auth.ContrainteGraph;
-import com.mcd_composent_graph.auth.EntiteGraph;
-import com.mcd_composent_graph.auth.HeritageGraph;
 import com.mcd_composent_graph.auth.McdComposentGraphique;
-import com.mcd_composent_graph.auth.RelationGraph;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
 import com.preferences_mcd_logique.auth.PCle;
 import com.preferences_mcd_logique.auth.PGroupe;
