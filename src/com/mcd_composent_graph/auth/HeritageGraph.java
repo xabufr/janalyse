@@ -185,9 +185,9 @@ public class HeritageGraph extends McdComposentGraphique implements FormeGeometr
 			g.setColor((Color) prefs.get(PGroupe.HERITAGE, PCle.FONT_COLOR_FOCUS));
 		
 		FontMetrics metric = g.getFontMetrics(g.getFont());
-		int widthType = metric.stringWidth(m_heritage.getType().toString());
+		int widthType = metric.stringWidth(m_heritage.getType().getName());
 
-		g.drawString(m_heritage.getType().toString(), pos.x+dim.width/2-widthType/2, pos.y+dim.height-2);
+		g.drawString(m_heritage.getType().getName(), pos.x+dim.width/2-widthType/2, pos.y+dim.height-2);
 	}
 
 	private void reloadGraph(){
