@@ -204,18 +204,19 @@ public class McdGraph extends JPanel{
 		{
 			if(min.x<0){
 				for(McdComposentGraphique component : m_components){
-					if(component instanceof EntiteGraph){
-						EntiteGraph eg = (EntiteGraph) component;
-						eg.setPosition(new Point(eg.getPosition().x-min.x, eg.getPosition().y));
-					}
+					if(component instanceof CardinaliteGraph)
+						continue;
+					FormeGeometrique eg = (FormeGeometrique) component;
+					eg.setPosition(new Point(eg.getPosition().x-min.x, eg.getPosition().y));
 				}
 			}
 			if(min.y<0){
 				for(McdComposentGraphique component : m_components){
-					if(component instanceof EntiteGraph){
-						EntiteGraph eg = (EntiteGraph) component;
-						eg.setPosition(new Point(eg.getPosition().x, eg.getPosition().y-min.y));
-					}
+					if(component instanceof CardinaliteGraph)
+						continue;
+					FormeGeometrique eg = (FormeGeometrique) component;
+					eg.setPosition(new Point(eg.getPosition().x, eg.getPosition().y-min.y));
+					
 				}
 			}
 			setPreferredSize(nouvelleDim);
