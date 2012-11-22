@@ -252,6 +252,7 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 		ArrayList<CardinaliteGraph> cards = m_mcd.getCardinalitesGraph();
 		int nombre=0;
 		int max[]=new int[2];
+		int min[] = new int[2];
 		for(CardinaliteGraph c : cards){
 			if(c.getCardinalite().getRelation()==m_relation){
 				if(++nombre>2){
@@ -259,10 +260,11 @@ public class RelationGraph extends McdComposentGraphique implements FormeGeometr
 					return;
 				}
 				max[nombre-1]=c.getCardinalite().getMax();
+				min[nombre-1]=c.getCardinalite().getMin();
 			}
 		}
-		if(((max[0]==0||max[0]==1)&&(max[1]==-1||max[1]==2))||
-				((max[1]==0||max[1]==1)&&(max[0]==-1||max[0]==2))){
+		if(((max[0]==1)&&(max[1]==-1||max[1]==2)&&min[0]==1)||
+				((max[1]==1)&&(max[0]==-1||max[0]==2)&&min[1]==1)){
 			m_relation.setCif(true);
 		}
 		else
