@@ -71,7 +71,7 @@ public class Updater {
 			byte data[] = new byte[length];
 			
 			int currByte=0, deplacement = 0;
-			while(deplacement<length){
+			while(deplacement<=length){
 				currByte = is.read(data, deplacement, data.length-deplacement);
 				if(currByte==-1||!isStarted())
 					break;
