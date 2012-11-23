@@ -44,6 +44,10 @@ import java.awt.Insets;
 import java.awt.GridLayout;
 import javax.swing.border.BevelBorder;
 import javax.swing.JComboBox;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 @SuppressWarnings("serial")
 public class FenetrePreferences extends JDialog {
@@ -79,7 +83,7 @@ public class FenetrePreferences extends JDialog {
 				{
 					JPanel panel = new JPanel();
 					tabbedPaneMcd.addTab("General", null, panel, null);
-					panel.setLayout(new MigLayout("", "[][]", "[]"));
+					panel.setLayout(new MigLayout("", "[][]", "[][]"));
 					{
 						JLabel lblCouleurDeFond = new JLabel("Couleur de fond");
 						panel.add(lblCouleurDeFond, "cell 0 0");
@@ -93,6 +97,22 @@ public class FenetrePreferences extends JDialog {
 							}
 						});
 						panel.add(btnCouleur_2, "cell 1 0");
+					}
+					{
+						JLabel lblTailleFileAnnuler = new JLabel("Taille file annuler");
+						panel.add(lblTailleFileAnnuler, "cell 0 1");
+					}
+					{
+						final JSpinner spinner = new JSpinner();
+						
+						spinner.setModel(new SpinnerNumberModel(5, 5, 100, 1));
+						spinner.setValue(McdPreferencesManager.getInstance().get(PGroupe.MCD, PCle.TAILLE_ANNULER));
+						spinner.addChangeListener(new ChangeListener() {
+							public void stateChanged(ChangeEvent arg0) {
+								McdPreferencesManager.getInstance().set(PGroupe.MCD, PCle.TAILLE_ANNULER, (Integer)spinner.getValue());
+							}
+						});
+						panel.add(spinner, "cell 1 1");
 					}
 				}
 				{

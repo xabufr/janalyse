@@ -1122,6 +1122,10 @@ public class McdGraph extends JPanel{
 	}
 	public void saveAnnulerModification(){
 		m_listeAnnuler.push(copyLogicGraph(m_logicObjects));
+		int tailleFile = (Integer) McdPreferencesManager.getInstance().get(PGroupe.MCD,PCle.TAILLE_ANNULER);
+		if(m_listeAnnuler.size()>tailleFile){
+			m_listeAnnuler.remove(0);
+		}
 		m_listeRefaire.clear();
 		m_isSaved=false;
 		m_fenetrePrincipale.updateMcdUi(this);

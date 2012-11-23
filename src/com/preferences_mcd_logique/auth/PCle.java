@@ -27,5 +27,6 @@ public enum PCle{
 	SHOW,
 	CSS,
 	LOOK,
-	STYLE_DEFAUT
+	STYLE_DEFAUT,
+	TAILLE_ANNULER
 }

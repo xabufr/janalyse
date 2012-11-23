@@ -300,6 +300,7 @@ public class McdPreferencesManager {
 		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
 		
 		set(PGroupe.MCD, PCle.COLOR, Color.WHITE);
+		set(PGroupe.MCD, PCle.TAILLE_ANNULER, 25);
 	}
 	
 	public void loadDefaultBlackAndWhite(){
@@ -414,6 +415,7 @@ public class McdPreferencesManager {
 		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
 		
 		set(PGroupe.MCD, PCle.COLOR, Color.WHITE);
+		set(PGroupe.MCD, PCle.TAILLE_ANNULER, 25);
 	}
 }
 
