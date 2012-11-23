@@ -1,5 +1,6 @@
 package com.mcd_graph.auth;
 
+import java.awt.Event;
 import java.awt.Point;
 
 import javax.swing.JFrame;
@@ -25,6 +26,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -765,6 +768,20 @@ public class FenetrePrincipale {
 			public void windowActivated(WindowEvent arg0) {}
 		});
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addMouseWheelListener(new MouseWheelListener() {			
+			public void mouseWheelMoved(MouseWheelEvent arg0) {
+				System.out.println("wheel");
+				if(m_mcd==null)
+					return;
+				if((arg0.getModifiers()&Event.CTRL_MASK)!=0)
+				{
+					float zoomModifier = (float) (arg0.getWheelRotation()*0.1);
+					m_mcd.setZoom(m_mcd.getZoom()+zoomModifier);
+					m_zoom.setValue((int) (m_mcd.getZoom()*100));
+					m_mcd.repaint();
+				}
+			}
+		});
 	}
 	public McdGraph getMcd(){
 		return m_mcd;
@@ -892,5 +909,11 @@ public class FenetrePrincipale {
 			m_mntmRefaire.setEnabled(m_mcd.peutRefaire());
 		}
 		updateMcdNames();
+	}
+	public void zoomChanged(McdGraph mcd){
+		if(m_mcd==mcd)
+		{
+			m_zoom.setValue((int) (mcd.getZoom()*100));
+		}
 	}
 }

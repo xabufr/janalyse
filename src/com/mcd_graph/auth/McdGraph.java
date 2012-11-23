@@ -8,11 +8,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -103,6 +106,16 @@ public class McdGraph extends JPanel{
 		this.setState(McdGraphStateE.EDIT);
 		this.setFocusable(true);
 		saveAnnulerModification();
+		
+		this.addMouseWheelListener(new MouseWheelListener() {
+			public void mouseWheelMoved(MouseWheelEvent arg0) {
+				if((arg0.getModifiers()&InputEvent.CTRL_MASK)!=0)
+				{
+					setZoom(m_zoom+arg0.getWheelRotation()*0.05);
+					m_fenetrePrincipale.zoomChanged(McdGraph.this);
+				}
+			}
+		});
 	}
 	public void paintComponent(Graphics g){
 		((Graphics2D) g).scale(m_zoom, m_zoom);
@@ -1447,12 +1460,10 @@ public class McdGraph extends JPanel{
 		return m_zoom;
 	}
 	public void setZoom(double zoom) {
-		if(m_zoom>1.0)
-			m_zoom=1.0;
-		if(m_zoom==0.0)
-			m_zoom = 0.05;
-		if(m_zoom<0)
-			m_zoom = 1.0;
+		if(zoom>1.0)
+			zoom=1.0;
+		if(zoom<=0.0)
+			zoom = 0.01;
 		m_zoom = zoom;
 		repaint();
 	}
