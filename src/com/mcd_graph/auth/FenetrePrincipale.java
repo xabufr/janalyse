@@ -803,7 +803,9 @@ public class FenetrePrincipale {
 		createNewMcd(mcd);
 	}
 	public void createNewMcd(McdGraph mcd){
-		m_mcdContener.addTab("", new JScrollPane(mcd));
+		JScrollPane scroll = new JScrollPane(mcd);
+		scroll.getVerticalScrollBar().setUnitIncrement(20);
+		m_mcdContener.addTab("", scroll);
 		updateMcdNames();
 	}
 	public void updateMcdNames(){
