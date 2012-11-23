@@ -77,6 +77,25 @@ public class FenetrePreferences extends JDialog {
 				tabbedPaneMcd.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 				tabbedPaneGeneral.addTab("MCD", null, tabbedPaneMcd, null);
 				{
+					JPanel panel = new JPanel();
+					tabbedPaneMcd.addTab("General", null, panel, null);
+					panel.setLayout(new MigLayout("", "[][]", "[]"));
+					{
+						JLabel lblCouleurDeFond = new JLabel("Couleur de fond");
+						panel.add(lblCouleurDeFond, "cell 0 0");
+					}
+					{
+						final JButton btnCouleur_2 = new JButton("Couleur");
+						initButtonColor(btnCouleur_2, PGroupe.MCD, PCle.COLOR);
+						btnCouleur_2.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								changeColor(PGroupe.MCD, PCle.COLOR, "Font", btnCouleur_2);
+							}
+						});
+						panel.add(btnCouleur_2, "cell 1 0");
+					}
+				}
+				{
 					m_panelEntites = new JPanel();
 					tabbedPaneMcd.addTab("Entités", null, m_panelEntites, null);
 					m_panelEntites.setLayout(new MigLayout("", "[398.00px,grow]", "[][grow]"));

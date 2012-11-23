@@ -298,6 +298,8 @@ public class McdPreferencesManager {
 		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.GRADIANT_COLOR, true);
 		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.OMBRE, true);
 		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
+		
+		set(PGroupe.MCD, PCle.COLOR, Color.WHITE);
 	}
 }
 

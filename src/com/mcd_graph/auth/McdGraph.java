@@ -120,7 +120,7 @@ public class McdGraph extends JPanel{
 	public void paintComponent(Graphics g){
 		((Graphics2D) g).scale(m_zoom, m_zoom);
 		CardinaliteGraph.resetCompteurLettre();
-		g.setColor(Color.WHITE);
+		g.setColor((Color) McdPreferencesManager.getInstance().get(PGroupe.MCD, PCle.COLOR));
 		g.fillRect(0, 0, (int)(this.getWidth()/m_zoom), (int)(this.getHeight()/m_zoom));
 		
 		Point min = new Point(0,0), max = new Point(0,0);
