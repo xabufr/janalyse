@@ -15,6 +15,8 @@ import java.util.prefs.Preferences;
 
 import javax.swing.UIManager;
 
+import com.mcd_composent_graph.auth.CardinaliteGraphType;
+
 public class McdPreferencesManager {
 
 	private McdPreferencesManager() {
@@ -222,6 +224,7 @@ public class McdPreferencesManager {
 		set(PGroupe.CARDINALITE, PCle.FONT_COLOR_FOCUS, Color.BLACK);
 		set(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR, Color.BLACK);
 		set(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		set(PGroupe.CARDINALITE, PCle.STYLE_DEFAUT, CardinaliteGraphType.CARDINALITE_COUPE_DOUBLE);
 		
 		setFont(PGroupe.RELATION, PCle.FONT, "Serif", Font.PLAIN, 10);
 		setFont(PGroupe.RELATION, PCle.FONT_NOM, "Serif", Font.PLAIN, 10);

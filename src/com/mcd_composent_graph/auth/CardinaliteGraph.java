@@ -53,7 +53,10 @@ public class CardinaliteGraph extends McdComposentGraphique implements FormeGeom
 		m_needUpdateGraphic=true;
 		m_registeredEntite=false;
 		m_estCoupe=false;
-		m_typeDessin=CardinaliteGraphType.CARDINALITE_COUPE_DOUBLE;
+		m_typeDessin = (CardinaliteGraphType) McdPreferencesManager.
+				getInstance().
+				get(PGroupe.CARDINALITE, PCle.STYLE_DEFAUT);
+		
 		m_geometrieComplexe = new ArrayList<FormeGeometriqueLigne>();
 		m_geometreCoupe = new FormeGeometriqueRectangle[2];
 	}

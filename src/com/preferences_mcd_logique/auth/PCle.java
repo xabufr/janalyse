@@ -26,5 +26,6 @@ public enum PCle{
 	CIF,
 	SHOW,
 	CSS,
-	LOOK
+	LOOK,
+	STYLE_DEFAUT
 }

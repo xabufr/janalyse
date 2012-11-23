@@ -19,6 +19,7 @@ import javax.swing.event.CaretListener;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JTabbedPane;
 
+import com.mcd_composent_graph.auth.CardinaliteGraphType;
 import com.mcd_log.auth.Propriete;
 import com.mcd_log.auth.ProprieteTypeE;
 import com.preferences_mcd_logique.auth.McdPreferencesManager;
@@ -90,7 +91,7 @@ public class FenetrePreferences extends JDialog {
 				{
 					JPanel panelCardinalite = new JPanel();
 					tabbedPaneMcd.addTab("Cardinalités", null, panelCardinalite, null);
-					initializeWithoutPropertiesWithoutBackground(panelCardinalite, PGroupe.CARDINALITE);
+					initializeCardinalites(panelCardinalite, PGroupe.CARDINALITE);
 				}
 				{
 					JPanel panelContraines = new JPanel();
@@ -611,11 +612,23 @@ public class FenetrePreferences extends JDialog {
 			}
 		}
 	}
-	private void initializeWithoutPropertiesWithoutBackground(JPanel parentPanel, final PGroupe g){
+	private void initializeCardinalites(JPanel parentPanel, final PGroupe g){
 		parentPanel.setLayout(new MigLayout("", "[398.00px,grow]", "[grow]"));
 		{
+			final JComboBox styles = new JComboBox();
+			for(CardinaliteGraphType t : CardinaliteGraphType.values())
+				styles.addItem(t);
+			styles.setSelectedItem(McdPreferencesManager.getInstance().get(g, PCle.STYLE_DEFAUT));
+			styles.addActionListener(new ActionListener() {				
+				public void actionPerformed(ActionEvent arg0) {
+					McdPreferencesManager.getInstance().set(g, PCle.STYLE_DEFAUT, styles.getSelectedItem());
+				}
+			});
+			
+			parentPanel.add(new JLabel("Style par défaut"), "cell 0 0");
+			parentPanel.add(styles, "cell 1 0");
 			JSplitPane splitPane = new JSplitPane();
-			parentPanel.add(splitPane, "cell 0 0,grow");
+			parentPanel.add(splitPane, "cell 0 1 2 2,grow");
 			{
 				JPanel panel = new JPanel();
 				splitPane.setLeftComponent(panel);
