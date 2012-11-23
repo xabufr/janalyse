@@ -552,7 +552,7 @@ public class FenetrePrincipale {
 		JSeparator separator_5 = new JSeparator();
 		mnAide.add(separator_5);
 		
-		JMenuItem mntmMettreJours = new JMenuItem("Mettre à jours");
+		JMenuItem mntmMettreJours = new JMenuItem("Mettre à jour");
 		mntmMettreJours.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(Updater.hasNewVersion()){
