@@ -84,6 +84,7 @@ public class FenetrePrincipale {
 	private JButton m_btnDico;
 	private JButton m_boutonInsertionCommentaire;
 	private JSlider m_zoom;
+	private JLabel m_labelMode;
 	
 	public FenetrePrincipale() {
 		m_stateButtons = new ArrayList<JButton>();
@@ -92,7 +93,7 @@ public class FenetrePrincipale {
 		
 		JPanel panel = new JPanel();
 		m_splitPane.setLeftComponent(panel);
-		panel.setLayout(new MigLayout("", "[]", "[][]"));
+		panel.setLayout(new MigLayout("", "[]", "[][][][][]"));
 		
 		m_btnMcd = new JButton("MCD");
 		m_btnMcd.setEnabled(false);
@@ -134,6 +135,12 @@ public class FenetrePrincipale {
 		});
 		panel.add(m_btnDico, "cell 0 2");
 		
+		JLabel lblVoustesEn = new JLabel("Vous êtes en mode:");
+		panel.add(lblVoustesEn, "cell 0 3");
+		
+		m_labelMode = new JLabel("");
+		panel.add(m_labelMode, "cell 0 4");
+		
 		m_mcdContener.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent event) {
 				if(m_mcdContener.getSelectedComponent()==null)
@@ -147,23 +154,30 @@ public class FenetrePrincipale {
 					m_mcd.setState(McdGraphStateE.EDIT);
 				case EDIT:
 					setEnabledButton(m_boutonEdition);
+					m_labelMode.setText("Édition");
 					break;
 				case INSERT_CONTRAINTE:
 					setEnabledButton(m_boutonInsertionContrainte);
+					m_labelMode.setText("Insertion contrainte");
 					break;
 				case INSERT_ENTITE:
 					setEnabledButton(m_boutonInsertionEntite);
+					m_labelMode.setText("Insertion entité");
 					break;
 				case INSERT_HERITAGE:
 					setEnabledButton(m_boutonInsertionHeritage);
+					m_labelMode.setText("Insertion héritage");
 					break;
 				case INSERT_LIEN:
 					setEnabledButton(m_boutonInsertionLien);
+					m_labelMode.setText("Insertion lien");
 					break;
 				case INSERT_COMMENTAIRE:
 					setEnabledButton(m_boutonInsertionCommentaire);
+					m_labelMode.setText("Insertion commentaire");
 				case INSERT_RELATION:
 					setEnabledButton(m_boutonInsertionRelation);
+					m_labelMode.setText("Insertion relation");
 					break;
 				default:
 					break;
@@ -646,6 +660,7 @@ public class FenetrePrincipale {
 					return;
 				m_mcd.setState(McdGraphStateE.INSERT_ENTITE);
 				setEnabledButton(m_boutonInsertionEntite);
+				m_labelMode.setText("Insertion entité");
 			}
 		});
 		m_boutonInsertionRelation.addActionListener(new ActionListener(){
@@ -654,6 +669,7 @@ public class FenetrePrincipale {
 					return;
 				m_mcd.setState(McdGraphStateE.INSERT_RELATION);
 				setEnabledButton(m_boutonInsertionRelation);
+				m_labelMode.setText("Insertion relation");
 			}
 		});
 		m_boutonInsertionContrainte.addActionListener(new ActionListener(){
@@ -662,6 +678,7 @@ public class FenetrePrincipale {
 					return;
 				m_mcd.setState(McdGraphStateE.INSERT_CONTRAINTE);
 				setEnabledButton(m_boutonInsertionContrainte);
+				m_labelMode.setText("Insertion contrainte");
 			}
 		});
 		m_boutonInsertionHeritage.addActionListener(new ActionListener(){
@@ -670,6 +687,7 @@ public class FenetrePrincipale {
 					return;
 				m_mcd.setState(McdGraphStateE.INSERT_HERITAGE);
 				setEnabledButton(m_boutonInsertionHeritage);
+				m_labelMode.setText("Insertion héritage");
 			}
 		});
 		m_boutonInsertionLien.addActionListener(new ActionListener(){
@@ -678,6 +696,7 @@ public class FenetrePrincipale {
 				return;
 			m_mcd.setState(McdGraphStateE.INSERT_LIEN);
 			setEnabledButton(m_boutonInsertionLien);
+			m_labelMode.setText("Insertion lien");
 		}
 		});
 		m_boutonEdition.addActionListener(new ActionListener(){
@@ -686,6 +705,7 @@ public class FenetrePrincipale {
 					return;
 				m_mcd.setState(McdGraphStateE.EDIT);
 				setEnabledButton(m_boutonEdition);
+				m_labelMode.setText("Édition");
 			}
 		});
 		m_boutonInsertionCommentaire.addActionListener(new ActionListener() {
@@ -693,6 +713,7 @@ public class FenetrePrincipale {
 				if(m_mcd==null)return;
 				m_mcd.setState(McdGraphStateE.INSERT_COMMENTAIRE);
 				setEnabledButton(m_boutonInsertionCommentaire);
+				m_labelMode.setText("Insertion commentaire");
 			}
 		});
 		setEnabledButton(m_boutonInsertionEntite);

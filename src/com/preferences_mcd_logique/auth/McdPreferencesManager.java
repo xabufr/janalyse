@@ -301,5 +301,119 @@ public class McdPreferencesManager {
 		
 		set(PGroupe.MCD, PCle.COLOR, Color.WHITE);
 	}
+	
+	public void loadDefaultBlackAndWhite(){
+		setFont(PGroupe.HERITAGE, PCle.FONT, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.HERITAGE, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
+		set(PGroupe.HERITAGE,  PCle.COLOR, Color.WHITE);
+		set(PGroupe.HERITAGE,  PCle.COLOR_FOCUS, Color.WHITE);
+		set(PGroupe.HERITAGE, PCle.COLOR_2, Color.WHITE);
+		set(PGroupe.HERITAGE, PCle.COLOR_2_FOCUS, Color.GREEN);
+		set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.HERITAGE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		set(PGroupe.HERITAGE, PCle.COLOR_LINE, Color.BLACK);
+		set(PGroupe.HERITAGE, PCle.FONT_COLOR, Color.BLACK);
+		set(PGroupe.HERITAGE, PCle.FONT_COLOR_FOCUS, Color.BLACK);
+		set(PGroupe.HERITAGE, PCle.OMBRE, false);
+		set(PGroupe.HERITAGE, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
+		set(PGroupe.HERITAGE, PCle.GRADIANT_COLOR, false);
+		
+		
+		setFont(PGroupe.CONTRAINTE, PCle.FONT, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.CONTRAINTE, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
+		set(PGroupe.CONTRAINTE,  PCle.COLOR, Color.WHITE);
+		set(PGroupe.CONTRAINTE,  PCle.COLOR_FOCUS, Color.WHITE);
+		set(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.CONTRAINTE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		set(PGroupe.CONTRAINTE, PCle.COLOR_LINE, Color.BLACK);
+		set(PGroupe.CONTRAINTE, PCle.FONT_COLOR, Color.BLACK);
+		set(PGroupe.CONTRAINTE, PCle.FONT_COLOR_FOCUS, Color.BLACK);
+		set(PGroupe.CONTRAINTE, PCle.OMBRE, false);
+		set(PGroupe.CONTRAINTE, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
+		
+		
+		setFont(PGroupe.CARDINALITE, PCle.FONT, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.CARDINALITE, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
+		set(PGroupe.CARDINALITE, PCle.FONT_COLOR, Color.BLACK);
+		set(PGroupe.CARDINALITE, PCle.FONT_COLOR_FOCUS, Color.BLACK);
+		set(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.CARDINALITE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		set(PGroupe.CARDINALITE, PCle.STYLE_DEFAUT, CardinaliteGraphType.CARDINALITE_COUPE_DOUBLE);
+		
+		setFont(PGroupe.RELATION, PCle.FONT, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.RELATION, PCle.FONT_NOM, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.RELATION, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.RELATION, PCle.FONT_NOM_FOCUS, "Serif", Font.PLAIN, 10);
+		set(PGroupe.RELATION, PCle.FONT_COLOR, Color.BLACK);
+		set(PGroupe.RELATION, PCle.FONT_COLOR_FOCUS, Color.BLACK);
+		set(PGroupe.RELATION, PCle.FONT_NOM_COLOR, Color.BLACK);
+		set(PGroupe.RELATION, PCle.FONT_NOM_COLOR_FOCUS, Color.BLACK);
+		set(PGroupe.RELATION, PCle.COLOR, Color.WHITE);
+		set(PGroupe.RELATION, PCle.COLOR_2, Color.WHITE);
+		set(PGroupe.RELATION, PCle.COLOR_FOCUS, Color.WHITE);
+		set(PGroupe.RELATION, PCle.COLOR_2_FOCUS, Color.GREEN);
+		set(PGroupe.RELATION, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.RELATION, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		set(PGroupe.RELATION, PCle.OMBRE, false);
+		set(PGroupe.RELATION, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
+		set(PGroupe.RELATION, PCle.CIF, true);
+		set(PGroupe.RELATION, PCle.GRADIANT_COLOR, false);
+		
+		setFont(PGroupe.ENTITE, PCle.FONT, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.ENTITE, PCle.FONT_NOM, "Serif", Font.PLAIN, 12);
+		setFont(PGroupe.ENTITE, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.ENTITE, PCle.FONT_NOM_FOCUS, "Serif", Font.PLAIN, 12);
+		set(PGroupe.ENTITE,  PCle.COLOR, Color.WHITE);
+		set(PGroupe.ENTITE,  PCle.COLOR_2, Color.WHITE);
+		set(PGroupe.ENTITE,  PCle.COLOR_FOCUS, Color.LIGHT_GRAY);
+		set(PGroupe.ENTITE,  PCle.COLOR_2_FOCUS, Color.GREEN);
+		set(PGroupe.ENTITE, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.ENTITE, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		set(PGroupe.ENTITE, PCle.FONT_COLOR, Color.BLACK);
+		set(PGroupe.ENTITE, PCle.FONT_COLOR_FOCUS, Color.BLACK);
+		set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR, Color.BLACK);
+		set(PGroupe.ENTITE, PCle.FONT_NOM_COLOR_FOCUS, Color.RED);
+		set(PGroupe.ENTITE, PCle.OMBRE, false);
+		set(PGroupe.ENTITE, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
+		set(PGroupe.ENTITE, PCle.GRADIANT_COLOR, false);
+		
+		set(PGroupe.PROPRIETE, PCle.SCHEMA, "%[0e1]%[1E]_%p");
+		
+		set(PGroupe.SELECTEUR, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.SELECTEUR, PCle.FORME_ARRONDIE, true);
+		set(PGroupe.SELECTEUR, PCle.LIGNE_CONTINUE, false);
+		
+		set(PGroupe.ETAT, PCle.SAVE, new ArrayList<String>());
+
+		set(PGroupe.HTML, PCle.CSS, "h1, div {\ntext-align: center;\n}\ndiv {\n border: 1px solid black;\n    margin-bottom: -1px;\n    padding: 1px;\n}\ndiv.entite p \n{\n    background-color: black;\n    margin: 0;\n    color: white;\n}\n.mld. cleEtrangere \n{\n    border-bottom: 1px black dashed;\n}\ndiv.entite \n{\n    margin-bottom: 5px;\n    background-color: silver;\n}\n .mld. clePrimaire{\n text-decoration: underline; \n}");
+	
+		set(PGroupe.COMMENTAIRE, PCle.SHOW, true);
+		setFont(PGroupe.COMMENTAIRE, PCle.FONT, "Serif", Font.PLAIN, 10);
+		set(PGroupe.COMMENTAIRE,  PCle.COLOR, Color.WHITE);
+		set(PGroupe.COMMENTAIRE,  PCle.COLOR_2, Color.WHITE);
+		set(PGroupe.COMMENTAIRE, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.COMMENTAIRE, PCle.FONT_COLOR, Color.BLACK);
+		set(PGroupe.COMMENTAIRE, PCle.OMBRE, false);
+		set(PGroupe.COMMENTAIRE, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
+		set(PGroupe.COMMENTAIRE, PCle.GRADIANT_COLOR, false);
+		
+		set(PGroupe.GUI, PCle.LOOK, UIManager.getSystemLookAndFeelClassName());
+		
+		setFont(PGroupe.COMMENTAIRE_COMPONENT, PCle.FONT, "Serif", Font.PLAIN, 10);
+		setFont(PGroupe.COMMENTAIRE_COMPONENT, PCle.FONT_FOCUS, "Serif", Font.PLAIN, 10);
+		set(PGroupe.COMMENTAIRE_COMPONENT,  PCle.COLOR, Color.WHITE);
+		set(PGroupe.COMMENTAIRE_COMPONENT,  PCle.COLOR_2, Color.WHITE);
+		set(PGroupe.COMMENTAIRE_COMPONENT,  PCle.COLOR_FOCUS, Color.WHITE);
+		set(PGroupe.COMMENTAIRE_COMPONENT,  PCle.COLOR_2_FOCUS, Color.LIGHT_GRAY);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.COLOR_CONTOUR, Color.BLACK);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.COLOR_CONTOUR_FOCUS, Color.RED);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.FONT_COLOR, Color.BLACK);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.FONT_COLOR_FOCUS, Color.BLACK);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.GRADIANT_COLOR, false);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.OMBRE, false);
+		set(PGroupe.COMMENTAIRE_COMPONENT, PCle.OMBRE_COLOR, Color.LIGHT_GRAY);
+		
+		set(PGroupe.MCD, PCle.COLOR, Color.WHITE);
+	}
 }
 

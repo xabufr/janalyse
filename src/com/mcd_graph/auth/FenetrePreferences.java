@@ -292,6 +292,19 @@ public class FenetrePreferences extends JDialog {
 				});
 				buttonPane.add(btnParDfaut);
 			}
+			{
+				JButton btnParDfautNoir = new JButton("Par défaut Noir et Blanc");
+				btnParDfautNoir.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						McdPreferencesManager.getInstance().loadDefaultBlackAndWhite();
+						McdPreferencesManager.getInstance().save();
+						FenetrePreferences.this.setVisible(false);
+						if(m_parent.getMcd()!=null)
+							m_parent.getMcd().repaint();
+					}
+				});
+				buttonPane.add(btnParDfautNoir);
+			}
 		}
 	}
 	private void changeFont(PGroupe groupe, PCle cle){
