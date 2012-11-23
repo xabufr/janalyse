@@ -769,23 +769,29 @@ public class McdGraph extends JPanel{
 					{
 						new FenetreEditionRelation(McdGraph.this, (RelationGraph)composent).setVisible(true);
 						((RelationGraph)composent).actualiser();
+						saveAnnulerModification();
 					}
 					else if (composent instanceof ContrainteGraph){
 						new FenetreEditionContrainte(McdGraph.this, (ContrainteGraph)composent).setVisible(true);
 						((ContrainteGraph) composent).update();
+						saveAnnulerModification();
 					}
 					else if (composent instanceof HeritageGraph){
 						new FenetreEditionHeritage(McdGraph.this, (HeritageGraph)composent).setVisible(true);
 						((HeritageGraph)composent).update();
+						saveAnnulerModification();
 					}
 					else if (composent instanceof EntiteGraph){
 						new FenetreEditionEntite(McdGraph.this, (EntiteGraph)composent).setVisible(true);
+						saveAnnulerModification();
 					}
 					else if(composent instanceof CardinaliteGraph){
 						new FenetreEditionCardinalite(McdGraph.this, (CardinaliteGraph)composent).setVisible(true);
+						saveAnnulerModification();
 					}
 					else if(composent instanceof CommentaireGraph){
 						new FenetreEditionCommentaire(McdGraph.this, (CommentaireGraph) composent).setVisible(true);
+						saveAnnulerModification();
 					}
 				}
 				setMcdComposentGraphiquetFocus(null);
@@ -794,7 +800,6 @@ public class McdGraph extends JPanel{
 				if ((e.getModifiers() & KeyEvent.CTRL_MASK) == 0)
 					setMcdComposentGraphiquetFocus(null);
 			}
-			saveAnnulerModification();
 		}
 
 		public void mouseReleased(MouseEvent arg0) {
