@@ -194,9 +194,12 @@ public class Chargement{
 				EntiteGraph ent  = (EntiteGraph)ids.get(Integer.valueOf(entite.getAttributeValue("id")));
 				e.addEnfant(ent.getEntite());
 			}
-			
-			EntiteGraph ent  = (EntiteGraph)ids.get(Integer.valueOf(courant.getChild("Entite-mere").getAttributeValue("id")));
-			e.setMere(ent.getEntite());
+			if(courant.getChild("Entite-mere")!=null&&
+					courant.getChild("Entite-mere").getAttributeValue("id")!=null)
+			{
+				EntiteGraph ent  = (EntiteGraph)ids.get(Integer.valueOf(courant.getChild("Entite-mere").getAttributeValue("id")));
+				e.setMere(ent.getEntite());
+			}
 			
 			eg.setHeritage(e);
 			eg.setMcd(mcd);

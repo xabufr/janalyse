@@ -240,6 +240,9 @@ public class FenetrePrincipale {
 				fermerMcd(m_mcd);
 			}
 		});
+		
+		JMenu mnRcemmentOuvert = new JMenu("Récemment ouvert...");
+		mnFichier.add(mnRcemmentOuvert);
 		mntmFermer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK));
 		mnFichier.add(mntmFermer);
 		
@@ -937,4 +940,14 @@ public class FenetrePrincipale {
 			m_zoom.setValue((int) (mcd.getZoom()*100));
 		}
 	}
+}
+
+class RecemmentOuvertDocument extends JMenuItem{
+	private static final long serialVersionUID = 1L;
+	//private String m_file;
+	public RecemmentOuvertDocument(String file){
+		//m_file=file;
+		
+	}
+	
 }
