@@ -120,9 +120,9 @@ public class Updater {
 		String currentPath =  getJarPath();
 		try {
 			if(update)
-				launch(to, currentPath);
+				launch(to, currentPath, true);
 			else
-				launch(to, "nothingtodo");
+				launch(to, "", false);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return;
@@ -156,7 +156,7 @@ public class Updater {
 		restart(to, false);
 	}
 
-	public static void launch(String jarFileName, String from) throws IOException {
+	public static void launch(String jarFileName, String from, boolean replace) throws IOException {
 		boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
  
 		// On récupère le chemin depuis "java.home" :
@@ -164,7 +164,11 @@ public class Updater {
 			isWindows ? "bin/javaw.exe" : "bin/java" );
  
 		// On lance le jar :
-		Process p = new ProcessBuilder( java.getAbsolutePath(), "-jar", jarFileName, from).start();
+		Process p = null;
+		if(replace)
+			p = new ProcessBuilder( java.getAbsolutePath(), "-jar", jarFileName, "--internal-update",from).start();
+		else
+			p = new ProcessBuilder( java.getAbsolutePath(), "-jar", jarFileName, "nothingtodo",from).start();
 		p.getInputStream().close();
 		p.getOutputStream().close();
 		p.getErrorStream().close();
