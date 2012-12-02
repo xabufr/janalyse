@@ -301,6 +301,8 @@ public class McdPreferencesManager {
 		
 		set(PGroupe.MCD, PCle.COLOR, Color.WHITE);
 		set(PGroupe.MCD, PCle.TAILLE_ANNULER, 25);
+		set(PGroupe.MCD, PCle.SAUVEGRADE_AUTO, false);
+		set(PGroupe.MCD, PCle.TIMER_SAUVEGARDE, 60);
 	}
 	
 	public void loadDefaultBlackAndWhite(){
@@ -416,6 +418,8 @@ public class McdPreferencesManager {
 		
 		set(PGroupe.MCD, PCle.COLOR, Color.WHITE);
 		set(PGroupe.MCD, PCle.TAILLE_ANNULER, 25);
+		set(PGroupe.MCD, PCle.SAUVEGRADE_AUTO, false);
+		set(PGroupe.MCD, PCle.TIMER_SAUVEGARDE, 60);
 	}
 }
 

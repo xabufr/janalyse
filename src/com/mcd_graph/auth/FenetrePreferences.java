@@ -157,7 +157,7 @@ public class FenetrePreferences extends JDialog {
 			{
 				JPanel panel = new JPanel();
 				tabbedPaneGeneral.addTab("Général", null, panel, null);
-				panel.setLayout(new MigLayout("", "[149px,grow][grow]", "[19px][][grow][]"));
+				panel.setLayout(new MigLayout("", "[149px,grow][grow]", "[19px][][grow][][]"));
 				{
 					JLabel lblNommageProprits = new JLabel("Nommage propriétés");
 					panel.add(lblNommageProprits, "cell 0 0,alignx left,aligny center");
@@ -187,12 +187,33 @@ public class FenetrePreferences extends JDialog {
 					panel.add(txtpnpProprit, "cell 0 2 2 1,grow");
 				}
 				{
+					final JCheckBox chckbxSauvegardeAuto = new JCheckBox("Sauvegarde auto");
+					panel.add(chckbxSauvegardeAuto, "cell 0 3");
+					chckbxSauvegardeAuto.setSelected((Boolean) McdPreferencesManager.getInstance().get(PGroupe.MCD, PCle.SAUVEGRADE_AUTO));
+					chckbxSauvegardeAuto.addActionListener(new ActionListener() {						
+						public void actionPerformed(ActionEvent arg0) {
+							McdPreferencesManager.getInstance().set(PGroupe.MCD, PCle.SAUVEGRADE_AUTO, chckbxSauvegardeAuto.isSelected());
+						}
+					});
+				}
+				{
+					final JSpinner temps_sauv_auto = new JSpinner();
+					temps_sauv_auto.setModel(new SpinnerNumberModel(30, 30, 300, 1));
+					panel.add(temps_sauv_auto, "cell 1 3,growx");
+					temps_sauv_auto.setValue(McdPreferencesManager.getInstance().get(PGroupe.MCD, PCle.TIMER_SAUVEGARDE));
+					temps_sauv_auto.addChangeListener(new ChangeListener() {
+						public void stateChanged(ChangeEvent arg0) {
+							McdPreferencesManager.getInstance().set(PGroupe.MCD, PCle.TIMER_SAUVEGARDE, (Integer) temps_sauv_auto.getValue());
+						}
+					});
+				}
+				{
 					JLabel lblThme = new JLabel("Thème");
-					panel.add(lblThme, "cell 0 3,alignx trailing");
+					panel.add(lblThme, "cell 0 4,alignx trailing");
 				}
 				{
 					final JComboBox selectionTheme = new JComboBox();
-					panel.add(selectionTheme, "cell 1 3,growx");
+					panel.add(selectionTheme, "cell 1 4,growx");
 					for(LookAndFeelInfo theme : UIManager.getInstalledLookAndFeels()){
 						selectionTheme.addItem(theme.getName());
 					}
@@ -282,6 +303,7 @@ public class FenetrePreferences extends JDialog {
 						McdPreferencesManager.getInstance().save();
 						if(m_parent.getMcd()!=null)
 							m_parent.getMcd().repaint();
+						m_parent.reloadAutoSave();
 					}
 				});
 				buttonPane.add(okButton);

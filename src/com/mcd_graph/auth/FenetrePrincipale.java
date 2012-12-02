@@ -15,6 +15,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.Timer;
 
 import java.awt.BorderLayout;
 import javax.swing.JButton;
@@ -85,8 +86,9 @@ public class FenetrePrincipale {
 	private JButton m_boutonInsertionCommentaire;
 	private JSlider m_zoom;
 	private JLabel m_labelMode;
+	private Timer m_timerSauvAuto;
 	
-	public FenetrePrincipale() {
+	public FenetrePrincipale() {	
 		m_stateButtons = new ArrayList<JButton>();
 		initialize();
 		m_splitPane.setRightComponent(m_mcdContener);
@@ -185,6 +187,8 @@ public class FenetrePrincipale {
 				m_zoom.setValue((int) (m_mcd.getZoom()*100));
 			}
 		});
+		reloadAutoSave();
+		
 		frame.setVisible(true);
 	}
 	private void setEnabledButton(JButton b){
@@ -939,6 +943,36 @@ public class FenetrePrincipale {
 		{
 			m_zoom.setValue((int) (mcd.getZoom()*100));
 		}
+	}
+	public void reloadAutoSave(){
+		if(m_timerSauvAuto==null){
+			m_timerSauvAuto = new Timer(1000*((Integer) McdPreferencesManager.getInstance().get(PGroupe.MCD, PCle.TIMER_SAUVEGARDE)), new ActionListener() {
+				public void actionPerformed(ActionEvent arg0){
+					ArrayList<McdGraph> mcds = new ArrayList<McdGraph>();
+					int nb = m_mcdContener.getTabCount();
+					for(int i=0;i<nb;++i){
+						mcds.add((McdGraph) ((JScrollPane)m_mcdContener.getComponentAt(i)).getViewport().getView());
+					}
+					for(McdGraph mcd : mcds){
+						if(mcd.getFile()!=null){
+							File f = mcd.getFile();
+							File fTemp = new File(f.getParentFile().getAbsolutePath()+File.separator+"~"+f.getName());
+							mcd.setFile(fTemp);
+							mcd.saveMcdComposent(false);
+							mcd.setFile(f);
+						}
+					}
+				}
+			});
+			
+		}
+		else{
+			m_timerSauvAuto.stop();
+			m_timerSauvAuto.setDelay(1000*((Integer) McdPreferencesManager.getInstance().get(PGroupe.MCD, PCle.TIMER_SAUVEGARDE)));
+		}
+		m_timerSauvAuto.setRepeats(true);
+		if((Boolean) McdPreferencesManager.getInstance().get(PGroupe.MCD, PCle.SAUVEGRADE_AUTO))
+			m_timerSauvAuto.start();
 	}
 }
 
