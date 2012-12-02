@@ -28,7 +28,7 @@ public class mainClass {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
-		setFenetre(new FenetrePrincipale());
+		setFenetre(new FenetrePrincipale(args));
 	}
 
 	public static FenetrePrincipale getFenetre() {

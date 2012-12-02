@@ -88,9 +88,9 @@ public class FenetrePrincipale {
 	private JLabel m_labelMode;
 	private Timer m_timerSauvAuto;
 	
-	public FenetrePrincipale() {	
+	public FenetrePrincipale(String files[]) {	
 		m_stateButtons = new ArrayList<JButton>();
-		initialize();
+		initialize(files);
 		m_splitPane.setRightComponent(m_mcdContener);
 		
 		JPanel panel = new JPanel();
@@ -200,7 +200,7 @@ public class FenetrePrincipale {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(final String files[]) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
 		frame.setTitle("JAnalyse");
@@ -768,6 +768,17 @@ public class FenetrePrincipale {
 				if (lst == null)
 					return;
 				for (String s : lst){
+					File f = new File(s);
+					
+					if (!f.exists())
+						continue;
+					
+					createNewMcd();
+					getTabs().setSelectedIndex(getTabs().getComponents().length-1);
+					
+					Chargement.charger(getMcd(), f);
+				}
+				for(String s : files){
 					File f = new File(s);
 					
 					if (!f.exists())
