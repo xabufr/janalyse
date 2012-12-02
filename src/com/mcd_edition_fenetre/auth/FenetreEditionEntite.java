@@ -173,6 +173,17 @@ public class FenetreEditionEntite extends JDialog{
 				m_isNull = new JCheckBox("");
 				m_panel.add(m_isNull, "cell 1 6,alignx center");
 				
+				m_isNull.addActionListener(new ActionListener() {					
+					public void actionPerformed(ActionEvent arg0) {
+						updateEnableCleNull();
+					}
+				});
+				m_isCle.addActionListener(new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e) {
+						updateEnableCleNull();
+					}
+				});
 				JLabel lblAutoincrment = new JLabel("Auto-incrémenté");
 				m_panel.add(lblAutoincrment, "cell 0 7");
 				
@@ -274,6 +285,7 @@ public class FenetreEditionEntite extends JDialog{
 							m_isCle.setSelected(p.isClePrimaire());
 							m_isNull.setSelected(p.isNull());
 							m_isAutoIncremente.setSelected(p.isAutoIncrement());
+							updateEnableCleNull();
 						}
 					}
 				});
@@ -325,6 +337,7 @@ public class FenetreEditionEntite extends JDialog{
 			p.setClePrimaire(m_isCle.isSelected());
 			p.setNull(m_isNull.isSelected());
 			p.setAutoIncrement(m_isAutoIncremente.isSelected());
+			updateEnableCleNull();
 			m_lstPropriete.updateUI();
 		}
 	}
@@ -353,6 +366,7 @@ public class FenetreEditionEntite extends JDialog{
 				m_commentairePropriete.setText("");
 				m_isCle.setSelected(false);
 				m_isNull.setSelected(false);
+				updateEnableCleNull();
 				m_isAutoIncremente.setSelected(false);
 			}
 			else if(m_nomPropriete.getText().equals(null) || m_nomPropriete.getText().equals("")){
@@ -398,5 +412,20 @@ public class FenetreEditionEntite extends JDialog{
 				return true;
 		}
 		return false;
+	}
+	private void updateEnableCleNull()
+	{
+		if(m_isNull.isSelected()){
+			m_isCle.setEnabled(false);
+			m_isNull.setEnabled(true);
+		}
+		else if(m_isCle.isSelected()){
+			m_isNull.setEnabled(false);
+			m_isCle.setEnabled(true);
+		}
+		else{
+			m_isNull.setEnabled(true);
+			m_isCle.setEnabled(true);
+		}
 	}
 }
