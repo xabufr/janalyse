@@ -40,10 +40,16 @@ public class Utils {
 		params.add(type);
 		return getFile(params, true);
 	}
+	public static File getFile4Save(ArrayList<String> type){
+		return getFile(type, true);
+	}
 	public static File getFile4Load(String type){
 		ArrayList<String> params = new ArrayList<String>();
 		params.add(type);
 		return getFile(params, false);
+	}
+	public static File getFile4Load(ArrayList<String> type){
+		return getFile(type, false);
 	}
 	private static File getFile(final ArrayList<String> types, boolean save){
 		
