@@ -55,6 +55,7 @@ public class FenetreEditionEntite extends JDialog{
 	private JButton m_boutonModifier;
 	private JPanel m_panel;
 	private JPanel m_panelTaille;
+	private JLabel m_lblTaille;
 
 	public FenetreEditionEntite(McdGraph mcd, EntiteGraph entite) {
 		
@@ -138,8 +139,9 @@ public class FenetreEditionEntite extends JDialog{
 				
 				m_panel.add(m_type, "cell 1 2,growx");
 				
-				JLabel lblTaille = new JLabel("Taille");
-				m_panel.add(lblTaille, "cell 0 3");
+				m_lblTaille = new JLabel("Taille");
+				m_panel.add(m_lblTaille, "cell 0 3");
+				m_lblTaille.setVisible(false);
 				
 				m_taille = null;
 				
@@ -368,6 +370,7 @@ public class FenetreEditionEntite extends JDialog{
 		m_panelTaille.removeAll();
 		if(type.getNombreTaille()==0){
 			m_taille=null;
+			m_lblTaille.setVisible(false);
 		}
 		else{
 			m_taille=new JSpinner[type.getNombreTaille()];
@@ -375,6 +378,7 @@ public class FenetreEditionEntite extends JDialog{
 				m_taille[i]=new JSpinner();
 				m_panelTaille.add(m_taille[i]);
 			}
+			m_lblTaille.setVisible(true);
 		}
 		m_panelTaille.updateUI();
 	}

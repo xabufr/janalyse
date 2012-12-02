@@ -59,6 +59,7 @@ public class FenetreEditionRelation extends JDialog {
 	private JButton m_btnCreer;
 	private JPanel m_panel, m_panelTaille;
 	private JButton m_okButton;
+	private JLabel m_lblTaille;
 	/**
 	 * Create the dialog.
 	 */
@@ -148,11 +149,7 @@ public class FenetreEditionRelation extends JDialog {
 			}
 			{
 				m_typePropriete = new JComboBox();
-				m_typePropriete.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						changeTaille(ProprieteTypeE.getValue((String) m_typePropriete.getSelectedItem()));
-					}
-				});
+				
 
 				m_panel.add(m_typePropriete, "cell 1 2,growx");
 				m_panelTaille = new JPanel();
@@ -165,10 +162,16 @@ public class FenetreEditionRelation extends JDialog {
 				JButton btnModifier = new JButton("Modifier");
 				btnModifier.addActionListener(new modifierPropriete());
 				{
-					JLabel lblTaille = new JLabel("Taille");
-					m_panel.add(lblTaille, "cell 0 3");
+					m_lblTaille = new JLabel("Taille");
+					m_panel.add(m_lblTaille, "cell 0 3");
 					m_panel.add(m_panelTaille, "cell 1 3");
+					m_lblTaille.setVisible(false);
 				}
+				m_typePropriete.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						changeTaille(ProprieteTypeE.getValue((String) m_typePropriete.getSelectedItem()));
+					}
+				});
 				{
 					m_taille = null;
 				}
@@ -381,6 +384,8 @@ public class FenetreEditionRelation extends JDialog {
 		m_panelTaille.removeAll();
 		if(type.getNombreTaille()==0){
 			m_taille=null;
+			m_lblTaille.setVisible(false);
+			
 		}
 		else{
 			m_taille=new JSpinner[type.getNombreTaille()];
@@ -388,6 +393,7 @@ public class FenetreEditionRelation extends JDialog {
 				m_taille[i]=new JSpinner(new SpinnerNumberModel(0, 0, 255, 1));
 				m_panelTaille.add(m_taille[i], "cell "+(i+1)+" 3,growx");
 			}
+			m_lblTaille.setVisible(true);
 		}
 		m_panelTaille.updateUI();
 	}
