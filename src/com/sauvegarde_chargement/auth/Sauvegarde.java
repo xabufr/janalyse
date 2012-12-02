@@ -39,8 +39,8 @@ public class Sauvegarde {
 		if(mcd.getFile() == null||saveAs){
 			if (m_components != null){
 				ArrayList<String> types = new ArrayList<String>();
+				types.add("janalyse");
 				types.add("xml");
-				types.add("xml.janalyse");
 				File file = Utils.getFile4Save(types);
 				if(file==null)
 					return;

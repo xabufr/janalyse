@@ -36,8 +36,8 @@ import com.utils.auth.Utils;
 public class Chargement{	
 	public static boolean charger(McdGraph mcd){
 		ArrayList<String> types = new ArrayList<String>();
+		types.add("janalyse");
 		types.add("xml");
-		types.add("xml.janalyse");
 		File file = Utils.getFile4Load(types);
 		if(file==null)
 			return false;
