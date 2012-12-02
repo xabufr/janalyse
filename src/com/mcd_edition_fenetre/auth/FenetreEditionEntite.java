@@ -340,7 +340,7 @@ public class FenetreEditionEntite extends JDialog{
 				alimenterPropriete(p);
 				
 				p.setClePrimaire(m_isCle.isSelected());
-				p.setNull(m_isCle.isSelected());
+				p.setNull(m_isNull.isSelected());
 				p.setAutoIncrement(m_isAutoIncremente.isSelected());
 				
 				m_model.addElement(p);
