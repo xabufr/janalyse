@@ -76,6 +76,7 @@ public class Sauvegarde {
 		Element mcd = new Element("Mcd");
 		Attribute mcdNom = new Attribute("nom", nom);
 		mcd.setAttribute(mcdNom);
+		mcd.setAttribute(new Attribute("version", "2"));
 		Document document = new Document(mcd);
 			
 		for (McdComposentGraphique mcg : m_components){
@@ -138,13 +139,13 @@ public class Sauvegarde {
 					propriete.setAttribute(tailleP);
 				}
 				
-				Attribute cleP = new Attribute("clé_primaire", String.valueOf(p.isClePrimaire()));
+				Attribute cleP = new Attribute("cle_primaire", String.valueOf(p.isClePrimaire()));
 				propriete.setAttribute(cleP);
 				
 				Attribute nullP = new Attribute("null", String.valueOf(p.isNull()));
 				propriete.setAttribute(nullP);
 				
-				Attribute AutoP = new Attribute("auto-incrémenté", String.valueOf(p.isAutoIncrement()));
+				Attribute AutoP = new Attribute("auto-incremente", String.valueOf(p.isAutoIncrement()));
 				propriete.setAttribute(AutoP);
 				
 				entite.addContent(propriete);
@@ -195,13 +196,13 @@ public class Sauvegarde {
 					propriete.setAttribute(tailleP);
 				}
 				
-				Attribute cleP = new Attribute("clé_primaire", String.valueOf(p.isClePrimaire()));
+				Attribute cleP = new Attribute("cle_primaire", String.valueOf(p.isClePrimaire()));
 				propriete.setAttribute(cleP);
 				
 				Attribute nullP = new Attribute("null", String.valueOf(p.isNull()));
 				propriete.setAttribute(nullP);
 				
-				Attribute AutoP = new Attribute("auto-incrémenté", String.valueOf(p.isAutoIncrement()));
+				Attribute AutoP = new Attribute("auto-incremente", String.valueOf(p.isAutoIncrement()));
 				propriete.setAttribute(AutoP);
 				
 				relation.addContent(propriete);
@@ -250,10 +251,10 @@ public class Sauvegarde {
 		}
 		mcd.addContent(allCardinalite);
 		
-		Element allHeritage = new Element("All-héritage");
+		Element allHeritage = new Element("All-heritage");
 		for (HeritageGraph hg : heritageGraph){
 			Heritage h = hg.getHeritage();
-			Element heritage = new Element("Héritage");
+			Element heritage = new Element("Heritage");
 			
 			Attribute posx = new Attribute("x", String.valueOf(hg.getPosition().x));
 			heritage.setAttribute(posx);

@@ -59,11 +59,21 @@ public class Chargement{
 	}
 	
 	private static void charger(McdGraph mcd, Document doc){
+		int version=1;
 		Element racine = doc.getRootElement();
+		if(racine.getAttribute("version")!=null)
+		{
+			version = Integer.parseInt(racine.getAttributeValue("version"));
+		}
 		List<Element> entites = racine.getChild("All-entite").getChildren("Entite");
 		List<Element> relations = racine.getChild("All-relation").getChildren("Relation");
 		List<Element> cardinalites = racine.getChild("All-cardinalite").getChildren("Cardinalite");
-		List<Element> heritages = racine.getChild("All-héritage").getChildren("Héritage");
+		List<Element> heritages = null;
+		if(version == 1)
+			heritages = racine.getChild("All-héritage").getChildren("Héritage");
+		else if(version==2)
+			heritages = racine.getChild("All-heritage").getChildren("Heritage");
+		
 		List<Element> contraintes = racine.getChild("All-contrainte").getChildren("Contrainte");
 		List<Element> commentaires = null;
 		if(racine.getChild("All-commentaire") != null)
@@ -96,11 +106,15 @@ public class Chargement{
 				for(int i1=0;i1<type.getNombreTaille();++i1){
 					prop.setTaille(i1,Integer.parseInt(p.getAttributeValue("taille"+i1)));
 				}
-				
-				prop.setClePrimaire(Boolean.parseBoolean(p.getAttributeValue("clé_primaire")));
+				if(version==1)
+					prop.setClePrimaire(Boolean.parseBoolean(p.getAttributeValue("clé_primaire")));
+				else if(version==2)
+					prop.setClePrimaire(Boolean.parseBoolean(p.getAttributeValue("cle_primaire")));
 				prop.setNull(Boolean.parseBoolean(p.getAttributeValue("null")));
-				prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incrémenté")));
-				
+				if(version==1)
+					prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incrémenté")));
+				else if(version==2)
+					prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incremente")));
 				props.add(prop);
 			}
 			e.setProprietes(props);
@@ -132,10 +146,15 @@ public class Chargement{
 				for(int i1=0;i1<prop.getType().getNombreTaille();++i1){
 					prop.setTaille(i1, Integer.parseInt(p.getAttributeValue("taille"+i1)));
 				}
-				prop.setClePrimaire(Boolean.parseBoolean(p.getAttributeValue("clé_primaire")));
+				if(version==1)
+					prop.setClePrimaire(Boolean.parseBoolean(p.getAttributeValue("clé_primaire")));
+				else if(version==2)
+					prop.setClePrimaire(Boolean.parseBoolean(p.getAttributeValue("cle_primaire")));
 				prop.setNull(Boolean.parseBoolean(p.getAttributeValue("null")));
-				prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incrémenté")));
-				
+				if(version==1)
+					prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incrémenté")));
+				else if(version==2)
+					prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incremente")));
 				e.addPropriete(prop);
 			}
 			eg.setRelation(e);
