@@ -323,6 +323,7 @@ public class FenetreEditionEntite extends JDialog{
 			p.setClePrimaire(m_isCle.isSelected());
 			p.setNull(m_isNull.isSelected());
 			p.setAutoIncrement(m_isAutoIncremente.isSelected());
+			m_lstPropriete.updateUI();
 		}
 	}
 	
