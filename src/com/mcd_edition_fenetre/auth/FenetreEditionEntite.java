@@ -330,7 +330,7 @@ public class FenetreEditionEntite extends JDialog{
 	private class BoutonCreerListener implements ActionListener{
 		public void actionPerformed(ActionEvent arg0) {
 			Propriete p;
-			if (!m_nomPropriete.getText().equals(null) && !m_nomPropriete.getText().equals("")){
+			if (!m_nomPropriete.getText().equals(null) && !m_nomPropriete.getText().equals("")&&!proprieteExiste(m_nomPropriete.getText())){
 				ProprieteTypeE t = ProprieteTypeE.getValue(m_type.getSelectedItem().toString());
 				p = new Propriete(m_nomPropriete.getText(), t);
 				
@@ -353,9 +353,14 @@ public class FenetreEditionEntite extends JDialog{
 				m_isNull.setSelected(false);
 				m_isAutoIncremente.setSelected(false);
 			}
-			else{
+			else if(m_nomPropriete.getText().equals(null) || m_nomPropriete.getText().equals("")){
 				JOptionPane.showMessageDialog(null, "Veuillez insérer un nom de propriété", "Erreur nom propriété", JOptionPane.ERROR_MESSAGE);
 				return;	
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "La propriété existe déjà", "Erreur nom propriété", JOptionPane.ERROR_MESSAGE);
+				return;
 			}
 		}
 	}
@@ -382,5 +387,12 @@ public class FenetreEditionEntite extends JDialog{
 		for(int i=0;i<p.getType().getNombreTaille();++i){
 			p.setTaille(i, (Integer) m_taille[i].getValue());
 		}
+	}
+	private boolean proprieteExiste(String p){
+		for(int i=0;i<m_model.getSize();++i){
+			if(((Propriete)m_model.elementAt(i)).getName().equals(p))
+				return true;
+		}
+		return false;
 	}
 }

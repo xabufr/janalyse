@@ -319,6 +319,11 @@ public class FenetreEditionRelation extends JDialog {
 				JOptionPane.showMessageDialog(null, "Veuillez insérer un nom de propriété", "Erreur nom propriété", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
+			if(proprieteExiste(m_nomPropriete.getText())){
+				JOptionPane.showMessageDialog(null, "La propriété existe déjà", "Erreur nom propriété", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+				
 			ProprieteTypeE type = ProprieteTypeE.getValue(m_typePropriete.getSelectedItem().toString());
 			Propriete prop = new Propriete(m_nomPropriete.getText(), type);
 			prop.setAutoIncrement(m_autoIncrement.isSelected());
@@ -395,5 +400,12 @@ public class FenetreEditionRelation extends JDialog {
 		for(int i=0;i<p.getType().getNombreTaille();++i){
 			p.setTaille(i, (Integer) m_taille[i].getValue());
 		}
+	}
+	private boolean proprieteExiste(String p){
+		for(int i=0;i<m_model.getSize();++i){
+			if(((Propriete)m_model.elementAt(i)).getName().equals(p))
+				return true;
+		}
+		return false;
 	}
 }
