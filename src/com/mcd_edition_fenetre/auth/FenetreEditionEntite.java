@@ -56,6 +56,7 @@ public class FenetreEditionEntite extends JDialog{
 	private JPanel m_panel;
 	private JPanel m_panelTaille;
 	private JLabel m_lblTaille;
+	private JCheckBox m_unique;
 
 	public FenetreEditionEntite(McdGraph mcd, EntiteGraph entite) {
 		
@@ -109,7 +110,7 @@ public class FenetreEditionEntite extends JDialog{
 			m_panel = new JPanel();
 			m_panel.setBorder(new LineBorder(Color.GRAY));
 			content.add(m_panel, "cell 0 1,grow");
-			m_panel.setLayout(new MigLayout("", "[][137.00,grow,center]", "[][][][grow][][][][][][]"));
+			m_panel.setLayout(new MigLayout("", "[][137.00,grow,center]", "[][][][grow][][][][][][][]"));
 			{
 				m_type = new JComboBox();
 				
@@ -192,12 +193,18 @@ public class FenetreEditionEntite extends JDialog{
 				
 				m_boutonModifier = new JButton("Modifier");
 				m_boutonModifier.addActionListener(new BoutonModifierListener());
-				m_panel.add(m_boutonModifier, "cell 0 8,growx");
+				
+				JLabel lblUnique = new JLabel("Unique");
+				m_panel.add(lblUnique, "cell 0 8");
+				
+				m_unique = new JCheckBox("");
+				m_panel.add(m_unique, "cell 1 8");
+				m_panel.add(m_boutonModifier, "cell 0 9,growx");
 			}
 			
 			m_boutonCreer = new JButton("Créer");
 			m_boutonCreer.addActionListener(new BoutonCreerListener());
-			m_panel.add(m_boutonCreer, "cell 1 8,growx");
+			m_panel.add(m_boutonCreer, "cell 1 9,growx");
 				JPanel panel_2 = new JPanel();
 				content.add(panel_2, "cell 0 2 2 1,growx,aligny top");
 				{
@@ -285,6 +292,7 @@ public class FenetreEditionEntite extends JDialog{
 							m_isCle.setSelected(p.isClePrimaire());
 							m_isNull.setSelected(p.isNull());
 							m_isAutoIncremente.setSelected(p.isAutoIncrement());
+							m_unique.setSelected(p.isUnique());
 							updateEnableCleNull();
 						}
 					}
@@ -337,6 +345,7 @@ public class FenetreEditionEntite extends JDialog{
 			p.setClePrimaire(m_isCle.isSelected());
 			p.setNull(m_isNull.isSelected());
 			p.setAutoIncrement(m_isAutoIncremente.isSelected());
+			p.setUnique(m_unique.isSelected());
 			updateEnableCleNull();
 			m_lstPropriete.updateUI();
 		}
@@ -357,6 +366,7 @@ public class FenetreEditionEntite extends JDialog{
 				p.setClePrimaire(m_isCle.isSelected());
 				p.setNull(m_isNull.isSelected());
 				p.setAutoIncrement(m_isAutoIncremente.isSelected());
+				p.setUnique(m_unique.isSelected());
 				
 				m_model.addElement(p);
 				
@@ -366,6 +376,7 @@ public class FenetreEditionEntite extends JDialog{
 				m_commentairePropriete.setText("");
 				m_isCle.setSelected(false);
 				m_isNull.setSelected(false);
+				m_unique.setSelected(false);
 				updateEnableCleNull();
 				m_isAutoIncremente.setSelected(false);
 			}

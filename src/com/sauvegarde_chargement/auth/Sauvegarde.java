@@ -151,6 +151,9 @@ public class Sauvegarde {
 				Attribute AutoP = new Attribute("auto-incremente", String.valueOf(p.isAutoIncrement()));
 				propriete.setAttribute(AutoP);
 				
+				Attribute Unique = new Attribute("unique", String.valueOf(p.isUnique()));
+				propriete.setAttribute(Unique);
+				
 				entite.addContent(propriete);
 			}
 			allEntite.addContent(entite);
@@ -207,6 +210,9 @@ public class Sauvegarde {
 				
 				Attribute AutoP = new Attribute("auto-incremente", String.valueOf(p.isAutoIncrement()));
 				propriete.setAttribute(AutoP);
+				
+				Attribute Unique = new Attribute("unique", String.valueOf(p.isUnique()));
+				propriete.setAttribute(Unique);
 				
 				relation.addContent(propriete);
 			}

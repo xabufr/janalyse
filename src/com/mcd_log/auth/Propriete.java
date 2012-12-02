@@ -14,6 +14,7 @@ public class Propriete implements Cloneable{
 	private boolean m_clePrimaire;
 	private boolean m_autoIncrement;
 	private boolean m_null;
+	private boolean m_unique;
 	
 	public Propriete(String name, ProprieteTypeE proprieteType){
 		setType(proprieteType);	
@@ -21,6 +22,7 @@ public class Propriete implements Cloneable{
 		setClePrimaire(false);
 		setAutoIncrement(false);
 		setNull(false);
+		setUnique(false);
 		setCommentaire("");
 	}
 	
@@ -39,6 +41,7 @@ public class Propriete implements Cloneable{
 		setClePrimaire(p.m_clePrimaire);
 		setAutoIncrement(p.m_autoIncrement);
 		setNull(p.m_autoIncrement);
+		setUnique(p.isUnique());
 	}
 
 	public String getName() {
@@ -118,6 +121,14 @@ public class Propriete implements Cloneable{
 		Propriete p = (Propriete) super.clone();
 		p.m_type = m_type;
 		return p;
+	}
+
+	public boolean isUnique() {
+		return m_unique;
+	}
+
+	public void setUnique(boolean unique) {
+		m_unique = unique;
 	}
 }
 class ProprieteProcessor{

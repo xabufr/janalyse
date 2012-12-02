@@ -114,10 +114,14 @@ public class Chargement{
 				else if(version==2)
 					prop.setClePrimaire(Boolean.parseBoolean(p.getAttributeValue("cle_primaire")));
 				prop.setNull(Boolean.parseBoolean(p.getAttributeValue("null")));
-				if(version==1)
+				if(version==1){
 					prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incrémenté")));
-				else if(version==2)
+					prop.setUnique(false);
+				}
+				else if(version==2){
 					prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incremente")));
+					prop.setUnique(Boolean.parseBoolean(p.getAttributeValue("unique")));
+				}
 				props.add(prop);
 			}
 			e.setProprietes(props);
@@ -154,10 +158,14 @@ public class Chargement{
 				else if(version==2)
 					prop.setClePrimaire(Boolean.parseBoolean(p.getAttributeValue("cle_primaire")));
 				prop.setNull(Boolean.parseBoolean(p.getAttributeValue("null")));
-				if(version==1)
+				if(version==1){
 					prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incrémenté")));
-				else if(version==2)
+					prop.setUnique(false);
+				}
+				else if(version==2){
 					prop.setAutoIncrement(Boolean.parseBoolean(p.getAttributeValue("auto-incremente")));
+					prop.setUnique(Boolean.parseBoolean(p.getAttributeValue("unique")));
+				}
 				e.addPropriete(prop);
 			}
 			eg.setRelation(e);

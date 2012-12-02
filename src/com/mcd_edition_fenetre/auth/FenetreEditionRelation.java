@@ -60,6 +60,7 @@ public class FenetreEditionRelation extends JDialog {
 	private JPanel m_panel, m_panelTaille;
 	private JButton m_okButton;
 	private JLabel m_lblTaille;
+	private JCheckBox m_unique;
 	/**
 	 * Create the dialog.
 	 */
@@ -122,7 +123,7 @@ public class FenetreEditionRelation extends JDialog {
 			m_panel = new JPanel();
 			m_panel.setBorder(new LineBorder(Color.GRAY));
 			contentPanel.add(m_panel, "cell 0 2,grow");
-			m_panel.setLayout(new MigLayout("", "[][grow,center]", "[][][][][grow][][][]"));
+			m_panel.setLayout(new MigLayout("", "[][grow,center]", "[][][][][grow][][][][]"));
 			{
 				JLabel lblProprietes = new JLabel("Propriete");
 				m_panel.add(lblProprietes, "cell 0 0 2 1,alignx center");
@@ -199,11 +200,19 @@ public class FenetreEditionRelation extends JDialog {
 					m_autoIncrement = new JCheckBox("");
 					m_panel.add(m_autoIncrement, "cell 1 6");
 				}
-				m_panel.add(btnModifier, "cell 0 7,growx");
+				{
+					JLabel lblUnique = new JLabel("Unique");
+					m_panel.add(lblUnique, "cell 0 7");
+				}
+				{
+					m_unique = new JCheckBox("");
+					m_panel.add(m_unique, "cell 1 7");
+				}
+				m_panel.add(btnModifier, "cell 0 8,growx");
 			}
 			{
 				m_btnCreer = new JButton("Créer");
-				m_panel.add(m_btnCreer, "cell 1 7,growx");
+				m_panel.add(m_btnCreer, "cell 1 8,growx");
 				m_btnCreer.addActionListener(new createurPropriete());
 			}
 		}
@@ -300,6 +309,7 @@ public class FenetreEditionRelation extends JDialog {
 		m_txtpnCommentaire.setText(p.getCommentaire());
 		m_nullable.setSelected(p.isNull());
 		m_typePropriete.setSelectedItem(p.getType().getName());
+		m_unique.setSelected(p.isUnique());
 		changeTaille(p.getType());
 		alimenterTaille(p);
 		
@@ -332,10 +342,14 @@ public class FenetreEditionRelation extends JDialog {
 			prop.setAutoIncrement(m_autoIncrement.isSelected());
 			prop.setNull(m_nullable.isSelected());
 			prop.setCommentaire(m_txtpnCommentaire.getText());
+			prop.setUnique(m_unique.isSelected());
 			alimenterPropriete(prop);
 
 			m_model.addElement(prop);
 			m_relationCopie.addPropriete(prop);
+			m_unique.setSelected(false);
+			m_nullable.setSelected(false);
+			m_autoIncrement.setSelected(false);
 			m_nomPropriete.setText("");
 		}
 	}
@@ -356,6 +370,7 @@ public class FenetreEditionRelation extends JDialog {
 			m_currentPropriete.setAutoIncrement(m_autoIncrement.isSelected());
 			m_currentPropriete.setNull(m_nullable.isSelected());
 			m_currentPropriete.setCommentaire(m_txtpnCommentaire.getText());
+			m_currentPropriete.setUnique(m_unique.isSelected());
 			alimenterPropriete(m_currentPropriete);
 			m_listeProprietes.updateUI();
 		}
